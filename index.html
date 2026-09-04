@@ -223,7 +223,7 @@
             padding: 7px 14px;
             border: 1px solid #ced4da;
             border-radius: 20px;
-            width: 220px;
+            width: 240px;
             font-size: 13px;
         }
 
@@ -392,8 +392,8 @@
                 <input type="date" id="newDate">
             </div>
             <div class="field">
-                <label>🔢 Voucher / Bill No. <span style="font-weight:400; color:#888;">(optional)</span></label>
-                <input type="text" id="newVoucher" placeholder="e.g. V-001">
+                <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(optional)</span></label>
+                <input type="text" id="newVoucher" placeholder="e.g. V-001 / P-101">
             </div>
             <div class="field">
                 <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
@@ -435,7 +435,7 @@
                     <tr>
                         <th style="width:40px;">#</th>
                         <th>📅 Date</th>
-                        <th>🔢 Voucher</th>
+                        <th>🔢 Voucher / Pavti No.</th>
                         <th>🧑‍💼 Name</th>
                         <th>📝 Description</th>
                         <th style="text-align:right;">📈 Credit (₹)</th>
@@ -903,7 +903,7 @@
 
             const headers = parseCSVLine(lines[0]);
             const dateIdx = headers.findIndex(h => h.toLowerCase().includes('date'));
-            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('bill'));
+            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('bill') || h.toLowerCase().includes('pavti'));
             const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
             const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc'));
             const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit'));
