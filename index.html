@@ -205,6 +205,20 @@
         td { padding: 8px 8px; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
         tr:hover { background: #f1f8ff; }
 
+        .doc-link {
+            color: #0d6efd;
+            font-weight: 700;
+            text-decoration: underline;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+        .doc-link:hover {
+            color: #0a58ca;
+            text-decoration: none;
+        }
+
         .action-btn {
             background: none;
             border: none;
@@ -223,7 +237,7 @@
             padding: 7px 14px;
             border: 1px solid #ced4da;
             border-radius: 20px;
-            width: 240px;
+            width: 250px;
             font-size: 13px;
         }
 
@@ -328,7 +342,7 @@
     <div class="org-header">
         <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
         <p>श्रीराम नगर भद्रावती</p>
-        <span class="reg">📜 Registration No.: F-0016068(CDP)</span><br>
+        <span class="reg">📜 Registration No.: Chandrapur/000029/2023</span><br>
         <span id="dbStatusBadge" class="db-status">⏳ Connecting to Cloud...</span>
         <button class="mode-toggle" id="modeToggleBtn" onclick="toggleMode()">🔐 Admin Login</button>
         <span class="mode-badge public" id="modeBadge">Public View</span>
@@ -396,12 +410,16 @@
                 <input type="text" id="newVoucher" placeholder="e.g. V-001 / P-101">
             </div>
             <div class="field">
+                <label>🔗 Drive / Bill Link <span style="font-weight:400; color:#888;">(optional)</span></label>
+                <input type="url" id="newDocUrl" placeholder="https://drive.google.com/..." style="min-width:210px;">
+            </div>
+            <div class="field">
                 <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
                 <input type="text" id="newName" placeholder="e.g. Saurabh Yamawar" style="min-width:180px;">
             </div>
             <div class="field">
                 <label>📝 Description <span style="font-weight:400; color:#888;">(optional)</span></label>
-                <input type="text" id="newDesc" placeholder="Expense or Donation reason" style="min-width:200px;">
+                <input type="text" id="newDesc" placeholder="Expense or Donation reason" style="min-width:190px;">
             </div>
             <div class="field">
                 <label>💰 Amount (₹) <span class="required-star">*</span></label>
@@ -490,6 +508,16 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
+    }
+
+    // Sanitize URLs to ensure only safe http/https links are rendered
+    function sanitizeUrl(url) {
+        if (!url) return '';
+        const trimmed = String(url).trim();
+        if (/^https?:\/\//i.test(trimmed)) {
+            return escapeHTML(trimmed);
+        }
+        return '';
     }
 
     function parseIndianNum(str) {
@@ -642,14 +670,25 @@
     }
 
     // ============================================================
-    //  DATABASE & REALTIME LISTENER
+    //  DATABASE & REALTIME LISTENER (Natural Sorting by Date & Voucher)
     // ============================================================
 
     function calculateRunningBalances(data) {
+        // Natural chronological and voucher ordering
         data.sort((a, b) => {
             const dateA = a.rawDate || parseToIsoDate(a.date);
             const dateB = b.rawDate || parseToIsoDate(b.date);
             if (dateA !== dateB) return dateA.localeCompare(dateB);
+
+            // Natural numeric comparison for vouchers on the same date (e.g. V-1, V-2, V-10)
+            const vA = (a.voucher || '').trim();
+            const vB = (b.voucher || '').trim();
+            if (vA && vB) {
+                return vA.localeCompare(vB, undefined, { numeric: true, sensitivity: 'base' });
+            }
+            if (vA && !vB) return -1;
+            if (!vA && vB) return 1;
+
             return (a.id || '').localeCompare(b.id || '');
         });
 
@@ -683,7 +722,7 @@
                 console.error("Firestore listen error: ", error);
                 badge.innerHTML = '⚠️ Cloud Permission Error';
                 badge.style.background = '#dc3545';
-                showToast("⚠️ Firebase Error: Make sure Firestore is created in Test Mode!", "error");
+                showToast("⚠️ Firebase Error: Check your Firestore rules!", "error");
             });
         }
     }
@@ -706,10 +745,20 @@
 
         data.forEach((item, index) => {
             const row = document.createElement('tr');
+            
+            // Voucher Display (With clickable Drive / Bill link if available)
+            let voucherDisplay = escapeHTML(item.voucher || '-');
+            const safeDocUrl = sanitizeUrl(item.docUrl);
+            if (safeDocUrl) {
+                voucherDisplay = `<a href="${safeDocUrl}" target="_blank" rel="noopener noreferrer" class="doc-link" title="Click to open Bill/Receipt/Drive file">📄 ${escapeHTML(item.voucher || 'View Doc')} ↗</a>`;
+            } else if (item.voucher) {
+                voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
+            }
+
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${escapeHTML(item.date)}</td>
-                <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                <td>${voucherDisplay}</td>
                 <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                 <td>${escapeHTML(item.description || '-')}</td>
                 <td style="text-align:right; color:#28a745; font-weight:600;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
@@ -742,7 +791,7 @@
     }
 
     // ============================================================
-    //  CRUD
+    //  CRUD (Add / Edit / Delete)
     // ============================================================
 
     let editingId = null;
@@ -751,6 +800,7 @@
         if (!isAdmin) { alert('Admin access required.'); return; }
         const dateVal = document.getElementById('newDate').value;
         const voucher = document.getElementById('newVoucher').value.trim();
+        const docUrl = document.getElementById('newDocUrl').value.trim();
         const name = document.getElementById('newName').value.trim();
         const desc = document.getElementById('newDesc').value.trim();
         const amount = parseFloat(document.getElementById('newAmount').value);
@@ -768,6 +818,7 @@
             rawDate: rawDate,
             date: formattedDate,
             voucher: voucher,
+            docUrl: docUrl,
             name: name,
             description: desc,
             credit: type === 'credit' ? amount : 0,
@@ -785,6 +836,7 @@
 
             cancelEdit();
             document.getElementById('newVoucher').value = '';
+            document.getElementById('newDocUrl').value = '';
             document.getElementById('newName').value = '';
             document.getElementById('newDesc').value = '';
             document.getElementById('newAmount').value = '';
@@ -808,6 +860,7 @@
 
         document.getElementById('newDate').value = item.rawDate || parseToIsoDate(item.date);
         document.getElementById('newVoucher').value = item.voucher || '';
+        document.getElementById('newDocUrl').value = item.docUrl || '';
         document.getElementById('newName').value = item.name || '';
         document.getElementById('newDesc').value = item.description || '';
         document.getElementById('newAmount').value = item.credit > 0 ? item.credit : item.debit;
@@ -824,6 +877,7 @@
         document.getElementById('addUpdateBtn').className = 'btn btn-success';
         document.getElementById('cancelEditBtn').style.display = 'none';
         document.getElementById('newVoucher').value = '';
+        document.getElementById('newDocUrl').value = '';
         document.getElementById('newName').value = '';
         document.getElementById('newDesc').value = '';
         document.getElementById('newAmount').value = '';
@@ -859,13 +913,13 @@
     }
 
     // ============================================================
-    //  CSV & BACKUP
+    //  CSV & BACKUP (With Drive Link Support)
     // ============================================================
 
     function downloadTemplate() {
         if (!isAdmin) { alert('Admin access required.'); return; }
-        const headers = ['Date', 'Voucher/Bill No.', 'Name', 'Description', 'Credit', 'Debit'];
-        const sample = ['2023-07-31', 'V-001', 'Saurabh Yamawar', 'Gurupournima donation', '11000', '0'];
+        const headers = ['Date', 'Voucher/Pavti No.', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
+        const sample = ['2023-07-31', 'V-001', 'https://drive.google.com/...', 'Saurabh Yamawar', 'Gurupournima donation', '11000', '0'];
         const csv = headers.join(',') + '\n' + sample.join(',');
         downloadFile(csv, 'CashBook_Template.csv', 'text/csv');
         showToast('📄 Template downloaded!');
@@ -877,12 +931,13 @@
             alert('No data to export.');
             return;
         }
-        let csv = 'Date,Voucher/Bill No.,Name,Description,Credit,Debit,Balance\n';
+        let csv = 'Date,Voucher/Pavti No.,Drive Link,Name,Description,Credit,Debit,Balance\n';
         transactionsData.forEach(t => {
             const v = `"${(t.voucher || '').replace(/"/g, '""')}"`;
+            const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
             const n = `"${(t.name || '').replace(/"/g, '""')}"`;
             const d = `"${(t.description || '').replace(/"/g, '""')}"`;
-            csv += `${t.date},${v},${n},${d},${t.credit || 0},${t.debit || 0},${t.balance}\n`;
+            csv += `${t.date},${v},${l},${n},${d},${t.credit || 0},${t.debit || 0},${t.balance}\n`;
         });
         downloadFile(csv, 'SwamiGopalTirth_CashBook_Export.csv', 'text/csv');
         showToast('⬇️ CSV exported!');
@@ -903,7 +958,8 @@
 
             const headers = parseCSVLine(lines[0]);
             const dateIdx = headers.findIndex(h => h.toLowerCase().includes('date'));
-            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('bill') || h.toLowerCase().includes('pavti'));
+            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('pavti') || h.toLowerCase().includes('bill'));
+            const docUrlIdx = headers.findIndex(h => h.toLowerCase().includes('link') || h.toLowerCase().includes('drive') || h.toLowerCase().includes('url'));
             const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
             const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc'));
             const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit'));
@@ -921,6 +977,7 @@
 
                 const rawDate = parseToIsoDate(parts[dateIdx] || '');
                 const voucher = (voucherIdx !== -1 && parts[voucherIdx]) ? parts[voucherIdx] : '';
+                const docUrl = (docUrlIdx !== -1 && parts[docUrlIdx]) ? parts[docUrlIdx] : '';
                 const name = (nameIdx !== -1 && parts[nameIdx]) ? parts[nameIdx] : '';
                 const description = (descIdx !== -1 && parts[descIdx]) ? parts[descIdx] : '';
                 const credit = parseIndianNum(parts[creditIdx] || 0);
@@ -932,6 +989,7 @@
                     rawDate: rawDate,
                     date: formatDateToDisplay(rawDate),
                     voucher: voucher,
+                    docUrl: docUrl,
                     name: name,
                     description: description,
                     credit: credit,
@@ -992,6 +1050,7 @@
                         rawDate: item.rawDate || parseToIsoDate(item.date),
                         date: item.date || formatDateToDisplay(item.rawDate),
                         voucher: item.voucher || '',
+                        docUrl: item.docUrl || '',
                         name: item.name || '',
                         description: item.description || '',
                         credit: item.credit || 0,
