@@ -48,12 +48,13 @@
         }
         .org-header .reg {
             font-size: 1rem;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.18);
             display: inline-block;
             padding: 5px 22px;
             border-radius: 30px;
             margin-top: 8px;
             font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .mode-toggle {
@@ -138,14 +139,14 @@
             background: #2a7de1;
             color: white;
             border: none;
-            padding: 9px 22px;
+            padding: 9px 20px;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             font-size: 13px;
             transition: 0.2s;
-            margin-right: 8px;
-            margin-top: 8px;
+            margin-right: 6px;
+            margin-top: 6px;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -159,10 +160,12 @@
         .btn-warning:hover { background: #e0a800; }
         .btn-secondary { background: #6c757d; }
         .btn-secondary:hover { background: #5a6268; }
-        .btn-sm { padding: 5px 12px; font-size: 12px; margin-top: 0; margin-right: 4px; }
+        .btn-pdf { background: #e63946; color: white; }
+        .btn-pdf:hover { background: #c1121f; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; margin-top: 0; margin-right: 4px; }
 
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
         .stats-grid {
             display: grid;
@@ -176,12 +179,40 @@
             border-radius: 10px;
             text-align: center;
             border-left: 5px solid #2a7de1;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            user-select: none;
+            position: relative;
+        }
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+        .stat-box.active-filter {
+            background: #e7f1ff;
+            outline: 3px solid #2a7de1;
+            box-shadow: 0 4px 12px rgba(42, 125, 225, 0.25);
         }
         .stat-box .label { font-size: 13px; color: #6c757d; font-weight: 600; }
         .stat-box .value { font-size: 21px; font-weight: 700; color: #0d2b44; }
         .stat-box.credit { border-left-color: #28a745; }
+        .stat-box.credit.active-filter { outline-color: #28a745; background: #eaf8ee; }
         .stat-box.debit { border-left-color: #dc3545; }
+        .stat-box.debit.active-filter { outline-color: #dc3545; background: #fdebee; }
         .stat-box.balance { border-left-color: #ffc107; }
+
+        .filter-banner {
+            background: #eef4fb;
+            border-left: 4px solid #2a7de1;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
 
         .table-wrapper {
             overflow-x: auto;
@@ -233,11 +264,28 @@
         .action-btn.del-btn { color: #dc3545; }
         .action-btn.del-btn:hover { background: #ffd4d4; }
 
+        .search-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-controls label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+        }
+        .search-controls input[type="date"] {
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 12px;
+        }
         .search-box {
             padding: 7px 14px;
             border: 1px solid #ced4da;
             border-radius: 20px;
-            width: 250px;
+            width: 220px;
             font-size: 13px;
         }
 
@@ -324,13 +372,14 @@
         .change-pwd-btn { background: #6f42c1; color: white; }
         .change-pwd-btn:hover { background: #5a32a3; }
 
-        @media (max-width: 700px) {
+        @media (max-width: 800px) {
             .add-entry-form .field { width: 100%; }
             .add-entry-form input { width: 100%; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .org-header h2 { font-size: 1.3rem; }
             .flex-between { flex-direction: column; align-items: stretch; }
-            .flex-between .search-box { width: 100%; margin-bottom: 8px; }
+            .search-controls { width: 100%; }
+            .search-box { width: 100%; }
             .mode-toggle { position: static; margin-top: 10px; }
         }
     </style>
@@ -342,13 +391,18 @@
     <div class="org-header">
         <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
         <p>श्रीराम नगर भद्रावती</p>
-        <span class="reg">📜 Registration No.: Chandrapur/000029/2023</span><br>
+        <span class="reg">📜 Registration No.: F-0016068(CDP)</span><br>
         <span id="dbStatusBadge" class="db-status">⏳ Connecting to Cloud...</span>
         <button class="mode-toggle" id="modeToggleBtn" onclick="toggleMode()">🔐 Admin Login</button>
         <span class="mode-badge public" id="modeBadge">Public View</span>
     </div>
 
-    <h1>📒 CASH BOOK</h1>
+    <div class="flex-between" style="margin-bottom:15px;">
+        <h1 style="margin-bottom:0; border-bottom:none; padding-bottom:0;">📒 CASH BOOK</h1>
+        <div>
+            <button class="btn btn-pdf" onclick="generateMonthwisePDF()">📄 Generate Month-wise PDF (मासिक कॅश बुक)</button>
+        </div>
+    </div>
 
     <div id="toast" class="toast">✅ Success!</div>
 
@@ -382,14 +436,29 @@
         </div>
     </div>
 
-    <!-- ===== 3. SUMMARY ===== -->
+    <!-- ===== 3. SUMMARY (Clickable Cards) ===== -->
     <div class="card">
-        <h2>📊 Summary</h2>
+        <div class="flex-between" style="margin-bottom:12px;">
+            <h2 style="margin-bottom:0;">📊 Summary <span style="font-size:12px; color:#888; font-weight:normal;">(कार्डवर क्लिक करून फिल्टर करा)</span></h2>
+            <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
+        </div>
         <div class="stats-grid" id="statsGrid">
-            <div class="stat-box credit"><div class="label">📈 Total Credit</div><div class="value" id="totalCredit">₹ 0.00</div></div>
-            <div class="stat-box debit"><div class="label">📉 Total Debit</div><div class="value" id="totalDebit">₹ 0.00</div></div>
-            <div class="stat-box balance"><div class="label">💰 Closing Balance</div><div class="value" id="closingBalance">₹ 0.00</div></div>
-            <div class="stat-box"><div class="label">🧾 Total Entries</div><div class="value" id="totalEntries">0</div></div>
+            <div class="stat-box credit" id="statCardCredit" onclick="toggleTypeFilter('credit')" title="Click to view ONLY Credit (जमा)">
+                <div class="label">📈 Total Credit (फक्त जमा)</div>
+                <div class="value" id="totalCredit">₹ 0.00</div>
+            </div>
+            <div class="stat-box debit" id="statCardDebit" onclick="toggleTypeFilter('debit')" title="Click to view ONLY Debit (खर्च)">
+                <div class="label">📉 Total Debit (फक्त खर्च)</div>
+                <div class="value" id="totalDebit">₹ 0.00</div>
+            </div>
+            <div class="stat-box balance" id="statCardBalance" onclick="resetAllFilters()" title="Click to reset filter">
+                <div class="label">💰 Closing Balance</div>
+                <div class="value" id="closingBalance">₹ 0.00</div>
+            </div>
+            <div class="stat-box" id="statCardEntries" onclick="resetAllFilters()" title="Click to reset filter">
+                <div class="label">🧾 Total Entries</div>
+                <div class="value" id="totalEntries">0</div>
+            </div>
         </div>
     </div>
 
@@ -443,10 +512,19 @@
     <div class="card">
         <div class="flex-between">
             <h2>📋 All Transactions</h2>
-            <div>
-                <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (Name/Desc/Voucher)" onkeyup="filterTable()">
+            <div class="search-controls">
+                <label>From: <input type="date" id="filterFromDate" onchange="filterTable()" title="Start Date"></label>
+                <label>To: <input type="date" id="filterToDate" onchange="filterTable()" title="End Date"></label>
+                <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (Name/Desc/Date/Voucher)" onkeyup="filterTable()">
+                <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" title="Reset Filters">✖ Reset</button>
             </div>
         </div>
+
+        <div id="filterBanner" class="filter-banner" style="display:none;">
+            <span id="filterBannerText">🔍 Active Filter</span>
+            <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" style="margin:0;">Clear Filter</button>
+        </div>
+
         <div class="table-wrapper" id="tableWrapper">
             <table id="transactionTable">
                 <thead>
@@ -487,6 +565,7 @@
     let db = null;
     let transactionsData = [];
     let isFirebaseReady = false;
+    let activeTypeFilter = 'all'; // 'all' | 'credit' | 'debit'
 
     try {
         firebase.initializeApp(firebaseConfig);
@@ -510,7 +589,6 @@
             .replace(/'/g, '&#039;');
     }
 
-    // Sanitize URLs to ensure only safe http/https links are rendered
     function sanitizeUrl(url) {
         if (!url) return '';
         const trimmed = String(url).trim();
@@ -670,17 +748,16 @@
     }
 
     // ============================================================
-    //  DATABASE & REALTIME LISTENER (Natural Sorting by Date & Voucher)
+    //  DATABASE & REALTIME LISTENER (Natural Sorting)
     // ============================================================
 
     function calculateRunningBalances(data) {
-        // Natural chronological and voucher ordering
         data.sort((a, b) => {
             const dateA = a.rawDate || parseToIsoDate(a.date);
             const dateB = b.rawDate || parseToIsoDate(b.date);
             if (dateA !== dateB) return dateA.localeCompare(dateB);
 
-            // Natural numeric comparison for vouchers on the same date (e.g. V-1, V-2, V-10)
+            // Natural numeric sort for vouchers
             const vA = (a.voucher || '').trim();
             const vB = (b.voucher || '').trim();
             if (vA && vB) {
@@ -716,8 +793,7 @@
                     list.push({ id: doc.id, ...doc.data() });
                 });
                 transactionsData = calculateRunningBalances(list);
-                renderTable(transactionsData);
-                updateStats(transactionsData);
+                filterTable();
             }, (error) => {
                 console.error("Firestore listen error: ", error);
                 badge.innerHTML = '⚠️ Cloud Permission Error';
@@ -735,18 +811,14 @@
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
 
-        const count = data ? data.length : 0;
-        document.getElementById('totalEntries').innerText = count;
-
         if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:35px; color:#888;">📭 No transactions yet. Admin can add new entries.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:35px; color:#888;">📭 No matching transactions found.</td></tr>';
             return;
         }
 
         data.forEach((item, index) => {
             const row = document.createElement('tr');
             
-            // Voucher Display (With clickable Drive / Bill link if available)
             let voucherDisplay = escapeHTML(item.voucher || '-');
             const safeDocUrl = sanitizeUrl(item.docUrl);
             if (safeDocUrl) {
@@ -773,21 +845,337 @@
         });
     }
 
-    function updateStats(data) {
-        if (!data || data.length === 0) {
-            document.getElementById('totalCredit').innerText = '₹ 0.00';
-            document.getElementById('totalDebit').innerText = '₹ 0.00';
-            document.getElementById('closingBalance').innerText = '₹ 0.00';
-            return;
-        }
+    function updateStats(allData, filteredData) {
         let totalCredit = 0, totalDebit = 0;
-        data.forEach(t => { 
+        allData.forEach(t => { 
             totalCredit += (t.credit || 0); 
             totalDebit += (t.debit || 0); 
         });
         document.getElementById('totalCredit').innerText = formatIndianNum(totalCredit);
         document.getElementById('totalDebit').innerText = formatIndianNum(totalDebit);
         document.getElementById('closingBalance').innerText = formatIndianNum(totalCredit - totalDebit);
+        
+        if (filteredData && filteredData.length !== allData.length) {
+            document.getElementById('totalEntries').innerText = `${filteredData.length} / ${allData.length}`;
+        } else {
+            document.getElementById('totalEntries').innerText = allData.length;
+        }
+    }
+
+    // ============================================================
+    //  INTERACTIVE STAT BOX FILTERS & SEARCH
+    // ============================================================
+
+    function toggleTypeFilter(type) {
+        if (activeTypeFilter === type) {
+            activeTypeFilter = 'all';
+        } else {
+            activeTypeFilter = type;
+        }
+        filterTable();
+    }
+
+    function resetAllFilters() {
+        activeTypeFilter = 'all';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('filterFromDate').value = '';
+        document.getElementById('filterToDate').value = '';
+        filterTable();
+    }
+
+    function filterTable() {
+        const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+        const fromDate = document.getElementById('filterFromDate').value;
+        const toDate = document.getElementById('filterToDate').value;
+
+        // Visual state on stat cards
+        document.getElementById('statCardCredit').classList.toggle('active-filter', activeTypeFilter === 'credit');
+        document.getElementById('statCardDebit').classList.toggle('active-filter', activeTypeFilter === 'debit');
+        
+        const banner = document.getElementById('filterBanner');
+        const bannerText = document.getElementById('filterBannerText');
+        const resetTop = document.getElementById('resetFilterTopBtn');
+
+        let isFiltered = (activeTypeFilter !== 'all') || query || fromDate || toDate;
+
+        if (isFiltered) {
+            let filterDesc = [];
+            if (activeTypeFilter === 'credit') filterDesc.push('फक्त जमा (Only Credit)');
+            if (activeTypeFilter === 'debit') filterDesc.push('फक्त खर्च (Only Debit)');
+            if (fromDate) filterDesc.push(`From: ${formatDateToDisplay(fromDate)}`);
+            if (toDate) filterDesc.push(`To: ${formatDateToDisplay(toDate)}`);
+            if (query) filterDesc.push(`Keyword: "${query}"`);
+
+            bannerText.innerHTML = `🔍 <strong>सध्याचे फिल्टर:</strong> ${filterDesc.join(' | ')}`;
+            banner.style.display = 'flex';
+            resetTop.style.display = 'inline-block';
+        } else {
+            banner.style.display = 'none';
+            resetTop.style.display = 'none';
+        }
+
+        let filtered = transactionsData.filter(t => {
+            // Type filter
+            if (activeTypeFilter === 'credit' && (!t.credit || t.credit <= 0)) return false;
+            if (activeTypeFilter === 'debit' && (!t.debit || t.debit <= 0)) return false;
+
+            // Date Range
+            const raw = t.rawDate || parseToIsoDate(t.date);
+            if (fromDate && raw < fromDate) return false;
+            if (toDate && raw > toDate) return false;
+
+            // Search Query
+            if (query) {
+                const combined = `${t.name || ''} ${t.description || ''} ${t.voucher || ''} ${t.date || ''} ${raw}`.toLowerCase();
+                if (!combined.includes(query)) return false;
+            }
+            return true;
+        });
+
+        renderTable(filtered);
+        updateStats(transactionsData, filtered);
+    }
+
+    // ============================================================
+    //  🖨️ GENERATE MONTH-WISE CASH BOOK PDF
+    // ============================================================
+
+    function generateMonthwisePDF() {
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
+            return;
+        }
+
+        // Group transactions by YYYY-MM
+        const groups = {};
+        transactionsData.forEach(item => {
+            const raw = item.rawDate || parseToIsoDate(item.date);
+            const key = raw.slice(0, 7); // '2023-07'
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(item);
+        });
+
+        const sortedKeys = Object.keys(groups).sort();
+        let runningTotalBal = 0;
+
+        const monthNames = [
+            "जानेवारी (January)", "फेब्रुवारी (February)", "मार्च (March)", "एप्रिल (April)",
+            "मे (May)", "जून (June)", "जुलै (July)", "ऑगस्ट (August)",
+            "सप्टेंबर (September)", "ऑक्टोबर (October)", "नोव्हेंबर (November)", "डिसेंबर (December)"
+        ];
+
+        let printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Cash Book - Swami Gopal Tirth Sanstha</title>
+            <style>
+                @page { 
+                    size: A4 landscape; 
+                    margin: 10mm; 
+                }
+                * { box-sizing: border-box; }
+                body { 
+                    font-family: 'Segoe UI', Arial, sans-serif; 
+                    color: #111; 
+                    margin: 0; 
+                    padding: 0; 
+                    background: #fff;
+                    font-size: 12px; 
+                }
+                .month-page { 
+                    page-break-after: always; 
+                    break-after: page; 
+                    padding: 10px 0 20px 0; 
+                }
+                .month-page:last-child { 
+                    page-break-after: avoid; 
+                    break-after: avoid; 
+                }
+                .org-title { 
+                    text-align: center; 
+                    border-bottom: 2px solid #0d2b44; 
+                    padding-bottom: 8px; 
+                    margin-bottom: 12px; 
+                }
+                .org-title h1 { 
+                    margin: 0 0 4px 0; 
+                    font-size: 20px; 
+                    color: #0d2b44; 
+                }
+                .org-title p { 
+                    margin: 2px 0; 
+                    font-size: 12px; 
+                    color: #333; 
+                }
+                .org-title .reg-no {
+                    font-weight: bold;
+                    background: #f0f4f9;
+                    display: inline-block;
+                    padding: 2px 14px;
+                    border-radius: 12px;
+                    margin-top: 4px;
+                    border: 1px solid #d0dbe5;
+                }
+                .month-bar { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    align-items: center; 
+                    background: #eef4fb; 
+                    padding: 8px 14px; 
+                    border: 1px solid #bdd5ea; 
+                    border-radius: 6px; 
+                    margin-bottom: 10px; 
+                    font-size: 13px; 
+                }
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin-bottom: 12px; 
+                    font-size: 11.5px; 
+                }
+                th, td { 
+                    border: 1px solid #bbb; 
+                    padding: 6px 8px; 
+                    text-align: left; 
+                }
+                th { 
+                    background-color: #0d2b44 !important; 
+                    color: white !important; 
+                    font-weight: 600;
+                }
+                .text-right { text-align: right; }
+                .credit-text { color: #198754; font-weight: 700; }
+                .debit-text { color: #dc3545; font-weight: 700; }
+                .summary-table { 
+                    width: 100%; 
+                    margin-top: 10px; 
+                    border: 1.5px solid #0d2b44; 
+                    background: #fdfdfd; 
+                    font-size: 12px;
+                }
+                .summary-table td { 
+                    padding: 8px 12px; 
+                    font-weight: 600; 
+                }
+                .signatures { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    margin-top: 45px; 
+                    padding: 0 40px; 
+                    font-weight: bold; 
+                    font-size: 12px;
+                }
+                .sig-box { 
+                    text-align: center; 
+                    border-top: 1px dashed #333; 
+                    width: 180px; 
+                    padding-top: 6px; 
+                }
+                @media print {
+                    .no-print { display: none !important; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
+            </style>
+        </head>
+        <body>
+        `;
+
+        sortedKeys.forEach((key) => {
+            const [year, month] = key.split('-');
+            const monthLabel = monthNames[parseInt(month, 10) - 1] + " " + year;
+            const items = groups[key];
+
+            const openingBalance = runningTotalBal;
+            let monthCredit = 0;
+            let monthDebit = 0;
+
+            let rowsHtml = '';
+            items.forEach((item, index) => {
+                monthCredit += (item.credit || 0);
+                monthDebit += (item.debit || 0);
+                runningTotalBal = item.balance;
+
+                rowsHtml += `
+                <tr>
+                    <td style="text-align:center; width:35px;">${index + 1}</td>
+                    <td style="white-space:nowrap; width:85px;">${escapeHTML(item.date)}</td>
+                    <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                    <td>${escapeHTML(item.description || '-')}</td>
+                    <td class="text-right credit-text" style="width:105px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
+                    <td class="text-right debit-text" style="width:105px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
+                    <td class="text-right" style="font-weight:bold; width:115px;">${formatIndianNum(item.balance)}</td>
+                </tr>
+                `;
+            });
+
+            const closingBalance = openingBalance + monthCredit - monthDebit;
+
+            printHtml += `
+            <div class="month-page">
+                <div class="org-title">
+                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <p>श्रीराम नगर भद्रावती | 📒 मासिक कॅश बुक (Monthly Cash Book)</p>
+                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
+                </div>
+
+                <div class="month-bar">
+                    <span>📅 महिना: <strong>${monthLabel}</strong></span>
+                    <span>💰 मागील महिना शिल्लक (Opening Balance): <strong>${formatIndianNum(openingBalance)}</strong></span>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:35px;">#</th>
+                            <th style="width:85px;">📅 दिनांक</th>
+                            <th style="width:110px;">🔢 व्हाउचर/पावती क्र.</th>
+                            <th>🧑‍💼 खातेदार / दात्याचे नाव</th>
+                            <th>📝 तपशील (Description)</th>
+                            <th class="text-right" style="width:105px;">📈 जमा (Credit ₹)</th>
+                            <th class="text-right" style="width:105px;">📉 खर्च (Debit ₹)</th>
+                            <th class="text-right" style="width:115px;">💰 शिल्लक (Balance ₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+
+                <table class="summary-table">
+                    <tr>
+                        <td>मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></td>
+                        <td class="credit-text">चालू महिना एकूण जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
+                        <td class="debit-text">चालू महिना एकूण खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
+                        <td style="background:#eef4fb; font-size:13px;">अखेर शिल्लक (Closing): <strong>${formatIndianNum(closingBalance)}</strong></td>
+                    </tr>
+                </table>
+
+                <div class="signatures">
+                    <div class="sig-box">तयार करणार (Accountant)</div>
+                    <div class="sig-box">सचिव (Secretary)</div>
+                    <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                </div>
+            </div>
+            `;
+        });
+
+        printHtml += `
+            <script>
+                window.onload = function() {
+                    window.print();
+                };
+            <\/script>
+        </body>
+        </html>
+        `;
+
+        const printWin = window.open('', '_blank');
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
     }
 
     // ============================================================
@@ -913,7 +1301,7 @@
     }
 
     // ============================================================
-    //  CSV & BACKUP (With Drive Link Support)
+    //  CSV & BACKUP
     // ============================================================
 
     function downloadTemplate() {
@@ -1068,26 +1456,8 @@
     }
 
     // ============================================================
-    //  SEARCH & UTILS
+    //  UTILS
     // ============================================================
-
-    function filterTable() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
-        if (!query) {
-            renderTable(transactionsData);
-            updateStats(transactionsData);
-            return;
-        }
-        const filtered = transactionsData.filter(t => 
-            (t.name || '').toLowerCase().includes(query) || 
-            (t.description || '').toLowerCase().includes(query) ||
-            (t.voucher || '').toLowerCase().includes(query) ||
-            (t.date || '').toLowerCase().includes(query)
-        );
-        renderTable(filtered);
-        updateStats(filtered);
-        document.getElementById('totalEntries').innerText = filtered.length + ' / ' + transactionsData.length;
-    }
 
     function downloadFile(content, filename, mimeType) {
         const blob = new Blob([content], { type: mimeType + ';charset=utf-8' });
