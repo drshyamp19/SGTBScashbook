@@ -71,16 +71,9 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .mode-toggle:hover {
-            background: rgba(255,255,255,0.25);
-        }
-        .mode-toggle.logout {
-            background: rgba(220,53,69,0.4);
-            border-color: #dc3545;
-        }
-        .mode-toggle.logout:hover {
-            background: rgba(220,53,69,0.6);
-        }
+        .mode-toggle:hover { background: rgba(255,255,255,0.25); }
+        .mode-toggle.logout { background: rgba(220,53,69,0.4); border-color: #dc3545; }
+        .mode-toggle.logout:hover { background: rgba(220,53,69,0.6); }
 
         .mode-badge {
             display: inline-block;
@@ -246,10 +239,7 @@
             gap: 4px;
             transition: 0.2s;
         }
-        .doc-link:hover {
-            color: #0a58ca;
-            text-decoration: none;
-        }
+        .doc-link:hover { color: #0a58ca; text-decoration: none; }
 
         .action-btn {
             background: none;
@@ -416,7 +406,7 @@
             </div>
         </div>
         <p style="font-size:13px; color:#6c757d; margin-top:6px;">
-            ☁️ All transactions & uploaded bills are saved in real-time in Google Firebase Cloud Storage.
+            ☁️ All transactions & bills are synced in real-time in Google Firebase Database.
         </p>
     </div>
 
@@ -476,10 +466,13 @@
                 <input type="text" id="newVoucher" placeholder="e.g. V-001 / P-101">
             </div>
             <div class="field">
-                <label>📎 Upload Bill/Photo <span style="font-weight:400; color:#888;">(पावती/बिल निवडा)</span></label>
-                <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:5px 0;">
-                <input type="hidden" id="existingDocUrl">
-                <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600;"></span>
+                <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
+                <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
+            </div>
+            <div class="field">
+                <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(पर्यायी लिंक)</span></label>
+                <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:180px;">
+                <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
             </div>
             <div class="field">
                 <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
@@ -568,9 +561,15 @@
     let activeTypeFilter = 'all';
 
     try {
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         db = firebase.firestore();
-        storage = firebase.storage();
+        try {
+            storage = firebase.storage();
+        } catch(e) {
+            console.warn("Storage not initialized:", e);
+        }
         isFirebaseReady = true;
     } catch(err) {
         console.error("Firebase init error:", err);
@@ -593,7 +592,7 @@
     function sanitizeUrl(url) {
         if (!url) return '';
         const trimmed = String(url).trim();
-        if (/^https?:\/\//i.test(trimmed)) {
+        if (/^(https?:\/\/|data:image)/i.test(trimmed)) {
             return escapeHTML(trimmed);
         }
         return '';
@@ -753,6 +752,7 @@
     // ============================================================
 
     function calculateRunningBalances(data) {
+        if (!data || !Array.isArray(data)) return [];
         data.sort((a, b) => {
             const dateA = a.rawDate || parseToIsoDate(a.date);
             const dateB = b.rawDate || parseToIsoDate(b.date);
@@ -783,7 +783,7 @@
 
     function initRealtimeSync() {
         const badge = document.getElementById('dbStatusBadge');
-        if (isFirebaseReady) {
+        if (isFirebaseReady && db) {
             db.collection('transactions').onSnapshot((snapshot) => {
                 badge.innerHTML = '🟢 Cloud Live (Synced)';
                 badge.style.background = '#28a745';
@@ -798,8 +798,11 @@
                 console.error("Firestore listen error: ", error);
                 badge.innerHTML = '⚠️ Cloud Permission Error';
                 badge.style.background = '#dc3545';
-                showToast("⚠️ Firebase Error: Check your Firestore rules!", "error");
+                showToast("⚠️ Firebase Firestore rules चेक करा!", "error");
             });
+        } else {
+            badge.innerHTML = '⚠️ Firebase Offline';
+            badge.style.background = '#dc3545';
         }
     }
 
@@ -846,6 +849,8 @@
     }
 
     function updateStats(allData, filteredData) {
+        allData = allData || [];
+        filteredData = filteredData || allData;
         let totalCredit = 0, totalDebit = 0;
         allData.forEach(t => { 
             totalCredit += (t.credit || 0); 
@@ -855,7 +860,7 @@
         document.getElementById('totalDebit').innerText = formatIndianNum(totalDebit);
         document.getElementById('closingBalance').innerText = formatIndianNum(totalCredit - totalDebit);
         
-        if (filteredData && filteredData.length !== allData.length) {
+        if (filteredData.length !== allData.length) {
             document.getElementById('totalEntries').innerText = `${filteredData.length} / ${allData.length}`;
         } else {
             document.getElementById('totalEntries').innerText = allData.length;
@@ -909,7 +914,7 @@
             resetTop.style.display = 'none';
         }
 
-        let filtered = transactionsData.filter(t => {
+        let filtered = (transactionsData || []).filter(t => {
             if (activeTypeFilter === 'credit' && (!t.credit || t.credit <= 0)) return false;
             if (activeTypeFilter === 'debit' && (!t.debit || t.debit <= 0)) return false;
 
@@ -1087,4 +1092,449 @@
 
                 rowsHtml += `
                 <tr>
-                    <td style="text-align:center; width:
+                    <td style="text-align:center; width:35px;">${index + 1}</td>
+                    <td style="white-space:nowrap; width:85px;">${escapeHTML(item.date)}</td>
+                    <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                    <td>${escapeHTML(item.description || '-')}</td>
+                    <td class="text-right credit-text" style="width:105px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
+                    <td class="text-right debit-text" style="width:105px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
+                    <td class="text-right" style="font-weight:bold; width:115px;">${formatIndianNum(item.balance)}</td>
+                </tr>
+                `;
+            });
+
+            const closingBalance = openingBalance + monthCredit - monthDebit;
+
+            printHtml += `
+            <div class="month-page">
+                <div class="org-title">
+                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <p>श्रीराम नगर भद्रावती | 📒 मासिक कॅश बुक (Monthly Cash Book)</p>
+                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
+                </div>
+
+                <div class="month-bar">
+                    <span>📅 महिना: <strong>${monthLabel}</strong></span>
+                    <span>💰 मागील महिना शिल्लक (Opening Balance): <strong>${formatIndianNum(openingBalance)}</strong></span>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:35px;">#</th>
+                            <th style="width:85px;">📅 दिनांक</th>
+                            <th style="width:110px;">🔢 व्हाउचर/पावती क्र.</th>
+                            <th>🧑‍💼 खातेदार / दात्याचे नाव</th>
+                            <th>📝 तपशील (Description)</th>
+                            <th class="text-right" style="width:105px;">📈 जमा (Credit ₹)</th>
+                            <th class="text-right" style="width:105px;">📉 खर्च (Debit ₹)</th>
+                            <th class="text-right" style="width:115px;">💰 शिल्लक (Balance ₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+
+                <table class="summary-table">
+                    <tr>
+                        <td>मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></td>
+                        <td class="credit-text">चालू महिना एकूण जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
+                        <td class="debit-text">चालू महिना एकूण खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
+                        <td style="background:#eef4fb; font-size:13px;">अखेर शिल्लक (Closing): <strong>${formatIndianNum(closingBalance)}</strong></td>
+                    </tr>
+                </table>
+
+                <div class="signatures">
+                    <div class="sig-box">तयार करणार (Accountant)</div>
+                    <div class="sig-box">सचिव (Secretary)</div>
+                    <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                </div>
+            </div>
+            `;
+        });
+
+        printHtml += `
+            <script>
+                window.onload = function() {
+                    window.print();
+                };
+            <\/script>
+        </body>
+        </html>
+        `;
+
+        const printWin = window.open('', '_blank');
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
+    }
+
+    // ============================================================
+    //  CRUD (Fail-Safe Handling)
+    // ============================================================
+
+    let editingId = null;
+
+    async function submitTransaction() {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        const dateVal = document.getElementById('newDate').value;
+        const voucher = document.getElementById('newVoucher').value.trim();
+        const fileInput = document.getElementById('newDocFile');
+        const docUrlInput = document.getElementById('newDocUrlInput').value.trim();
+        const name = document.getElementById('newName').value.trim();
+        const desc = document.getElementById('newDesc').value.trim();
+        const amount = parseFloat(document.getElementById('newAmount').value);
+        const type = document.getElementById('newType').value;
+        const submitBtn = document.getElementById('addUpdateBtn');
+        const statusText = document.getElementById('fileUploadStatus');
+
+        if (!dateVal || isNaN(amount) || amount <= 0) {
+            alert('Please select a valid Date and enter Amount greater than 0.');
+            return;
+        }
+
+        const rawDate = parseToIsoDate(dateVal);
+        const formattedDate = formatDateToDisplay(rawDate);
+        let finalDocUrl = docUrlInput;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Processing...';
+
+        try {
+            // Attempt file upload if file is selected
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                statusText.textContent = '⏳ Uploading file...';
+
+                if (storage) {
+                    try {
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `bills/${Date.now()}_${Math.random().toString(36).substr(2, 6)}.${fileExt}`;
+                        const storageRef = storage.ref(fileName);
+                        const snapshot = await storageRef.put(file);
+                        finalDocUrl = await snapshot.ref.getDownloadURL();
+                    } catch(storageErr) {
+                        console.warn("Storage upload error:", storageErr);
+                        alert("⚠️ File upload failed (Storage not configured in Firebase). Transaction will save without file.");
+                    }
+                }
+            }
+
+            const payload = {
+                rawDate: rawDate,
+                date: formattedDate,
+                voucher: voucher,
+                docUrl: finalDocUrl,
+                name: name,
+                description: desc,
+                credit: type === 'credit' ? amount : 0,
+                debit: type === 'debit' ? amount : 0
+            };
+
+            if (db) {
+                if (editingId) {
+                    await db.collection('transactions').doc(editingId).update(payload);
+                    showToast('✅ Cloud transaction updated!');
+                } else {
+                    await db.collection('transactions').add(payload);
+                    showToast('✅ Cloud transaction added!');
+                }
+            } else {
+                throw new Error("Database not connected.");
+            }
+
+            cancelEdit();
+            document.getElementById('newVoucher').value = '';
+            document.getElementById('newDocFile').value = '';
+            document.getElementById('newDocUrlInput').value = '';
+            document.getElementById('newName').value = '';
+            document.getElementById('newDesc').value = '';
+            document.getElementById('newAmount').value = '';
+            statusText.textContent = '';
+        } catch(err) {
+            alert('Error: ' + err.message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = editingId ? '💾 Update Transaction' : '➕ Add Transaction';
+            statusText.textContent = '';
+        }
+    }
+
+    function editEntry(id) {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) { alert('Entry not found!'); return; }
+
+        editingId = id;
+        document.getElementById('formTitle').textContent = '✏️ Edit Transaction';
+        document.getElementById('editIndicator').style.display = 'block';
+        document.getElementById('editDescDisplay').textContent = item.name || item.description || 'Entry';
+        document.getElementById('addUpdateBtn').textContent = '💾 Update Transaction';
+        document.getElementById('addUpdateBtn').className = 'btn btn-warning';
+        document.getElementById('cancelEditBtn').style.display = 'inline-block';
+
+        document.getElementById('newDate').value = item.rawDate || parseToIsoDate(item.date);
+        document.getElementById('newVoucher').value = item.voucher || '';
+        document.getElementById('newDocUrlInput').value = item.docUrl || '';
+        document.getElementById('newDocFile').value = '';
+        
+        if (item.docUrl) {
+            document.getElementById('fileUploadStatus').innerHTML = `✅ <a href="${item.docUrl}" target="_blank" style="color:#0d6efd;">Existing Link Attached ↗</a>`;
+        } else {
+            document.getElementById('fileUploadStatus').textContent = '';
+        }
+
+        document.getElementById('newName').value = item.name || '';
+        document.getElementById('newDesc').value = item.description || '';
+        document.getElementById('newAmount').value = item.credit > 0 ? item.credit : item.debit;
+        document.getElementById('newType').value = item.credit > 0 ? 'credit' : 'debit';
+
+        document.getElementById('addEditCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        document.getElementById('formTitle').textContent = '➕ Add New Transaction';
+        document.getElementById('editIndicator').style.display = 'none';
+        document.getElementById('addUpdateBtn').textContent = '➕ Add Transaction';
+        document.getElementById('addUpdateBtn').className = 'btn btn-success';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('newVoucher').value = '';
+        document.getElementById('newDocFile').value = '';
+        document.getElementById('newDocUrlInput').value = '';
+        document.getElementById('fileUploadStatus').textContent = '';
+        document.getElementById('newName').value = '';
+        document.getElementById('newDesc').value = '';
+        document.getElementById('newAmount').value = '';
+    }
+
+    async function deleteEntry(id) {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (!confirm('Delete this entry permanently from the Cloud?')) return;
+        
+        try {
+            await db.collection('transactions').doc(id).delete();
+            showToast('🗑️ Entry deleted from Cloud.');
+            if (editingId === id) cancelEdit();
+        } catch(err) {
+            alert('Error deleting: ' + err.message);
+        }
+    }
+
+    async function clearAllData() {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (!confirm('⚠️ Are you sure you want to permanently DELETE ALL cloud transactions?')) return;
+        
+        try {
+            const snapshot = await db.collection('transactions').get();
+            const batch = db.batch();
+            snapshot.docs.forEach((doc) => batch.delete(doc.ref));
+            await batch.commit();
+            cancelEdit();
+            showToast('🗑️ All cloud data cleared!');
+        } catch(err) {
+            alert('Error clearing data: ' + err.message);
+        }
+    }
+
+    // ============================================================
+    //  CSV & BACKUP
+    // ============================================================
+
+    function downloadTemplate() {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        const headers = ['Date', 'Voucher/Pavti No.', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
+        const sample = ['2023-07-31', 'V-001', 'https://...', 'Saurabh Yamawar', 'Gurupournima donation', '11000', '0'];
+        const csv = headers.join(',') + '\n' + sample.join(',');
+        downloadFile(csv, 'CashBook_Template.csv', 'text/csv');
+        showToast('📄 Template downloaded!');
+    }
+
+    function exportCSV() {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('No data to export.');
+            return;
+        }
+        let csv = 'Date,Voucher/Pavti No.,Drive Link,Name,Description,Credit,Debit,Balance\n';
+        transactionsData.forEach(t => {
+            const v = `"${(t.voucher || '').replace(/"/g, '""')}"`;
+            const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
+            const n = `"${(t.name || '').replace(/"/g, '""')}"`;
+            const d = `"${(t.description || '').replace(/"/g, '""')}"`;
+            csv += `${t.date},${v},${l},${n},${d},${t.credit || 0},${t.debit || 0},${t.balance}\n`;
+        });
+        downloadFile(csv, 'SwamiGopalTirth_CashBook_Export.csv', 'text/csv');
+        showToast('⬇️ CSV exported!');
+    }
+
+    async function uploadCSV(event) {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const text = e.target.result;
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            if (lines.length < 2) {
+                alert('CSV file is empty or missing data.');
+                return;
+            }
+
+            const headers = parseCSVLine(lines[0]);
+            const dateIdx = headers.findIndex(h => h.toLowerCase().includes('date'));
+            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('pavti') || h.toLowerCase().includes('bill'));
+            const docUrlIdx = headers.findIndex(h => h.toLowerCase().includes('link') || h.toLowerCase().includes('drive') || h.toLowerCase().includes('url'));
+            const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
+            const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc'));
+            const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit'));
+            const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit'));
+
+            if (dateIdx === -1 || (creditIdx === -1 && debitIdx === -1)) {
+                alert('Invalid CSV header. Required columns: Date, Credit/Debit.');
+                return;
+            }
+
+            let toAdd = [];
+            for (let i = 1; i < lines.length; i++) {
+                const parts = parseCSVLine(lines[i]);
+                if (parts.length < 2) continue;
+
+                const rawDate = parseToIsoDate(parts[dateIdx] || '');
+                const voucher = (voucherIdx !== -1 && parts[voucherIdx]) ? parts[voucherIdx] : '';
+                const docUrl = (docUrlIdx !== -1 && parts[docUrlIdx]) ? parts[docUrlIdx] : '';
+                const name = (nameIdx !== -1 && parts[nameIdx]) ? parts[nameIdx] : '';
+                const description = (descIdx !== -1 && parts[descIdx]) ? parts[descIdx] : '';
+                const credit = parseIndianNum(parts[creditIdx] || 0);
+                const debit = parseIndianNum(parts[debitIdx] || 0);
+
+                if (!rawDate || (credit === 0 && debit === 0)) continue;
+
+                toAdd.push({
+                    rawDate: rawDate,
+                    date: formatDateToDisplay(rawDate),
+                    voucher: voucher,
+                    docUrl: docUrl,
+                    name: name,
+                    description: description,
+                    credit: credit,
+                    debit: debit
+                });
+            }
+
+            if (toAdd.length === 0) {
+                alert('No valid transactions found in CSV.');
+                return;
+            }
+
+            try {
+                const batch = db.batch();
+                toAdd.forEach(item => {
+                    const newDoc = db.collection('transactions').doc();
+                    batch.set(newDoc, item);
+                });
+                await batch.commit();
+                showToast(`✅ ${toAdd.length} transactions imported to Cloud!`);
+            } catch(err) {
+                alert('Import error: ' + err.message);
+            }
+            event.target.value = '';
+        };
+        reader.readAsText(file);
+    }
+
+    function backupData() {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('No data to backup.');
+            return;
+        }
+        const json = JSON.stringify(transactionsData, null, 2);
+        downloadFile(json, 'CashBook_CloudBackup_' + new Date().toISOString().slice(0,10) + '.json', 'application/json');
+        showToast('💾 Backup downloaded!');
+    }
+
+    function restoreData(event) {
+        if (!isAdmin) { alert('Admin access required.'); return; }
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            try {
+                let data = JSON.parse(e.target.result);
+                if (!Array.isArray(data)) {
+                    alert('Invalid backup file format.');
+                    return;
+                }
+                if (!confirm(`Restore ${data.length} transactions to Cloud?`)) return;
+
+                const batch = db.batch();
+                data.forEach(item => {
+                    const newDoc = db.collection('transactions').doc();
+                    batch.set(newDoc, {
+                        rawDate: item.rawDate || parseToIsoDate(item.date),
+                        date: item.date || formatDateToDisplay(item.rawDate),
+                        voucher: item.voucher || '',
+                        docUrl: item.docUrl || '',
+                        name: item.name || '',
+                        description: item.description || '',
+                        credit: item.credit || 0,
+                        debit: item.debit || 0
+                    });
+                });
+                await batch.commit();
+                showToast(`✅ Restored ${data.length} entries successfully!`);
+            } catch(err) {
+                alert('Error reading backup: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    // ============================================================
+    //  UTILS
+    // ============================================================
+
+    function downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType + ';charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function showToast(msg, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = 'toast' + (type === 'error' ? ' error' : type === 'warning' ? ' warning' : '');
+        toast.style.display = 'block';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    // ============================================================
+    //  INIT
+    // ============================================================
+
+    window.onload = function() {
+        initRealtimeSync();
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('newDate').value = today;
+
+        document.body.className = 'public-mode';
+        document.getElementById('modeToggleBtn').textContent = '🔐 Admin Login';
+        document.getElementById('modeToggleBtn').className = 'mode-toggle';
+        document.getElementById('modeBadge').textContent = 'Public View';
+        document.getElementById('modeBadge').className = 'mode-badge public';
+    };
+</script>
+</body>
+</html>
