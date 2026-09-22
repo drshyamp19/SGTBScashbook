@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash Book - Swami Gopal Tirth Sanstha</title>
+    <title>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था - Cash Book</title>
     
     <!-- Google Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -33,50 +33,62 @@
         }
         .front-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
-            max-width: 580px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            max-width: 600px;
             width: 100%;
-            padding: 35px 30px;
+            overflow: hidden;
             text-align: center;
             animation: fadeIn 0.4s ease-in-out;
         }
-        .temple-emblem {
-            width: 90px;
-            height: 90px;
-            background: #fff3cd;
-            border: 3px solid #ffc107;
+        .front-banner-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 4px solid #ffc107;
+        }
+        .front-content {
+            padding: 0 30px 30px 30px;
+            position: relative;
+        }
+        .front-logo-wrapper {
+            margin-top: -65px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .front-logo-img {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 42px;
-            margin-bottom: 15px;
-            box-shadow: 0 6px 15px rgba(255,193,7,0.3);
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            background: #fff;
+            object-fit: cover;
         }
         .front-card h1 {
             color: #0d2b44;
             font-size: 1.85rem;
             font-weight: 800;
             line-height: 1.3;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
         .front-card p.sub {
             font-size: 1.15rem;
             color: #555;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .front-reg {
-            background: #eef4fb;
-            color: #0d2b44;
-            padding: 6px 18px;
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 18px;
             border-radius: 30px;
             font-size: 13px;
             font-weight: 700;
             display: inline-block;
-            margin-bottom: 25px;
-            border: 1px solid #bdd5ea;
+            margin-bottom: 22px;
+            border: 1px solid #ffeeba;
         }
 
         .login-tabs {
@@ -89,7 +101,7 @@
         }
         .login-tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 11px;
             border: none;
             background: none;
             font-weight: 700;
@@ -102,11 +114,9 @@
         .login-tab-btn.active {
             background: #0d2b44;
             color: white;
-            box-shadow: 0 4px 10px rgba(13,43,68,0.2);
+            box-shadow: 0 4px 12px rgba(13,43,68,0.25);
         }
-        .login-form-box {
-            text-align: left;
-        }
+        .login-form-box { text-align: left; }
         .login-form-box label {
             font-size: 13px;
             font-weight: 600;
@@ -161,40 +171,58 @@
         .org-header {
             background: linear-gradient(135deg, #0d2b44 0%, #1e4d6b 100%);
             color: white;
-            padding: 22px 30px;
-            border-radius: 15px;
+            padding: 20px 25px;
+            border-radius: 16px;
             margin-bottom: 22px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
             position: relative;
         }
-        .org-header h2 {
-            font-size: 1.85rem;
+        .header-left-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+        .header-logo-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #ffc107;
+            background: white;
+            object-fit: cover;
+        }
+        .header-titles h2 {
+            font-size: 1.6rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
-        .org-header p {
-            font-size: 1.05rem;
+        .header-titles p {
+            font-size: 1rem;
             opacity: 0.9;
-            margin: 4px 0;
         }
-        .org-header .reg {
-            font-size: 0.95rem;
+        .header-titles .reg {
+            font-size: 0.85rem;
             background: rgba(255,255,255,0.18);
             display: inline-block;
-            padding: 4px 20px;
-            border-radius: 30px;
-            margin-top: 6px;
+            padding: 3px 14px;
+            border-radius: 20px;
+            margin-top: 4px;
             font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.3);
         }
 
+        .header-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
         .logout-btn-header {
-            position: absolute;
-            top: 18px;
-            right: 20px;
-            background: rgba(220,53,69,0.7);
+            background: rgba(220,53,69,0.8);
             border: 1px solid #dc3545;
             color: white;
             padding: 7px 18px;
@@ -208,11 +236,10 @@
 
         .user-role-badge {
             display: inline-block;
-            padding: 3px 14px;
+            padding: 4px 14px;
             border-radius: 30px;
             font-size: 12px;
             font-weight: 700;
-            margin-left: 10px;
         }
         .user-role-badge.admin { background: #ffc107; color: #212529; }
         .user-role-badge.viewer { background: #28a745; color: white; }
@@ -222,15 +249,11 @@
             padding: 3px 12px;
             border-radius: 15px;
             font-size: 11px;
-            margin-top: 8px;
             background: rgba(0,0,0,0.35);
             font-weight: 500;
         }
 
-        h1 {
-            color: #0d2b44;
-            font-size: 1.7rem;
-        }
+        h1 { color: #0d2b44; font-size: 1.65rem; }
         .card {
             background: white;
             border-radius: 12px;
@@ -451,29 +474,29 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.65);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(3px);
         }
         .modal-box {
             background: white;
             padding: 25px 30px;
-            border-radius: 12px;
+            border-radius: 16px;
             width: 90%;
             max-width: 420px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.3);
             text-align: left;
         }
         .modal-box h3 { color: #0d2b44; margin-bottom: 15px; font-size: 1.25rem; }
         .modal-box input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 11px 14px;
             border: 1.5px solid #ced4da;
             border-radius: 8px;
             font-size: 14px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
@@ -496,11 +519,13 @@
             .add-entry-form .field { width: 100%; }
             .add-entry-form input { width: 100%; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
-            .org-header h2 { font-size: 1.3rem; }
+            .org-header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left-brand { flex-direction: column; text-align: center; }
             .flex-between { flex-direction: column; align-items: stretch; }
             .search-controls { width: 100%; }
             .search-box { width: 100%; }
-            .logout-btn-header { position: static; margin-top: 10px; }
+            .front-card h1 { font-size: 1.45rem; }
+            .front-banner-img { height: 160px; }
         }
     </style>
 </head>
@@ -511,37 +536,41 @@
 ============================================================ -->
 <div id="frontPageSection">
     <div class="front-card">
-        <!-- Temple Emblem / Image -->
-        <div class="temple-emblem">🕉️</div>
+        <!-- Temple Banner Image (banner.jpg) -->
+        <img src="banner.jpg" class="front-banner-img" alt="Temple Banner" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada?w=800&auto=format&fit=crop&q=80'">
         
-        <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-        <p class="sub">श्रीराम नगर भद्रावती</p>
-        <span class="front-reg">📜 Registration No.: F-0016068(CDP)</span>
+        <div class="front-content">
+            <!-- Circular Logo (logo.jpg) -->
+            <div class="front-logo-wrapper">
+                <img src="logo.jpg" class="front-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/120x120/ffc107/0d2b44?text=LOGO'">
+            </div>
 
-        <!-- Login Tabs (Admin vs Viewer) -->
-        <div class="login-tabs">
-            <button class="login-tab-btn active" id="tabAdminBtn" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
-            <button class="login-tab-btn" id="tabViewerBtn" onclick="switchLoginTab('viewer')">👁️ Viewer (विश्वस्त) Login</button>
-        </div>
+            <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+            <p class="sub">श्रीराम नगर भद्रावती</p>
+            <span class="front-reg">📜 Registration No.: F-0016068(CDP)</span>
 
-        <!-- Admin Login Form -->
-        <div id="adminLoginForm" class="login-form-box">
-            <label>Admin Password:</label>
-            <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
-            <button class="login-submit-btn admin-btn" onclick="loginAsAdmin()">🔐 Admin Login</button>
-            <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password? (पासवर्ड विसरलात?)</span>
-        </div>
+            <!-- Login Tabs -->
+            <div class="login-tabs">
+                <button class="login-tab-btn active" id="tabAdminBtn" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
+                <button class="login-tab-btn" id="tabViewerBtn" onclick="switchLoginTab('viewer')">👁️ Viewer (विश्वस्त) Login</button>
+            </div>
 
-        <!-- Viewer Login Form -->
-        <div id="viewerLoginForm" class="login-form-box" style="display:none;">
-            <label>Viewer Username (युझरनेम):</label>
-            <input type="text" id="viewerUsernameInput" placeholder="e.g. trustee1">
-            <label>Viewer Password (पासवर्ड):</label>
-            <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
-            <button class="login-submit-btn viewer-btn" onclick="loginAsViewer()">👁️ Viewer Login (पहा)</button>
-            <p style="font-size:12px; color:#888; text-align:center; margin-top:10px;">
-                📌 विवर युझरनेम व पासवर्ड ऍडमिनकडून मिळवा.
-            </p>
+            <!-- Admin Login Form -->
+            <div id="adminLoginForm" class="login-form-box">
+                <label>Admin Password:</label>
+                <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
+                <button class="login-submit-btn admin-btn" onclick="loginAsAdmin()">🔐 Admin Login</button>
+                <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password?</span>
+            </div>
+
+            <!-- Viewer Login Form -->
+            <div id="viewerLoginForm" class="login-form-box" style="display:none;">
+                <label>Viewer Username (युझरनेम):</label>
+                <input type="text" id="viewerUsernameInput" placeholder="e.g. trustee1">
+                <label>Viewer Password (पासवर्ड):</label>
+                <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
+                <button class="login-submit-btn viewer-btn" onclick="loginAsViewer()">👁️ Viewer Login (पहा)</button>
+            </div>
         </div>
     </div>
 </div>
@@ -551,17 +580,25 @@
 ============================================================ -->
 <div id="mainAppSection">
     <div class="container">
-        <!-- Header -->
+        <!-- Dashboard Header with Logo -->
         <div class="org-header">
-            <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
-            <p>श्रीराम नगर भद्रावती</p>
-            <span class="reg">📜 Registration No.: F-0016068(CDP)</span><br>
-            <span id="dbStatusBadge" class="db-status">⏳ Connecting to Cloud...</span>
-            <span id="userRoleBadge" class="user-role-badge admin">Admin Panel</span>
-            <button class="logout-btn-header" onclick="logoutToFrontPage()">🚪 Logout</button>
+            <div class="header-left-brand">
+                <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/70x70/ffc107/0d2b44?text=LOGO'">
+                <div class="header-titles">
+                    <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
+                    <p>श्रीराम नगर भद्रावती</p>
+                    <span class="reg">📜 Registration No.: F-0016068(CDP)</span>
+                </div>
+            </div>
+            
+            <div class="header-right-actions">
+                <span id="dbStatusBadge" class="db-status">⏳ Connecting...</span>
+                <span id="userRoleBadge" class="user-role-badge admin">Admin Panel</span>
+                <button class="logout-btn-header" onclick="logoutToFrontPage()">🚪 Logout</button>
+            </div>
         </div>
 
-        <!-- Title & Admin PDF Buttons -->
+        <!-- Title & Admin PDF Action Buttons -->
         <div class="flex-between" style="margin-bottom:15px;">
             <h1 style="margin-bottom:0;">📒 CASH BOOK</h1>
             <div class="admin-only-inline" style="gap:6px; display:none;">
@@ -760,14 +797,11 @@
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
         <h3>🔑 Reset Admin Password</h3>
-        <p style="font-size:12px; color:#666; margin-bottom:10px;">
-            पासवर्ड रिसेट करण्यासाठी **Master PIN (123456)** किंवा **संस्थेचा Reg No. (F-0016068)** टाका:
-        </p>
-        <label style="font-size:12px; font-weight:600; color:#555;">Master PIN / Reg No:</label>
-        <input type="password" id="modalPinInput" placeholder="Master PIN किंवा Reg No टाका">
+        <label style="font-size:12px; font-weight:600; color:#555;">Secret Security / Recovery Key:</label>
+        <input type="password" id="modalPinInput" placeholder="Enter Secret Key">
         
         <label style="font-size:12px; font-weight:600; color:#555;">New Password (नवीन पासवर्ड):</label>
-        <input type="password" id="modalNewPasswordInput" placeholder="नवीन पासवर्ड (किमान ४ अक्षरे)">
+        <input type="password" id="modalNewPasswordInput" placeholder="नवीन पासवर्ड टाका">
         
         <div class="modal-actions">
             <button class="btn btn-secondary btn-sm" onclick="closeForgotModal()">Cancel</button>
@@ -810,7 +844,7 @@
     }
 
     // ============================================================
-    //  FRONT PAGE & LOGIN TAB SWITCHING
+    //  FRONT PAGE & LOGIN SWITCHING
     // ============================================================
 
     function switchLoginTab(tab) {
@@ -897,7 +931,7 @@
                            (pin === "F-0016068");
 
         if (!isPinValid) {
-            alert('❌ चुकीचा Master PIN किंवा Registration Number!');
+            alert('❌ चुकीचा Secret Security Key!');
             return;
         }
 
@@ -909,7 +943,6 @@
         localStorage.setItem('adminPassword', newPwd);
         closeForgotModal();
 
-        // Auto login as admin
         currentRole = 'admin';
         document.body.className = 'admin-mode';
         document.getElementById('userRoleBadge').textContent = 'Admin Panel';
@@ -1319,7 +1352,6 @@
             return;
         }
 
-        // Filter if Debit only
         let dataToPrint = transactionsData;
         if (type === 'debit') {
             dataToPrint = transactionsData.filter(t => t.debit && t.debit > 0);
@@ -1510,7 +1542,7 @@
     }
 
     // ============================================================
-    //  CRUD (Add / Edit / Delete Transactions)
+    //  CRUD
     // ============================================================
 
     let editingId = null;
@@ -1859,7 +1891,6 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('newDate').value = today;
 
-        // Fetch Viewers in background for login verification
         if (isFirebaseReady && db) {
             db.collection('viewers').onSnapshot((snapshot) => {
                 let list = [];
