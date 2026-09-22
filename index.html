@@ -19,6 +19,138 @@
         }
         body {
             background: #f0f4f9;
+            min-height: 100vh;
+        }
+
+        /* ===== FRONT / LANDING PAGE STYLES ===== */
+        #frontPageSection {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #0d2b44 0%, #1e4d6b 100%);
+        }
+        .front-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+            max-width: 580px;
+            width: 100%;
+            padding: 35px 30px;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .temple-emblem {
+            width: 90px;
+            height: 90px;
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 15px rgba(255,193,7,0.3);
+        }
+        .front-card h1 {
+            color: #0d2b44;
+            font-size: 1.85rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+        .front-card p.sub {
+            font-size: 1.15rem;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .front-reg {
+            background: #eef4fb;
+            color: #0d2b44;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 25px;
+            border: 1px solid #bdd5ea;
+        }
+
+        .login-tabs {
+            display: flex;
+            background: #f0f4f9;
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        .login-tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            font-size: 14px;
+            color: #555;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-tab-btn.active {
+            background: #0d2b44;
+            color: white;
+            box-shadow: 0 4px 10px rgba(13,43,68,0.2);
+        }
+        .login-form-box {
+            text-align: left;
+        }
+        .login-form-box label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .login-form-box input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #ced4da;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+        .login-submit-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-submit-btn.admin-btn { background: #ffc107; color: #212529; }
+        .login-submit-btn.admin-btn:hover { background: #e0a800; }
+        .login-submit-btn.viewer-btn { background: #28a745; color: white; }
+        .login-submit-btn.viewer-btn:hover { background: #1e7e34; }
+
+        .forgot-pass-link {
+            font-size: 13px;
+            color: #0d6efd;
+            text-decoration: underline;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* ===== MAIN APP DASHBOARD STYLES ===== */
+        #mainAppSection {
+            display: none;
             padding: 20px;
         }
         .container {
@@ -29,62 +161,61 @@
         .org-header {
             background: linear-gradient(135deg, #0d2b44 0%, #1e4d6b 100%);
             color: white;
-            padding: 25px 30px;
+            padding: 22px 30px;
             border-radius: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 22px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
             text-align: center;
             position: relative;
         }
         .org-header h2 {
-            font-size: 2rem;
+            font-size: 1.85rem;
             font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
         .org-header p {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             opacity: 0.9;
-            margin: 5px 0;
+            margin: 4px 0;
         }
         .org-header .reg {
-            font-size: 1rem;
+            font-size: 0.95rem;
             background: rgba(255,255,255,0.18);
             display: inline-block;
-            padding: 5px 22px;
+            padding: 4px 20px;
             border-radius: 30px;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,0.3);
         }
 
-        .mode-toggle {
+        .logout-btn-header {
             position: absolute;
-            top: 15px;
+            top: 18px;
             right: 20px;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(220,53,69,0.7);
+            border: 1px solid #dc3545;
             color: white;
-            padding: 6px 16px;
+            padding: 7px 18px;
             border-radius: 30px;
             font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
         }
-        .mode-toggle:hover { background: rgba(255,255,255,0.25); }
-        .mode-toggle.logout { background: rgba(220,53,69,0.4); border-color: #dc3545; }
-        .mode-toggle.logout:hover { background: rgba(220,53,69,0.6); }
+        .logout-btn-header:hover { background: #dc3545; }
 
-        .mode-badge {
+        .user-role-badge {
             display: inline-block;
-            padding: 2px 14px;
+            padding: 3px 14px;
             border-radius: 30px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             margin-left: 10px;
         }
-        .mode-badge.public { background: #28a745; color: white; }
-        .mode-badge.admin { background: #ffc107; color: #212529; }
+        .user-role-badge.admin { background: #ffc107; color: #212529; }
+        .user-role-badge.viewer { background: #28a745; color: white; }
 
         .db-status {
             display: inline-block;
@@ -98,17 +229,14 @@
 
         h1 {
             color: #0d2b44;
-            border-bottom: 3px solid #2a7de1;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
         }
         .card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.07);
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: 22px;
+            margin-bottom: 22px;
             transition: box-shadow 0.2s;
         }
         .card:hover { box-shadow: 0 6px 25px rgba(0,0,0,0.1); }
@@ -133,7 +261,7 @@
             background: #2a7de1;
             color: white;
             border: none;
-            padding: 9px 20px;
+            padding: 9px 18px;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
@@ -156,6 +284,8 @@
         .btn-secondary:hover { background: #5a6268; }
         .btn-pdf { background: #e63946; color: white; }
         .btn-pdf:hover { background: #c1121f; }
+        .btn-pdf-debit { background: #6f42c1; color: white; }
+        .btn-pdf-debit:hover { background: #5a32a3; }
         .btn-sm { padding: 6px 14px; font-size: 12px; margin-top: 0; margin-right: 4px; }
 
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
@@ -176,17 +306,9 @@
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             user-select: none;
-            position: relative;
         }
-        .stat-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        }
-        .stat-box.active-filter {
-            background: #e7f1ff;
-            outline: 3px solid #2a7de1;
-            box-shadow: 0 4px 12px rgba(42, 125, 225, 0.25);
-        }
+        .stat-box:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+        .stat-box.active-filter { background: #e7f1ff; outline: 3px solid #2a7de1; }
         .stat-box .label { font-size: 13px; color: #6c757d; font-weight: 600; }
         .stat-box .value { font-size: 21px; font-weight: 700; color: #0d2b44; }
         .stat-box.credit { border-left-color: #28a745; }
@@ -237,9 +359,8 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            transition: 0.2s;
         }
-        .doc-link:hover { color: #0a58ca; text-decoration: none; }
+        .doc-link:hover { color: #0a58ca; }
 
         .action-btn {
             background: none;
@@ -248,7 +369,6 @@
             font-size: 16px;
             padding: 2px 6px;
             border-radius: 4px;
-            transition: 0.2s;
         }
         .action-btn.edit-btn { color: #2a7de1; }
         .action-btn.edit-btn:hover { background: #d4e4ff; }
@@ -294,15 +414,6 @@
         .add-entry-form input[type="number"] { min-width: 130px; }
         .add-entry-form .field-actions { display: flex; gap: 8px; align-items: center; }
 
-        .file-upload-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .file-upload-wrapper input[type="file"] { padding: 6px 0; font-size: 13px; }
-
         .toast {
             background: #28a745;
             color: white;
@@ -319,7 +430,6 @@
             max-width: 400px;
         }
         .toast.error { background: #dc3545; }
-        .toast.warning { background: #ffc107; color: #212529; }
 
         .edit-indicator {
             background: #fff3cd;
@@ -332,16 +442,11 @@
             margin-bottom: 12px;
             border: 1px solid #ffc107;
         }
-        .edit-indicator .cancel-edit {
-            color: #dc3545;
-            cursor: pointer;
-            font-weight: 700;
-            margin-left: 12px;
-        }
+        .edit-indicator .cancel-edit { color: #dc3545; cursor: pointer; font-weight: 700; margin-left: 12px; }
 
         .required-star { color: #dc3545; font-weight: 700; }
 
-        /* Modal Styles for Login & Forgot Password */
+        /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -357,19 +462,11 @@
             padding: 25px 30px;
             border-radius: 12px;
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: left;
-            position: relative;
         }
-        .modal-box h3 {
-            color: #0d2b44;
-            margin-bottom: 15px;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .modal-box h3 { color: #0d2b44; margin-bottom: 15px; font-size: 1.25rem; }
         .modal-box input {
             width: 100%;
             padding: 10px 14px;
@@ -378,37 +475,22 @@
             font-size: 14px;
             margin-bottom: 12px;
         }
-        .modal-box .forgot-link {
-            font-size: 12.5px;
-            color: #0d6efd;
-            cursor: pointer;
-            display: inline-block;
-            margin-bottom: 15px;
-            text-decoration: underline;
-        }
-        .modal-box .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-        }
+        .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
         /* Admin-only visibility */
         .admin-only { display: none; }
         body.admin-mode .admin-only { display: block; }
         body.admin-mode .admin-only-inline { display: inline-flex !important; }
-        body.public-mode .admin-only,
-        body.public-mode .admin-only-inline { display: none !important; }
+        body.viewer-mode .admin-only,
+        body.viewer-mode .admin-only-inline { display: none !important; }
 
-        body.public-mode .action-btn.edit-btn,
-        body.public-mode .action-btn.del-btn { display: none !important; }
+        body.viewer-mode .action-btn.edit-btn,
+        body.viewer-mode .action-btn.del-btn { display: none !important; }
 
-        body.public-mode #addEditCard .add-entry-form,
-        body.public-mode .file-upload-wrapper,
-        body.public-mode #addEditCard .field-actions,
-        body.public-mode #csvCard { display: none !important; }
-
-        .change-pwd-btn { background: #6f42c1; color: white; }
-        .change-pwd-btn:hover { background: #5a32a3; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
         @media (max-width: 800px) {
             .add-entry-form .field { width: 100%; }
@@ -418,191 +500,258 @@
             .flex-between { flex-direction: column; align-items: stretch; }
             .search-controls { width: 100%; }
             .search-box { width: 100%; }
-            .mode-toggle { position: static; margin-top: 10px; }
+            .logout-btn-header { position: static; margin-top: 10px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- ===== Header ===== -->
-    <div class="org-header">
-        <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
-        <p>श्रीराम नगर भद्रावती</p>
-        <span class="reg">📜 Registration No.: F-0016068(CDP)</span><br>
-        <span id="dbStatusBadge" class="db-status">⏳ Connecting to Cloud...</span>
-        <button class="mode-toggle" id="modeToggleBtn" onclick="openLoginModal()">🔐 Admin Login</button>
-        <span class="mode-badge public" id="modeBadge">Public View</span>
-    </div>
+<!-- ============================================================
+     1. FRONT / LANDING WELCOME PAGE (Before Login)
+============================================================ -->
+<div id="frontPageSection">
+    <div class="front-card">
+        <!-- Temple Emblem / Image -->
+        <div class="temple-emblem">🕉️</div>
+        
+        <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+        <p class="sub">श्रीराम नगर भद्रावती</p>
+        <span class="front-reg">📜 Registration No.: F-0016068(CDP)</span>
 
-    <div class="flex-between" style="margin-bottom:15px;">
-        <h1 style="margin-bottom:0; border-bottom:none; padding-bottom:0;">📒 CASH BOOK</h1>
-        <div>
-            <button class="btn btn-pdf" onclick="generateMonthwisePDF()">📄 Generate Month-wise PDF (मासिक कॅश बुक)</button>
-        </div>
-    </div>
-
-    <div id="toast" class="toast">✅ Success!</div>
-
-    <!-- ===== 1. DATA STORAGE (Admin only) ===== -->
-    <div class="card admin-only">
-        <div class="flex-between">
-            <h2>💾 Cloud & Backup Management <span class="badge">Admin</span></h2>
-            <div>
-                <button class="btn btn-success btn-sm" onclick="backupData()">💾 Backup (Export JSON)</button>
-                <button class="btn btn-warning btn-sm" onclick="document.getElementById('restoreInput').click()">📂 Restore (Import JSON)</button>
-                <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
-                <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Cloud Data</button>
-                <button class="btn change-pwd-btn btn-sm" onclick="changePassword()">🔑 Change Password</button>
-            </div>
-        </div>
-        <p style="font-size:13px; color:#6c757d; margin-top:6px;">
-            ☁️ All transactions & bills are synced in real-time in Google Firebase Database.
-        </p>
-    </div>
-
-    <!-- ===== 2. CSV IMPORT / EXPORT (Admin only) ===== -->
-    <div class="card admin-only" id="csvCard">
-        <h2>📂 CSV Import / Export <span class="badge">Admin</span></h2>
-        <div class="flex-row">
-            <button class="btn btn-secondary" onclick="downloadTemplate()">📄 Download CSV Template</button>
-            <button class="btn btn-success" onclick="exportCSV()">⬇️ Export CSV</button>
-            <div class="file-upload-wrapper admin-only-inline">
-                <label style="font-weight:600; font-size:13px; color:#495057;">Upload CSV to Cloud:</label>
-                <input type="file" id="csvUploadInput" accept=".csv" onchange="uploadCSV(event)">
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== 3. SUMMARY (Clickable Cards) ===== -->
-    <div class="card">
-        <div class="flex-between" style="margin-bottom:12px;">
-            <h2 style="margin-bottom:0;">📊 Summary <span style="font-size:12px; color:#888; font-weight:normal;">(कार्डवर क्लिक करून फिल्टर करा)</span></h2>
-            <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
-        </div>
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-box credit" id="statCardCredit" onclick="toggleTypeFilter('credit')" title="Click to view ONLY Credit (जमा)">
-                <div class="label">📈 Total Credit (फक्त जमा)</div>
-                <div class="value" id="totalCredit">₹ 0.00</div>
-            </div>
-            <div class="stat-box debit" id="statCardDebit" onclick="toggleTypeFilter('debit')" title="Click to view ONLY Debit (खर्च)">
-                <div class="label">📉 Total Debit (फक्त खर्च)</div>
-                <div class="value" id="totalDebit">₹ 0.00</div>
-            </div>
-            <div class="stat-box balance" id="statCardBalance" onclick="resetAllFilters()" title="Click to reset filter">
-                <div class="label">💰 Closing Balance</div>
-                <div class="value" id="closingBalance">₹ 0.00</div>
-            </div>
-            <div class="stat-box" id="statCardEntries" onclick="resetAllFilters()" title="Click to reset filter">
-                <div class="label">🧾 Total Entries</div>
-                <div class="value" id="totalEntries">0</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== 4. ADD / EDIT TRANSACTION (Admin only) ===== -->
-    <div class="card admin-only" id="addEditCard">
-        <h2 id="formTitle">➕ Add New Transaction</h2>
-        <div class="edit-indicator" id="editIndicator">
-            ✏️ Editing: <span id="editDescDisplay"></span>
-            <span class="cancel-edit" onclick="cancelEdit()">✖ Cancel</span>
-        </div>
-        <div class="add-entry-form">
-            <div class="field">
-                <label>📅 Date <span class="required-star">*</span></label>
-                <input type="date" id="newDate">
-            </div>
-            <div class="field">
-                <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(optional)</span></label>
-                <input type="text" id="newVoucher" placeholder="e.g. V-001 / P-101">
-            </div>
-            <div class="field">
-                <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
-                <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
-            </div>
-            <div class="field">
-                <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(पर्यायी लिंक)</span></label>
-                <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:180px;">
-                <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
-            </div>
-            <div class="field">
-                <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
-                <input type="text" id="newName" placeholder="e.g. Saurabh Yamawar" style="min-width:180px;">
-            </div>
-            <div class="field">
-                <label>📝 Description <span style="font-weight:400; color:#888;">(optional)</span></label>
-                <input type="text" id="newDesc" placeholder="Expense or Donation reason" style="min-width:190px;">
-            </div>
-            <div class="field">
-                <label>💰 Amount (₹) <span class="required-star">*</span></label>
-                <input type="number" id="newAmount" placeholder="1000" step="0.01">
-            </div>
-            <div class="field">
-                <label>📌 Type <span class="required-star">*</span></label>
-                <select id="newType">
-                    <option value="credit">📈 Credit (जमा)</option>
-                    <option value="debit">📉 Debit (खर्च)</option>
-                </select>
-            </div>
-            <div class="field field-actions">
-                <button class="btn btn-success" id="addUpdateBtn" onclick="submitTransaction()">➕ Add Transaction</button>
-                <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">✖ Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== 5. TRANSACTIONS TABLE ===== -->
-    <div class="card">
-        <div class="flex-between">
-            <h2>📋 All Transactions</h2>
-            <div class="search-controls">
-                <label>From: <input type="date" id="filterFromDate" onchange="filterTable()" title="Start Date"></label>
-                <label>To: <input type="date" id="filterToDate" onchange="filterTable()" title="End Date"></label>
-                <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (Name/Desc/Date/Voucher)" onkeyup="filterTable()">
-                <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" title="Reset Filters">✖ Reset</button>
-            </div>
+        <!-- Login Tabs (Admin vs Viewer) -->
+        <div class="login-tabs">
+            <button class="login-tab-btn active" id="tabAdminBtn" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
+            <button class="login-tab-btn" id="tabViewerBtn" onclick="switchLoginTab('viewer')">👁️ Viewer (विश्वस्त) Login</button>
         </div>
 
-        <div id="filterBanner" class="filter-banner" style="display:none;">
-            <span id="filterBannerText">🔍 Active Filter</span>
-            <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" style="margin:0;">Clear Filter</button>
+        <!-- Admin Login Form -->
+        <div id="adminLoginForm" class="login-form-box">
+            <label>Admin Password:</label>
+            <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
+            <button class="login-submit-btn admin-btn" onclick="loginAsAdmin()">🔐 Admin Login</button>
+            <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password? (पासवर्ड विसरलात?)</span>
         </div>
 
-        <div class="table-wrapper" id="tableWrapper">
-            <table id="transactionTable">
-                <thead>
-                    <tr>
-                        <th style="width:40px;">#</th>
-                        <th>📅 Date</th>
-                        <th>🔢 Voucher / Pavti No.</th>
-                        <th>🧑‍💼 Name</th>
-                        <th>📝 Description</th>
-                        <th style="text-align:right;">📈 Credit (₹)</th>
-                        <th style="text-align:right;">📉 Debit (₹)</th>
-                        <th style="text-align:right;">💰 Balance (₹)</th>
-                        <th style="text-align:center; width:80px;">⚡ Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="9" style="text-align:center; padding:40px; color:#888;">⏳ Loading cloud transactions...</td></tr>
-                </tbody>
-            </table>
+        <!-- Viewer Login Form -->
+        <div id="viewerLoginForm" class="login-form-box" style="display:none;">
+            <label>Viewer Username (युझरनेम):</label>
+            <input type="text" id="viewerUsernameInput" placeholder="e.g. trustee1">
+            <label>Viewer Password (पासवर्ड):</label>
+            <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
+            <button class="login-submit-btn viewer-btn" onclick="loginAsViewer()">👁️ Viewer Login (पहा)</button>
+            <p style="font-size:12px; color:#888; text-align:center; margin-top:10px;">
+                📌 विवर युझरनेम व पासवर्ड ऍडमिनकडून मिळवा.
+            </p>
         </div>
     </div>
 </div>
 
-<!-- ===== LOGIN MODAL ===== -->
-<div class="modal-overlay" id="loginModal">
-    <div class="modal-box">
-        <h3>🔐 Admin Login</h3>
-        <label style="font-size:12px; font-weight:600; color:#555;">Enter Admin Password:</label>
-        <input type="password" id="modalPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') performLogin()">
-        <div>
-            <span class="forgot-link" onclick="openForgotModal()">❓ Forgot Password? (पासवर्ड विसरलात?)</span>
+<!-- ============================================================
+     2. MAIN CASH BOOK APP DASHBOARD (After Login)
+============================================================ -->
+<div id="mainAppSection">
+    <div class="container">
+        <!-- Header -->
+        <div class="org-header">
+            <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
+            <p>श्रीराम नगर भद्रावती</p>
+            <span class="reg">📜 Registration No.: F-0016068(CDP)</span><br>
+            <span id="dbStatusBadge" class="db-status">⏳ Connecting to Cloud...</span>
+            <span id="userRoleBadge" class="user-role-badge admin">Admin Panel</span>
+            <button class="logout-btn-header" onclick="logoutToFrontPage()">🚪 Logout</button>
         </div>
-        <div class="modal-actions">
-            <button class="btn btn-secondary btn-sm" onclick="closeLoginModal()">Cancel</button>
-            <button class="btn btn-success btn-sm" onclick="performLogin()">Login</button>
+
+        <!-- Title & Admin PDF Buttons -->
+        <div class="flex-between" style="margin-bottom:15px;">
+            <h1 style="margin-bottom:0;">📒 CASH BOOK</h1>
+            <div class="admin-only-inline" style="gap:6px; display:none;">
+                <button class="btn btn-pdf" onclick="generateMonthwisePDF('all')">📄 मासिक कॅश बुक PDF</button>
+                <button class="btn btn-pdf-debit" onclick="generateMonthwisePDF('debit')">📉 मासिक खर्च (Debit) PDF</button>
+            </div>
+        </div>
+
+        <div id="toast" class="toast">✅ Success!</div>
+
+        <!-- 1. DATA STORAGE & BACKUP (Admin only) -->
+        <div class="card admin-only">
+            <div class="flex-between">
+                <h2>💾 Cloud & Backup Management <span class="badge">Admin</span></h2>
+                <div>
+                    <button class="btn btn-success btn-sm" onclick="backupData()">💾 Backup (JSON)</button>
+                    <button class="btn btn-warning btn-sm" onclick="document.getElementById('restoreInput').click()">📂 Restore (JSON)</button>
+                    <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
+                    <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Data</button>
+                    <button class="btn change-pwd-btn btn-sm" onclick="changePassword()">🔑 Change Password</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. VIEWER MANAGEMENT (Admin only) -->
+        <div class="card admin-only">
+            <h2>👥 Viewer Management (विवर युझर्स तयार करा / डिलीट करा) <span class="badge">Admin</span></h2>
+            <div class="add-entry-form" style="margin-bottom:15px;">
+                <div class="field">
+                    <label>👤 Viewer Name (नाव/पद):</label>
+                    <input type="text" id="newViewerName" placeholder="e.g. श्री. शर्मा (विश्वस्त)">
+                </div>
+                <div class="field">
+                    <label>🆔 Username (युझरनेम):</label>
+                    <input type="text" id="newViewerUser" placeholder="e.g. trustee1">
+                </div>
+                <div class="field">
+                    <label>🔑 Password (पासवर्ड):</label>
+                    <input type="text" id="newViewerPass" placeholder="e.g. pass123">
+                </div>
+                <div class="field field-actions">
+                    <button class="btn btn-success" onclick="addNewViewer()">➕ Add Viewer</button>
+                </div>
+            </div>
+            
+            <div class="table-wrapper" style="max-height:200px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>👤 Name (नाव)</th>
+                            <th>🆔 Username</th>
+                            <th>🔑 Password</th>
+                            <th style="text-align:center;">⚡ Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="viewersTableBody">
+                        <tr><td colspan="5" style="text-align:center; color:#888;">कोणतेही विवर ॲड केलेले नाहीत.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. CSV IMPORT / EXPORT (Admin only) -->
+        <div class="card admin-only" id="csvCard">
+            <h2>📂 CSV Import / Export <span class="badge">Admin</span></h2>
+            <div class="flex-row">
+                <button class="btn btn-secondary" onclick="downloadTemplate()">📄 Download CSV Template</button>
+                <button class="btn btn-success" onclick="exportCSV()">⬇️ Export CSV</button>
+                <div class="file-upload-wrapper admin-only-inline">
+                    <label style="font-weight:600; font-size:13px; color:#495057;">Upload CSV to Cloud:</label>
+                    <input type="file" id="csvUploadInput" accept=".csv" onchange="uploadCSV(event)">
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. SUMMARY (Clickable Cards) -->
+        <div class="card">
+            <div class="flex-between" style="margin-bottom:12px;">
+                <h2 style="margin-bottom:0;">📊 Summary <span style="font-size:12px; color:#888; font-weight:normal;">(कार्डवर क्लिक करून फिल्टर करा)</span></h2>
+                <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
+            </div>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-box credit" id="statCardCredit" onclick="toggleTypeFilter('credit')" title="Click to view ONLY Credit (जमा)">
+                    <div class="label">📈 Total Credit (फक्त जमा)</div>
+                    <div class="value" id="totalCredit">₹ 0.00</div>
+                </div>
+                <div class="stat-box debit" id="statCardDebit" onclick="toggleTypeFilter('debit')" title="Click to view ONLY Debit (खर्च)">
+                    <div class="label">📉 Total Debit (फक्त खर्च)</div>
+                    <div class="value" id="totalDebit">₹ 0.00</div>
+                </div>
+                <div class="stat-box balance" id="statCardBalance" onclick="resetAllFilters()" title="Click to reset filter">
+                    <div class="label">💰 Closing Balance</div>
+                    <div class="value" id="closingBalance">₹ 0.00</div>
+                </div>
+                <div class="stat-box" id="statCardEntries" onclick="resetAllFilters()" title="Click to reset filter">
+                    <div class="label">🧾 Total Entries</div>
+                    <div class="value" id="totalEntries">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. ADD / EDIT TRANSACTION (Admin only) -->
+        <div class="card admin-only" id="addEditCard">
+            <h2 id="formTitle">➕ Add New Transaction</h2>
+            <div class="edit-indicator" id="editIndicator">
+                ✏️ Editing: <span id="editDescDisplay"></span>
+                <span class="cancel-edit" onclick="cancelEdit()">✖ Cancel</span>
+            </div>
+            <div class="add-entry-form">
+                <div class="field">
+                    <label>📅 Date <span class="required-star">*</span></label>
+                    <input type="date" id="newDate">
+                </div>
+                <div class="field">
+                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(optional)</span></label>
+                    <input type="text" id="newVoucher" placeholder="e.g. V-001 / P-101">
+                </div>
+                <div class="field">
+                    <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
+                    <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
+                </div>
+                <div class="field">
+                    <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(पर्यायी लिंक)</span></label>
+                    <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:180px;">
+                    <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
+                </div>
+                <div class="field">
+                    <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
+                    <input type="text" id="newName" placeholder="e.g. Saurabh Yamawar" style="min-width:180px;">
+                </div>
+                <div class="field">
+                    <label>📝 Description <span style="font-weight:400; color:#888;">(optional)</span></label>
+                    <input type="text" id="newDesc" placeholder="Expense or Donation reason" style="min-width:190px;">
+                </div>
+                <div class="field">
+                    <label>💰 Amount (₹) <span class="required-star">*</span></label>
+                    <input type="number" id="newAmount" placeholder="1000" step="0.01">
+                </div>
+                <div class="field">
+                    <label>📌 Type <span class="required-star">*</span></label>
+                    <select id="newType">
+                        <option value="credit">📈 Credit (जमा)</option>
+                        <option value="debit">📉 Debit (खर्च)</option>
+                    </select>
+                </div>
+                <div class="field field-actions">
+                    <button class="btn btn-success" id="addUpdateBtn" onclick="submitTransaction()">➕ Add Transaction</button>
+                    <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">✖ Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. TRANSACTIONS TABLE (Visible to Admin & Viewer) -->
+        <div class="card">
+            <div class="flex-between">
+                <h2>📋 All Transactions</h2>
+                <div class="search-controls">
+                    <label>From: <input type="date" id="filterFromDate" onchange="filterTable()" title="Start Date"></label>
+                    <label>To: <input type="date" id="filterToDate" onchange="filterTable()" title="End Date"></label>
+                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (Name/Desc/Date/Voucher)" onkeyup="filterTable()">
+                    <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" title="Reset Filters">✖ Reset</button>
+                </div>
+            </div>
+
+            <div id="filterBanner" class="filter-banner" style="display:none;">
+                <span id="filterBannerText">🔍 Active Filter</span>
+                <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" style="margin:0;">Clear Filter</button>
+            </div>
+
+            <div class="table-wrapper" id="tableWrapper">
+                <table id="transactionTable">
+                    <thead>
+                        <tr>
+                            <th style="width:40px;">#</th>
+                            <th>📅 Date</th>
+                            <th>🔢 Voucher / Pavti No.</th>
+                            <th>🧑‍💼 Name</th>
+                            <th>📝 Description</th>
+                            <th style="text-align:right;">📈 Credit (₹)</th>
+                            <th style="text-align:right;">📉 Debit (₹)</th>
+                            <th style="text-align:right;">💰 Balance (₹)</th>
+                            <th style="text-align:center; width:80px;" class="admin-only">⚡ Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="9" style="text-align:center; padding:40px; color:#888;">⏳ Loading cloud transactions...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -610,12 +759,12 @@
 <!-- ===== FORGOT PASSWORD MODAL ===== -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
-        <h3>🔑 Reset Password</h3>
+        <h3>🔑 Reset Admin Password</h3>
         <p style="font-size:12px; color:#666; margin-bottom:10px;">
-            पासवर्ड रिसेट करण्यासाठी **मास्टर पिन (123456)** किंवा **संस्थेचा Reg. No. (F-0016068)** टाका:
+            पासवर्ड रिसेट करण्यासाठी **Master PIN (123456)** किंवा **संस्थेचा Reg No. (F-0016068)** टाका:
         </p>
         <label style="font-size:12px; font-weight:600; color:#555;">Master PIN / Reg No:</label>
-        <input type="password" id="modalPinInput" placeholder="Master PIN किंवा Reg. No. टाका">
+        <input type="password" id="modalPinInput" placeholder="Master PIN किंवा Reg No टाका">
         
         <label style="font-size:12px; font-weight:600; color:#555;">New Password (नवीन पासवर्ड):</label>
         <input type="password" id="modalNewPasswordInput" placeholder="नवीन पासवर्ड (किमान ४ अक्षरे)">
@@ -644,7 +793,9 @@
     let db = null;
     let storage = null;
     let transactionsData = [];
+    let viewersData = [];
     let isFirebaseReady = false;
+    let currentRole = 'none'; // 'none' | 'admin' | 'viewer'
     let activeTypeFilter = 'all';
 
     try {
@@ -652,14 +803,224 @@
             firebase.initializeApp(firebaseConfig);
         }
         db = firebase.firestore();
-        try {
-            storage = firebase.storage();
-        } catch(e) {
-            console.warn("Storage not initialized:", e);
-        }
+        try { storage = firebase.storage(); } catch(e) { console.warn("Storage not initialized:", e); }
         isFirebaseReady = true;
     } catch(err) {
         console.error("Firebase init error:", err);
+    }
+
+    // ============================================================
+    //  FRONT PAGE & LOGIN TAB SWITCHING
+    // ============================================================
+
+    function switchLoginTab(tab) {
+        document.getElementById('tabAdminBtn').classList.toggle('active', tab === 'admin');
+        document.getElementById('tabViewerBtn').classList.toggle('active', tab === 'viewer');
+        document.getElementById('adminLoginForm').style.display = (tab === 'admin') ? 'block' : 'none';
+        document.getElementById('viewerLoginForm').style.display = (tab === 'viewer') ? 'block' : 'none';
+    }
+
+    function loginAsAdmin() {
+        const enteredPwd = document.getElementById('adminPasswordInput').value;
+        const currentAdminPwd = localStorage.getItem('adminPassword') || 'admin123';
+
+        if (enteredPwd === currentAdminPwd) {
+            currentRole = 'admin';
+            document.body.className = 'admin-mode';
+            document.getElementById('userRoleBadge').textContent = 'Admin Panel';
+            document.getElementById('userRoleBadge').className = 'user-role-badge admin';
+            
+            document.getElementById('frontPageSection').style.display = 'none';
+            document.getElementById('mainAppSection').style.display = 'block';
+            showToast('🔓 Welcome Admin!');
+            initRealtimeSync();
+            initViewersSync();
+        } else {
+            alert('❌ चुकीचा पासवर्ड! (Incorrect Admin Password)');
+        }
+    }
+
+    function loginAsViewer() {
+        const u = document.getElementById('viewerUsernameInput').value.trim();
+        const p = document.getElementById('viewerPasswordInput').value.trim();
+
+        if (!u || !p) {
+            alert('कृपया युझरनेम आणि पासवर्ड दोन्ही भरा.');
+            return;
+        }
+
+        const found = viewersData.find(v => v.username === u && v.password === p);
+
+        if (found) {
+            currentRole = 'viewer';
+            document.body.className = 'viewer-mode';
+            document.getElementById('userRoleBadge').textContent = `Viewer: ${found.name || found.username}`;
+            document.getElementById('userRoleBadge').className = 'user-role-badge viewer';
+            
+            document.getElementById('frontPageSection').style.display = 'none';
+            document.getElementById('mainAppSection').style.display = 'block';
+            showToast(`👋 Welcome ${found.name || found.username}!`);
+            initRealtimeSync();
+        } else {
+            alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
+        }
+    }
+
+    function logoutToFrontPage() {
+        currentRole = 'none';
+        document.body.className = '';
+        document.getElementById('mainAppSection').style.display = 'none';
+        document.getElementById('frontPageSection').style.display = 'flex';
+        document.getElementById('adminPasswordInput').value = '';
+        document.getElementById('viewerPasswordInput').value = '';
+        cancelEdit();
+        showToast('👋 Logged out successfully.');
+    }
+
+    function openForgotModal() {
+        document.getElementById('modalPinInput').value = '';
+        document.getElementById('modalNewPasswordInput').value = '';
+        document.getElementById('forgotModal').style.display = 'flex';
+        setTimeout(() => document.getElementById('modalPinInput').focus(), 100);
+    }
+
+    function closeForgotModal() {
+        document.getElementById('forgotModal').style.display = 'none';
+    }
+
+    function performResetPassword() {
+        const pin = document.getElementById('modalPinInput').value.trim();
+        const newPwd = document.getElementById('modalNewPasswordInput').value.trim();
+
+        const isPinValid = (pin === "123456") || 
+                           (pin.toLowerCase() === "f-0016068(cdp)".toLowerCase()) || 
+                           (pin === "F-0016068");
+
+        if (!isPinValid) {
+            alert('❌ चुकीचा Master PIN किंवा Registration Number!');
+            return;
+        }
+
+        if (!newPwd || newPwd.length < 4) {
+            alert('❌ नवीन पासवर्ड किमान ४ अक्षरांचा असावा.');
+            return;
+        }
+
+        localStorage.setItem('adminPassword', newPwd);
+        closeForgotModal();
+
+        // Auto login as admin
+        currentRole = 'admin';
+        document.body.className = 'admin-mode';
+        document.getElementById('userRoleBadge').textContent = 'Admin Panel';
+        document.getElementById('userRoleBadge').className = 'user-role-badge admin';
+        document.getElementById('frontPageSection').style.display = 'none';
+        document.getElementById('mainAppSection').style.display = 'block';
+        
+        showToast('✅ पासवर्ड यशस्वीरित्या बदलला आणि लॉगिन झाले!');
+        initRealtimeSync();
+        initViewersSync();
+    }
+
+    function changePassword() {
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        const currentPwd = prompt('Enter CURRENT password:');
+        const stored = localStorage.getItem('adminPassword') || 'admin123';
+        if (currentPwd !== stored) {
+            alert('❌ Current password is incorrect.');
+            return;
+        }
+        const newPwd = prompt('Enter NEW password:');
+        if (!newPwd || newPwd.length < 4) {
+            alert('❌ Password must be at least 4 characters long.');
+            return;
+        }
+        const confirmPwd = prompt('Confirm NEW password:');
+        if (newPwd !== confirmPwd) {
+            alert('❌ Passwords do not match.');
+            return;
+        }
+        localStorage.setItem('adminPassword', newPwd);
+        showToast('✅ Password changed successfully!');
+    }
+
+    // ============================================================
+    //  👥 VIEWER MANAGEMENT (CRUD in Firestore)
+    // ============================================================
+
+    function initViewersSync() {
+        if (isFirebaseReady && db) {
+            db.collection('viewers').onSnapshot((snapshot) => {
+                let list = [];
+                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+                viewersData = list;
+                renderViewersTable(viewersData);
+            }, (err) => console.error("Viewers fetch error:", err));
+        }
+    }
+
+    function renderViewersTable(list) {
+        const tbody = document.getElementById('viewersTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (!list || list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">कोणतेही विवर ॲड केलेले नाहीत.</td></tr>';
+            return;
+        }
+
+        list.forEach((v, idx) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><strong>${escapeHTML(v.name || '-')}</strong></td>
+                <td><code>${escapeHTML(v.username || '-')}</code></td>
+                <td><code>${escapeHTML(v.password || '-')}</code></td>
+                <td style="text-align:center;">
+                    <button class="action-btn del-btn" onclick="deleteViewer('${v.id}')" title="Delete Viewer">🗑️ Delete</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    async function addNewViewer() {
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        const name = document.getElementById('newViewerName').value.trim();
+        const user = document.getElementById('newViewerUser').value.trim();
+        const pass = document.getElementById('newViewerPass').value.trim();
+
+        if (!user || !pass) {
+            alert('Username आणि Password आवश्यक आहे.');
+            return;
+        }
+
+        try {
+            await db.collection('viewers').add({
+                name: name || user,
+                username: user,
+                password: pass,
+                createdAt: new Date().toISOString()
+            });
+
+            document.getElementById('newViewerName').value = '';
+            document.getElementById('newViewerUser').value = '';
+            document.getElementById('newViewerPass').value = '';
+            showToast('✅ नवीन विवर युझर तयार झाला!');
+        } catch(e) {
+            alert('Error creating viewer: ' + e.message);
+        }
+    }
+
+    async function deleteViewer(id) {
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (!confirm('या विवरचे खाते डिलीट करायचे आहे का?')) return;
+        try {
+            await db.collection('viewers').doc(id).delete();
+            showToast('🗑️ विवर खाते डिलीट झाले.');
+        } catch(e) {
+            alert('Error deleting: ' + e.message);
+        }
     }
 
     // ============================================================
@@ -769,129 +1130,6 @@
         return result;
     }
 
-    function genId() {
-        return Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    }
-
-    // ============================================================
-    //  🔐 ADMIN AUTHENTICATION & FORGOT PASSWORD
-    // ============================================================
-
-    let isAdmin = false;
-    const MASTER_RECOVERY_PIN = "123456";
-    const MASTER_REG_NO = "F-0016068(CDP)";
-
-    function getAdminPassword() {
-        return localStorage.getItem('adminPassword') || 'admin123';
-    }
-
-    function setAdminPassword(newPassword) {
-        localStorage.setItem('adminPassword', newPassword);
-    }
-
-    function openLoginModal() {
-        if (isAdmin) {
-            // Logout
-            isAdmin = false;
-            document.body.className = 'public-mode';
-            document.getElementById('modeToggleBtn').textContent = '🔐 Admin Login';
-            document.getElementById('modeToggleBtn').className = 'mode-toggle';
-            document.getElementById('modeBadge').textContent = 'Public View';
-            document.getElementById('modeBadge').className = 'mode-badge public';
-            cancelEdit();
-            showToast('👋 Logged out. Public view.');
-        } else {
-            document.getElementById('modalPasswordInput').value = '';
-            document.getElementById('loginModal').style.display = 'flex';
-            setTimeout(() => document.getElementById('modalPasswordInput').focus(), 100);
-        }
-    }
-
-    function closeLoginModal() {
-        document.getElementById('loginModal').style.display = 'none';
-    }
-
-    function performLogin() {
-        const enteredPwd = document.getElementById('modalPasswordInput').value;
-        if (enteredPwd === getAdminPassword()) {
-            isAdmin = true;
-            document.body.className = 'admin-mode';
-            document.getElementById('modeToggleBtn').textContent = '🚪 Logout';
-            document.getElementById('modeToggleBtn').className = 'mode-toggle logout';
-            document.getElementById('modeBadge').textContent = 'Admin Panel';
-            document.getElementById('modeBadge').className = 'mode-badge admin';
-            closeLoginModal();
-            showToast('🔓 Admin login successful!');
-        } else {
-            alert('❌ चुकीचा पासवर्ड! (Incorrect Password)');
-        }
-    }
-
-    function openForgotModal() {
-        closeLoginModal();
-        document.getElementById('modalPinInput').value = '';
-        document.getElementById('modalNewPasswordInput').value = '';
-        document.getElementById('forgotModal').style.display = 'flex';
-        setTimeout(() => document.getElementById('modalPinInput').focus(), 100);
-    }
-
-    function closeForgotModal() {
-        document.getElementById('forgotModal').style.display = 'none';
-    }
-
-    function performResetPassword() {
-        const pin = document.getElementById('modalPinInput').value.trim();
-        const newPwd = document.getElementById('modalNewPasswordInput').value.trim();
-
-        const isPinValid = (pin === MASTER_RECOVERY_PIN) || 
-                           (pin.toLowerCase() === MASTER_REG_NO.toLowerCase()) || 
-                           (pin === "F-0016068");
-
-        if (!isPinValid) {
-            alert('❌ चुकीचा Master PIN किंवा Registration Number!');
-            return;
-        }
-
-        if (!newPwd || newPwd.length < 4) {
-            alert('❌ नवीन पासवर्ड किमान ४ अक्षरांचा असावा.');
-            return;
-        }
-
-        setAdminPassword(newPwd);
-        closeForgotModal();
-
-        // Auto login as admin
-        isAdmin = true;
-        document.body.className = 'admin-mode';
-        document.getElementById('modeToggleBtn').textContent = '🚪 Logout';
-        document.getElementById('modeToggleBtn').className = 'mode-toggle logout';
-        document.getElementById('modeBadge').textContent = 'Admin Panel';
-        document.getElementById('modeBadge').className = 'mode-badge admin';
-        
-        showToast('✅ पासवर्ड यशस्वीरित्या बदलला आणि लॉगिन झाले!');
-    }
-
-    function changePassword() {
-        if (!isAdmin) { alert('Admin access required.'); return; }
-        const currentPwd = prompt('Enter CURRENT password:');
-        if (currentPwd !== getAdminPassword()) {
-            alert('❌ Current password is incorrect.');
-            return;
-        }
-        const newPwd = prompt('Enter NEW password:');
-        if (!newPwd || newPwd.length < 4) {
-            alert('❌ Password must be at least 4 characters long.');
-            return;
-        }
-        const confirmPwd = prompt('Confirm NEW password:');
-        if (newPwd !== confirmPwd) {
-            alert('❌ Passwords do not match.');
-            return;
-        }
-        setAdminPassword(newPwd);
-        showToast('✅ Password changed successfully!');
-    }
-
     // ============================================================
     //  DATABASE & REALTIME LISTENER
     // ============================================================
@@ -943,7 +1181,6 @@
                 console.error("Firestore listen error: ", error);
                 badge.innerHTML = '⚠️ Cloud Permission Error';
                 badge.style.background = '#dc3545';
-                showToast("⚠️ Firebase Firestore rules चेक करा!", "error");
             });
         }
     }
@@ -981,7 +1218,7 @@
                 <td style="text-align:right; color:#28a745; font-weight:600;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
                 <td style="text-align:right; color:#dc3545; font-weight:600;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
                 <td style="text-align:right; font-weight:700;">${formatIndianNum(item.balance)}</td>
-                <td style="text-align:center; white-space:nowrap;">
+                <td style="text-align:center; white-space:nowrap;" class="admin-only">
                     <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
                     <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
                 </td>
@@ -1010,11 +1247,7 @@
     }
 
     function toggleTypeFilter(type) {
-        if (activeTypeFilter === type) {
-            activeTypeFilter = 'all';
-        } else {
-            activeTypeFilter = type;
-        }
+        activeTypeFilter = (activeTypeFilter === type) ? 'all' : type;
         filterTable();
     }
 
@@ -1076,17 +1309,28 @@
     }
 
     // ============================================================
-    //  🖨️ GENERATE MONTH-WISE CASH BOOK PDF
+    //  🖨️ GENERATE MONTH-WISE PDF (All Cash Book & Debit Only Book)
     // ============================================================
 
-    function generateMonthwisePDF() {
+    function generateMonthwisePDF(type = 'all') {
+        if (currentRole !== 'admin') { alert('फक्त ऍडमिनला PDF जनरेट करण्याची परवानगी आहे.'); return; }
         if (!transactionsData || transactionsData.length === 0) {
             alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
             return;
         }
 
+        // Filter if Debit only
+        let dataToPrint = transactionsData;
+        if (type === 'debit') {
+            dataToPrint = transactionsData.filter(t => t.debit && t.debit > 0);
+            if (dataToPrint.length === 0) {
+                alert('खर्चाच्या (Debit) कोणत्याही नोंदी उपलब्ध नाहीत.');
+                return;
+            }
+        }
+
         const groups = {};
-        transactionsData.forEach(item => {
+        dataToPrint.forEach(item => {
             const raw = item.rawDate || parseToIsoDate(item.date);
             const key = raw.slice(0, 7);
             if (!groups[key]) groups[key] = [];
@@ -1102,112 +1346,36 @@
             "सप्टेंबर (September)", "ऑक्टोबर (October)", "नोव्हेंबर (November)", "डिसेंबर (December)"
         ];
 
+        const isDebitOnly = (type === 'debit');
+        const reportTitle = isDebitOnly ? '📉 मासिक खर्च नोंदवही (Monthly Expense / Debit Book)' : '📒 मासिक कॅश बुक (Monthly Cash Book)';
+
         let printHtml = `
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>Cash Book - Swami Gopal Tirth Sanstha</title>
+            <title>${reportTitle} - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 10mm; }
                 * { box-sizing: border-box; }
-                body { 
-                    font-family: 'Segoe UI', Arial, sans-serif; 
-                    color: #111; 
-                    margin: 0; 
-                    padding: 0; 
-                    background: #fff;
-                    font-size: 12px; 
-                }
-                .month-page { 
-                    page-break-after: always; 
-                    break-after: page; 
-                    padding: 10px 0 20px 0; 
-                }
-                .month-page:last-child { 
-                    page-break-after: avoid; 
-                    break-after: avoid; 
-                }
-                .org-title { 
-                    text-align: center; 
-                    border-bottom: 2px solid #0d2b44; 
-                    padding-bottom: 8px; 
-                    margin-bottom: 12px; 
-                }
-                .org-title h1 { 
-                    margin: 0 0 4px 0; 
-                    font-size: 20px; 
-                    color: #0d2b44; 
-                }
-                .org-title p { 
-                    margin: 2px 0; 
-                    font-size: 12px; 
-                    color: #333; 
-                }
-                .org-title .reg-no {
-                    font-weight: bold;
-                    background: #f0f4f9;
-                    display: inline-block;
-                    padding: 2px 14px;
-                    border-radius: 12px;
-                    margin-top: 4px;
-                    border: 1px solid #d0dbe5;
-                }
-                .month-bar { 
-                    display: flex; 
-                    justify-content: space-between; 
-                    align-items: center; 
-                    background: #eef4fb; 
-                    padding: 8px 14px; 
-                    border: 1px solid #bdd5ea; 
-                    border-radius: 6px; 
-                    margin-bottom: 10px; 
-                    font-size: 13px; 
-                }
-                table { 
-                    width: 100%; 
-                    border-collapse: collapse; 
-                    margin-bottom: 12px; 
-                    font-size: 11.5px; 
-                }
-                th, td { 
-                    border: 1px solid #bbb; 
-                    padding: 6px 8px; 
-                    text-align: left; 
-                }
-                th { 
-                    background-color: #0d2b44 !important; 
-                    color: white !important; 
-                    font-weight: 600;
-                }
+                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 12px; }
+                .month-page { page-break-after: always; break-after: page; padding: 10px 0 20px 0; }
+                .month-page:last-child { page-break-after: avoid; break-after: avoid; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 8px; margin-bottom: 12px; }
+                .org-title h1 { margin: 0 0 4px 0; font-size: 20px; color: #0d2b44; }
+                .org-title p { margin: 2px 0; font-size: 12px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 14px; border-radius: 12px; margin-top: 4px; border: 1px solid #d0dbe5; }
+                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 8px 14px; border: 1px solid #bdd5ea; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11.5px; }
+                th, td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; }
+                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; }
                 .text-right { text-align: right; }
                 .credit-text { color: #198754; font-weight: 700; }
                 .debit-text { color: #dc3545; font-weight: 700; }
-                .summary-table { 
-                    width: 100%; 
-                    margin-top: 10px; 
-                    border: 1.5px solid #0d2b44; 
-                    background: #fdfdfd; 
-                    font-size: 12px;
-                }
-                .summary-table td { 
-                    padding: 8px 12px; 
-                    font-weight: 600; 
-                }
-                .signatures { 
-                    display: flex; 
-                    justify-content: space-between; 
-                    margin-top: 45px; 
-                    padding: 0 40px; 
-                    font-weight: bold; 
-                    font-size: 12px;
-                }
-                .sig-box { 
-                    text-align: center; 
-                    border-top: 1px dashed #333; 
-                    width: 180px; 
-                    padding-top: 6px; 
-                }
+                .summary-table { width: 100%; margin-top: 10px; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 12px; }
+                .summary-table td { padding: 8px 12px; font-weight: 600; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 45px; padding: 0 40px; font-weight: bold; font-size: 12px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 180px; padding-top: 6px; }
                 @media print {
                     .no-print { display: none !important; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1232,18 +1400,31 @@
                 monthDebit += (item.debit || 0);
                 runningTotalBal = item.balance;
 
-                rowsHtml += `
-                <tr>
-                    <td style="text-align:center; width:35px;">${index + 1}</td>
-                    <td style="white-space:nowrap; width:85px;">${escapeHTML(item.date)}</td>
-                    <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td class="text-right credit-text" style="width:105px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
-                    <td class="text-right debit-text" style="width:105px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
-                    <td class="text-right" style="font-weight:bold; width:115px;">${formatIndianNum(item.balance)}</td>
-                </tr>
-                `;
+                if (isDebitOnly) {
+                    rowsHtml += `
+                    <tr>
+                        <td style="text-align:center; width:35px;">${index + 1}</td>
+                        <td style="white-space:nowrap; width:90px;">${escapeHTML(item.date)}</td>
+                        <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                        <td>${escapeHTML(item.description || '-')}</td>
+                        <td class="text-right debit-text" style="width:130px; font-size:13px;">${formatIndianNum(item.debit)}</td>
+                    </tr>
+                    `;
+                } else {
+                    rowsHtml += `
+                    <tr>
+                        <td style="text-align:center; width:35px;">${index + 1}</td>
+                        <td style="white-space:nowrap; width:85px;">${escapeHTML(item.date)}</td>
+                        <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                        <td>${escapeHTML(item.description || '-')}</td>
+                        <td class="text-right credit-text" style="width:105px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
+                        <td class="text-right debit-text" style="width:105px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
+                        <td class="text-right" style="font-weight:bold; width:115px;">${formatIndianNum(item.balance)}</td>
+                    </tr>
+                    `;
+                }
             });
 
             const closingBalance = openingBalance + monthCredit - monthDebit;
@@ -1252,17 +1433,27 @@
             <div class="month-page">
                 <div class="org-title">
                     <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | 📒 मासिक कॅश बुक (Monthly Cash Book)</p>
+                    <p>श्रीराम नगर भद्रावती | ${reportTitle}</p>
                     <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                 </div>
 
                 <div class="month-bar">
                     <span>📅 महिना: <strong>${monthLabel}</strong></span>
-                    <span>💰 मागील महिना शिल्लक (Opening Balance): <strong>${formatIndianNum(openingBalance)}</strong></span>
+                    ${!isDebitOnly ? `<span>💰 मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></span>` : `<span>📉 चालू महिन्यातील एकूण खर्च नोंदी: <strong>${items.length}</strong></span>`}
                 </div>
 
                 <table>
                     <thead>
+                        ${isDebitOnly ? `
+                        <tr>
+                            <th style="width:35px;">#</th>
+                            <th style="width:90px;">📅 दिनांक</th>
+                            <th style="width:110px;">🔢 व्हाउचर/बिल क्र.</th>
+                            <th>🧑‍💼 कोणास दिले (Recipient/Party)</th>
+                            <th>📝 खर्चाचा तपशील (Description)</th>
+                            <th class="text-right" style="width:130px;">📉 खर्च रक्कम (Debit ₹)</th>
+                        </tr>
+                        ` : `
                         <tr>
                             <th style="width:35px;">#</th>
                             <th style="width:85px;">📅 दिनांक</th>
@@ -1273,6 +1464,7 @@
                             <th class="text-right" style="width:105px;">📉 खर्च (Debit ₹)</th>
                             <th class="text-right" style="width:115px;">💰 शिल्लक (Balance ₹)</th>
                         </tr>
+                        `}
                     </thead>
                     <tbody>
                         ${rowsHtml}
@@ -1280,12 +1472,18 @@
                 </table>
 
                 <table class="summary-table">
+                    ${isDebitOnly ? `
+                    <tr>
+                        <td colspan="2" style="font-size:13px; text-align:right;">📅 महिना (${monthLabel}) एकूण खर्च (Total Debit): <strong class="debit-text" style="font-size:15px; margin-left:10px;">${formatIndianNum(monthDebit)}</strong></td>
+                    </tr>
+                    ` : `
                     <tr>
                         <td>मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></td>
-                        <td class="credit-text">चालू महिना एकूण जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
-                        <td class="debit-text">चालू महिना एकूण खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
+                        <td class="credit-text">चालू महिना जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
+                        <td class="debit-text">चालू महिना खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
                         <td style="background:#eef4fb; font-size:13px;">अखेर शिल्लक (Closing): <strong>${formatIndianNum(closingBalance)}</strong></td>
                     </tr>
+                    `}
                 </table>
 
                 <div class="signatures">
@@ -1299,9 +1497,7 @@
 
         printHtml += `
             <script>
-                window.onload = function() {
-                    window.print();
-                };
+                window.onload = function() { window.print(); };
             <\/script>
         </body>
         </html>
@@ -1314,13 +1510,13 @@
     }
 
     // ============================================================
-    //  CRUD
+    //  CRUD (Add / Edit / Delete Transactions)
     // ============================================================
 
     let editingId = null;
 
     async function submitTransaction() {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         const dateVal = document.getElementById('newDate').value;
         const voucher = document.getElementById('newVoucher').value.trim();
         const fileInput = document.getElementById('newDocFile');
@@ -1403,7 +1599,7 @@
     }
 
     function editEntry(id) {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) { alert('Entry not found!'); return; }
 
@@ -1451,7 +1647,7 @@
     }
 
     async function deleteEntry(id) {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         if (!confirm('Delete this entry permanently from the Cloud?')) return;
         
         try {
@@ -1464,7 +1660,7 @@
     }
 
     async function clearAllData() {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         if (!confirm('⚠️ Are you sure you want to permanently DELETE ALL cloud transactions?')) return;
         
         try {
@@ -1484,7 +1680,7 @@
     // ============================================================
 
     function downloadTemplate() {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         const headers = ['Date', 'Voucher/Pavti No.', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
         const sample = ['2023-07-31', 'V-001', 'https://...', 'Saurabh Yamawar', 'Gurupournima donation', '11000', '0'];
         const csv = headers.join(',') + '\n' + sample.join(',');
@@ -1493,7 +1689,7 @@
     }
 
     function exportCSV() {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         if (!transactionsData || transactionsData.length === 0) {
             alert('No data to export.');
             return;
@@ -1511,7 +1707,7 @@
     }
 
     async function uploadCSV(event) {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -1586,7 +1782,7 @@
     }
 
     function backupData() {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         if (!transactionsData || transactionsData.length === 0) {
             alert('No data to backup.');
             return;
@@ -1597,7 +1793,7 @@
     }
 
     function restoreData(event) {
-        if (!isAdmin) { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -1634,10 +1830,6 @@
         event.target.value = '';
     }
 
-    // ============================================================
-    //  UTILS
-    // ============================================================
-
     function downloadFile(content, filename, mimeType) {
         const blob = new Blob([content], { type: mimeType + ';charset=utf-8' });
         const url = URL.createObjectURL(blob);
@@ -1653,27 +1845,28 @@
     function showToast(msg, type) {
         const toast = document.getElementById('toast');
         toast.textContent = msg;
-        toast.className = 'toast' + (type === 'error' ? ' error' : type === 'warning' ? ' warning' : '');
+        toast.className = 'toast' + (type === 'error' ? ' error' : '');
         toast.style.display = 'block';
         clearTimeout(toast._timer);
         toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
     }
 
     // ============================================================
-    //  INIT
+    //  INIT (Start at Front Page)
     // ============================================================
 
     window.onload = function() {
-        initRealtimeSync();
-
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('newDate').value = today;
 
-        document.body.className = 'public-mode';
-        document.getElementById('modeToggleBtn').textContent = '🔐 Admin Login';
-        document.getElementById('modeToggleBtn').className = 'mode-toggle';
-        document.getElementById('modeBadge').textContent = 'Public View';
-        document.getElementById('modeBadge').className = 'mode-badge public';
+        // Fetch Viewers in background for login verification
+        if (isFirebaseReady && db) {
+            db.collection('viewers').onSnapshot((snapshot) => {
+                let list = [];
+                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+                viewersData = list;
+            });
+        }
     };
 </script>
 </body>
