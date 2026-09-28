@@ -433,6 +433,20 @@
         .add-entry-form input[type="number"] { min-width: 130px; }
         .add-entry-form .field-actions { display: flex; gap: 8px; align-items: center; }
 
+        .voucher-input-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .voucher-input-group select {
+            min-width: 130px;
+            background: #fff;
+            font-weight: 600;
+        }
+        .voucher-input-group input {
+            min-width: 140px;
+        }
+
         .toast {
             background: #28a745;
             color: white;
@@ -512,6 +526,7 @@
         @media (max-width: 800px) {
             .add-entry-form .field { width: 100%; }
             .add-entry-form input, .add-entry-form select { width: 100%; }
+            .voucher-input-group { flex-direction: column; align-items: stretch; width: 100%; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .org-header { flex-direction: column; align-items: stretch; text-align: center; }
             .header-left-brand { flex-direction: column; text-align: center; }
@@ -705,8 +720,18 @@
                     <input type="date" id="newDate">
                 </div>
                 <div class="field">
-                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(optional)</span></label>
-                    <input type="text" id="newVoucher" placeholder="उदा. V-001 / P-101">
+                    <!-- Dropdown with 5 Options + Auto-Generated Number -->
+                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Auto/Manual)</span></label>
+                    <div class="voucher-input-group">
+                        <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
+                            <option value="PN">PN (देणगी जमा)</option>
+                            <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
+                            <option value="VN">VN (खर्च/व्हाउचर)</option>
+                            <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
+                            <option value="OTHER">Other / इतर (Manual)</option>
+                        </select>
+                        <input type="text" id="newVoucher" placeholder="उदा. PN 01">
+                    </div>
                 </div>
                 <div class="field">
                     <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
@@ -718,7 +743,7 @@
                     <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
                 </div>
                 <div class="field">
-                    <!-- Feature 1: Donor Name Compulsory (*) + Datalist Autocomplete -->
+                    <!-- Donor Name Compulsory (*) + Datalist Autocomplete -->
                     <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
                     <input type="text" id="newName" list="donorNamesList" placeholder="उदा. सौरभ यमावार" style="min-width:180px;" autocomplete="off">
                     <datalist id="donorNamesList"></datalist>
@@ -733,7 +758,7 @@
                 </div>
                 <div class="field">
                     <label>📌 Type <span class="required-star">*</span></label>
-                    <select id="newType">
+                    <select id="newType" onchange="handleTypeChange()">
                         <option value="credit">📈 Credit (जमा)</option>
                         <option value="debit">📉 Debit (खर्च)</option>
                     </select>
@@ -1153,12 +1178,111 @@
         return result;
     }
 
-    // Update Datalist with all unique donor names
+    // Helper: Remove prefixes like PN, VN, A/VSN for clean receipt print
+    function getCleanReceiptNumber(rawStr) {
+        if (!rawStr) return '-';
+        return rawStr
+            .replace(/^PN[-\s]*/i, '')
+            .replace(/^VN[-\s]*/i, '')
+            .replace(/^A\/VSN[-\s]*/i, '')
+            .trim() || rawStr;
+    }
+
+    // Datalist Autocomplete Updater
     function updateDonorNamesDatalist() {
         const datalist = document.getElementById('donorNamesList');
         if (!datalist) return;
         const uniqueNames = [...new Set(transactionsData.map(t => (t.name || '').trim()).filter(Boolean))].sort();
         datalist.innerHTML = uniqueNames.map(name => `<option value="${escapeHTML(name)}">`).join('');
+    }
+
+    // ============================================================
+    //  🔢 AUTO-INCREMENT LOGIC FOR VOUCHERS (5 OPTIONS)
+    // ============================================================
+
+    function getNextVoucherString(selectedType) {
+        const pad = (num, size = 2) => String(num).padStart(size, '0');
+
+        if (selectedType === 'PN') {
+            let maxPN = 0;
+            transactionsData.forEach(t => {
+                const match = (t.voucher || '').match(/^PN\s*(\d+)/i);
+                if (match) {
+                    const n = parseInt(match[1], 10);
+                    if (n > maxPN) maxPN = n;
+                }
+            });
+            return `PN ${pad(maxPN + 1)}`;
+        }
+
+        if (selectedType === 'A/VSN') {
+            let maxAVSN = 0;
+            transactionsData.forEach(t => {
+                const match = (t.voucher || '').match(/^A\/VSN\s*(\d+)/i);
+                if (match) {
+                    const n = parseInt(match[1], 10);
+                    if (n > maxAVSN) maxAVSN = n;
+                }
+            });
+            return `A/VSN ${pad(maxAVSN + 1)}`;
+        }
+
+        // VN: Continuous across normal expenses and VN IBT
+        let maxVN = 0;
+        let maxIBT = 0;
+        transactionsData.forEach(t => {
+            const v = t.voucher || '';
+            const vnMatch = v.match(/^VN\s*(\d+)/i);
+            if (vnMatch) {
+                const n = parseInt(vnMatch[1], 10);
+                if (n > maxVN) maxVN = n;
+            }
+            const ibtMatch = v.match(/IBT\s*(\d+)/i);
+            if (ibtMatch) {
+                const n = parseInt(ibtMatch[1], 10);
+                if (n > maxIBT) maxIBT = n;
+            }
+        });
+
+        if (selectedType === 'VN') {
+            return `VN ${pad(maxVN + 1)}`;
+        }
+
+        if (selectedType === 'VN_IBT') {
+            // VN is continuous (maxVN + 1), IBT has its own counter (maxIBT + 1)
+            return `VN ${pad(maxVN + 1)} IBT ${pad(maxIBT + 1)}`;
+        }
+
+        return ''; // OTHER
+    }
+
+    function handleVoucherTypeChange() {
+        const typeSelect = document.getElementById('voucherTypeSelect').value;
+        const voucherInput = document.getElementById('newVoucher');
+
+        if (typeSelect === 'OTHER') {
+            voucherInput.value = '';
+            voucherInput.placeholder = 'उदा. UPI / Cheque / इतर नंबर';
+            voucherInput.focus();
+        } else {
+            voucherInput.value = getNextVoucherString(typeSelect);
+        }
+    }
+
+    function handleTypeChange() {
+        const entryType = document.getElementById('newType').value;
+        const vSelect = document.getElementById('voucherTypeSelect');
+        
+        if (entryType === 'credit') {
+            if (vSelect.value === 'VN' || vSelect.value === 'VN_IBT') {
+                vSelect.value = 'PN';
+            }
+        } else if (entryType === 'debit') {
+            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN') {
+                vSelect.value = 'VN';
+            }
+        }
+        handleVoucherTypeChange();
     }
 
     // ============================================================
@@ -1207,6 +1331,13 @@
                 });
                 transactionsData = calculateRunningBalances(list);
                 updateDonorNamesDatalist();
+                
+                // Auto populate voucher if field is currently empty
+                const currentVoucherInput = document.getElementById('newVoucher');
+                if (!currentVoucherInput.value) {
+                    handleVoucherTypeChange();
+                }
+
                 filterTable();
             }, (error) => {
                 console.error("Firestore listen error: ", error);
@@ -1240,7 +1371,7 @@
                 voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
             }
 
-            // Feature 3: Single Print + WhatsApp Share Button for Credit Entries
+            // Single Print + WhatsApp Share Button for Credit Entries
             let receiptBtns = '';
             if (item.credit > 0) {
                 receiptBtns = `
@@ -1350,19 +1481,22 @@
     }
 
     // ============================================================
-    //  🧾 SINGLE RECEIPT PRINT (देणगी पावती)
+    //  🧾 SINGLE RECEIPT PRINT (देणगी पावती - PN/VN विना फक्त नंबर)
     // ============================================================
 
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
 
+        // Clean number without 'PN'
+        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+
         const receiptHtml = `
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>पावती - ${escapeHTML(item.voucher || item.name)}</title>
+            <title>पावती - ${escapeHTML(cleanReceiptNum)}</title>
             <style>
                 @page { size: A5 landscape; margin: 8mm; }
                 body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 15px; }
@@ -1389,7 +1523,7 @@
                 <div class="receipt-title">देणगी / पावती (Receipt)</div>
                 <table class="details-table">
                     <tr>
-                        <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(item.voucher || '-')}</td>
+                        <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(cleanReceiptNum)}</td>
                         <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
                     </tr>
                     <tr>
@@ -1422,12 +1556,13 @@
         printWin.document.close();
     }
 
-    // Feature 3: Share Receipt on WhatsApp
+    // Share Receipt on WhatsApp (Clean number without PN)
     function shareReceiptOnWhatsApp(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
 
-        const voucherText = item.voucher ? `*पावती क्र:* ${item.voucher}\n` : '';
+        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+        const voucherText = cleanReceiptNum !== '-' ? `*पावती क्र:* ${cleanReceiptNum}\n` : '';
         const descText = item.description ? `*तपशील:* ${item.description}\n` : '';
 
         const msg = 
@@ -1447,7 +1582,7 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
     }
 
     // ============================================================
-    //  🖨️ GENERATE MONTH-WISE PDF (Feature 2: Page Overflow Fix)
+    //  🖨️ GENERATE MONTH-WISE PDF (Page Overflow & Blank Page Fix)
     // ============================================================
 
     function generateMonthwisePDF(type = 'all') {
@@ -1511,7 +1646,7 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
                 .credit-text { color: #198754; font-weight: 700; }
                 .debit-text { color: #dc3545; font-weight: 700; }
                 
-                /* Overflow & orphan signatures protection */
+                /* Overflow & signature page-split fix */
                 .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
                 .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 11px; margin-bottom: 0; }
                 .summary-table td { padding: 6px 10px; font-weight: 600; }
@@ -1672,7 +1807,7 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
         const submitBtn = document.getElementById('addUpdateBtn');
         const statusText = document.getElementById('fileUploadStatus');
 
-        // Feature 1: Name validation is now required
+        // Validation: Date, Name, Amount compulsory
         if (!dateVal || !name || isNaN(amount) || amount <= 0) {
             alert('कृपया दिनांक, नाव आणि ० पेक्षा जास्त रक्कम ही सर्व माहिती भरा.');
             return;
@@ -1725,13 +1860,15 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
             }
 
             cancelEdit();
-            document.getElementById('newVoucher').value = '';
             document.getElementById('newDocFile').value = '';
             document.getElementById('newDocUrlInput').value = '';
             document.getElementById('newName').value = '';
             document.getElementById('newDesc').value = '';
             document.getElementById('newAmount').value = '';
             statusText.textContent = '';
+
+            // Auto-advance next voucher number
+            handleVoucherTypeChange();
         } catch(err) {
             alert('Error: ' + err.message);
         } finally {
@@ -1755,7 +1892,17 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
         document.getElementById('cancelEditBtn').style.display = 'inline-block';
 
         document.getElementById('newDate').value = item.rawDate || parseToIsoDate(item.date);
-        document.getElementById('newVoucher').value = item.voucher || '';
+        
+        // Auto detect voucher dropdown
+        const v = item.voucher || '';
+        const vSelect = document.getElementById('voucherTypeSelect');
+        if (/^PN/i.test(v)) vSelect.value = 'PN';
+        else if (/^A\/VSN/i.test(v)) vSelect.value = 'A/VSN';
+        else if (/^VN.*IBT/i.test(v)) vSelect.value = 'VN_IBT';
+        else if (/^VN/i.test(v)) vSelect.value = 'VN';
+        else vSelect.value = 'OTHER';
+        
+        document.getElementById('newVoucher').value = v;
         document.getElementById('newDocUrlInput').value = item.docUrl || '';
         document.getElementById('newDocFile').value = '';
         
@@ -1780,13 +1927,13 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
         document.getElementById('addUpdateBtn').textContent = '➕ Add Transaction';
         document.getElementById('addUpdateBtn').className = 'btn btn-success';
         document.getElementById('cancelEditBtn').style.display = 'none';
-        document.getElementById('newVoucher').value = '';
         document.getElementById('newDocFile').value = '';
         document.getElementById('newDocUrlInput').value = '';
         document.getElementById('fileUploadStatus').textContent = '';
         document.getElementById('newName').value = '';
         document.getElementById('newDesc').value = '';
         document.getElementById('newAmount').value = '';
+        handleVoucherTypeChange();
     }
 
     async function deleteEntry(id) {
@@ -1825,7 +1972,7 @@ ${descText}*स्वीकारलेली रक्कम:* ${formatIndianNu
     function downloadTemplate() {
         if (currentRole !== 'admin') return;
         const headers = ['Date', 'Voucher/Pavti No.', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
-        const sample = ['2026-04-01', 'V-001', 'https://...', 'रमेश पाटील', 'देणगी', '5000', '0'];
+        const sample = ['2026-04-01', 'PN 01', 'https://...', 'रमेश पाटील', 'देणगी', '5000', '0'];
         const csv = headers.join(',') + '\n' + sample.join(',');
         downloadFile(csv, 'CashBook_Template.csv', 'text/csv');
         showToast('📄 Template downloaded!');
