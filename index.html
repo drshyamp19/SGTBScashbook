@@ -412,18 +412,41 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             padding: 3px 5px;
             border-radius: 4px;
+            transition: 0.15s;
         }
         .action-btn.edit-btn { color: #2a7de1; }
         .action-btn.edit-btn:hover { background: #d4e4ff; }
         .action-btn.del-btn { color: #dc3545; }
         .action-btn.del-btn:hover { background: #ffd4d4; }
         .action-btn.wa-btn { color: #25D366; }
-        .action-btn.wa-btn:hover { background: #d4f8e0; }
+        .action-btn.wa-btn:hover { transform: scale(1.15); background: #d4f8e0; }
         .action-btn.voucher-btn { color: #6f42c1; }
         .action-btn.voucher-btn:hover { background: #f0e6ff; }
+
+        /* WhatsApp Circular Icon like screenshot */
+        .wa-inline-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #25D366;
+            color: white;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(37,211,102,0.3);
+            vertical-align: middle;
+            transition: 0.2s;
+        }
+        .wa-inline-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 3px 8px rgba(37,211,102,0.5);
+        }
 
         .search-controls {
             display: flex;
@@ -470,7 +493,7 @@
             align-items: center;
         }
         .voucher-input-group select {
-            min-width: 130px;
+            min-width: 140px;
             background: #fff;
             font-weight: 600;
         }
@@ -543,7 +566,7 @@
             color: #795548;
         }
 
-        /* Modals */
+        /* Modals & Popups */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -559,7 +582,7 @@
             padding: 25px 30px;
             border-radius: 16px;
             width: 90%;
-            max-width: 420px;
+            max-width: 440px;
             box-shadow: 0 10px 35px rgba(0,0,0,0.3);
             text-align: left;
         }
@@ -573,6 +596,93 @@
             margin-bottom: 14px;
         }
         .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+        /* EXACT WHATSAPP MODAL LIKE SCREENSHOT (2) */
+        .wa-modal-box {
+            background: white;
+            padding: 24px;
+            border-radius: 18px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+            position: relative;
+        }
+        .wa-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .wa-modal-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.15rem;
+            color: #0d2b44;
+            font-weight: 700;
+        }
+        .wa-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #888;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+        .wa-close-btn:hover { color: #333; }
+        .wa-message-textarea {
+            width: 100%;
+            height: 240px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #1e293b;
+            resize: none;
+            margin-bottom: 18px;
+            outline: none;
+        }
+        .wa-modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .wa-btn-send {
+            flex: 1;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .wa-btn-send:hover { background: #1eb954; }
+        .wa-btn-copy {
+            flex: 1;
+            background: #e2e8f0;
+            color: #334155;
+            border: none;
+            padding: 11px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .wa-btn-copy:hover { background: #cbd5e1; }
 
         /* Admin / Viewer Guards */
         .admin-only { display: none; }
@@ -876,14 +986,15 @@
                     <input type="date" id="newDate">
                 </div>
                 <div class="field">
-                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Auto/Manual)</span></label>
+                    <!-- 5 Voucher Types with Auto-Increment -->
+                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(5 Options)</span></label>
                     <div class="voucher-input-group">
                         <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
-                            <option value="PN">PN (देणगी पावती)</option>
+                            <option value="PN">PN (सामान्य देणगी)</option>
                             <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
-                            <option value="VN">VN (खर्च/व्हाउचर)</option>
+                            <option value="VN">VN (सर्व सामान्य खर्च)</option>
                             <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
-                            <option value="OTHER">Other / इतर (Manual)</option>
+                            <option value="OTHER">Other / इतर (Manual Box)</option>
                         </select>
                         <input type="text" id="newVoucher" placeholder="उदा. PN 01">
                     </div>
@@ -932,14 +1043,24 @@
             </div>
         </div>
 
-        <!-- 6. ALL TRANSACTIONS TABLE -->
+        <!-- 6. ALL TRANSACTIONS TABLE (With Voucher Type Filter & Inline WhatsApp Icon) -->
         <div class="card">
             <div class="flex-between">
                 <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
                 <div class="search-controls">
+                    <label>Voucher:
+                        <select id="filterVoucherTypeSelect" onchange="filterTable()">
+                            <option value="all">All Vouchers</option>
+                            <option value="PN">PN (सामान्य देणगी)</option>
+                            <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
+                            <option value="VN_PURE">VN (सामान्य खर्च)</option>
+                            <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
+                            <option value="OTHER">Other / इतर</option>
+                        </select>
+                    </label>
                     <label>FY:
                         <select id="filterFYSelect" onchange="filterTable()">
-                            <option value="all">All Financial Years</option>
+                            <option value="all">All FYs</option>
                             <option value="2023-24">FY 2023-24</option>
                             <option value="2024-25">FY 2024-25</option>
                             <option value="2025-26">FY 2025-26</option>
@@ -949,15 +1070,15 @@
                     <label>Mode: 
                         <select id="filterModeSelect" onchange="filterTable()">
                             <option value="all">All Modes</option>
-                            <option value="bank">Bank Only</option>
-                            <option value="cash">Cash Only</option>
-                            <option value="contra">Contra Only</option>
+                            <option value="bank">Bank</option>
+                            <option value="cash">Cash</option>
+                            <option value="contra">Contra</option>
                         </select>
                     </label>
-                    <label>From: <input type="date" id="filterFromDate" onchange="filterTable()" title="Start Date"></label>
-                    <label>To: <input type="date" id="filterToDate" onchange="filterTable()" title="End Date"></label>
-                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (नाव/तपशील/पावती)" onkeyup="filterTable()">
-                    <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" title="Reset Filters">✖ Reset</button>
+                    <label>From: <input type="date" id="filterFromDate" onchange="filterTable()"></label>
+                    <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
+                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
+                    <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
                 </div>
             </div>
 
@@ -995,6 +1116,27 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     3. POPUP MODALS: WHATSAPP SHARE POPUP LIKE SCREENSHOT (2)
+============================================================ -->
+<div class="modal-overlay" id="whatsappShareModal">
+    <div class="wa-modal-box">
+        <div class="wa-modal-header">
+            <h3><span style="color:#25D366; font-size:22px;">💬</span> Share via WhatsApp</h3>
+            <button class="wa-close-btn" onclick="closeWhatsAppModal()">✖</button>
+        </div>
+        <textarea id="waShareMessagePreview" class="wa-message-textarea" spellcheck="false"></textarea>
+        <div class="wa-modal-actions">
+            <button class="wa-btn-send" onclick="sendWhatsAppFromModal()">
+                <span>🟢 Send to WhatsApp</span>
+            </button>
+            <button class="wa-btn-copy" onclick="copyWhatsAppMessageFromModal()">
+                <span>📋 Copy Message</span>
+            </button>
         </div>
     </div>
 </div>
@@ -1239,7 +1381,7 @@
             closeChangePasswordModal();
             showToast('✅ पासवर्ड यशस्वीरीत्या बदलला गेला!');
         } catch(err) {
-            alert('त्रुटी: ' + err.message + '\n(सूचना: सुरक्षिततेसाठी अलीकडेच लॉगिन केलेले असणे आवश्यक आहे)');
+            alert('त्रुटी: ' + err.message);
         }
     }
 
@@ -1364,7 +1506,6 @@
         return (isNegative ? '- ' : '') + '₹ ' + formatted + '.' + decPart;
     }
 
-    // Indian Number to Marathi Words Function
     function numberToMarathiWords(n) {
         n = parseFloat(n);
         if (isNaN(n) || n === 0) return 'शून्य रुपये फक्त';
@@ -1517,7 +1658,7 @@
     }
 
     // ============================================================
-    //  🔢 AUTO-INCREMENT LOGIC (5 OPTIONS)
+    //  🔢 5 VOUCHER TYPES WITH AUTO-INCREMENT LOGIC
     // ============================================================
     function getNextVoucherString(selectedType) {
         const pad = (num, size = 2) => String(num).padStart(size, '0');
@@ -1546,6 +1687,7 @@
             return `A/VSN ${pad(maxAVSN + 1)}`;
         }
 
+        // VN is continuous across normal expense and VN IBT
         let maxVN = 0;
         let maxIBT = 0;
         transactionsData.forEach(t => {
@@ -1570,7 +1712,7 @@
             return `VN ${pad(maxVN + 1)} IBT ${pad(maxIBT + 1)}`;
         }
 
-        return '';
+        return ''; // Other / इतर (Manual)
     }
 
     function handleVoucherTypeChange() {
@@ -1579,7 +1721,7 @@
 
         if (typeSelect === 'OTHER') {
             voucherInput.value = '';
-            voucherInput.placeholder = 'उदा. UPI / Cheque / इतर नंबर';
+            voucherInput.placeholder = 'उदा. UPI / Cheque / UTR नंबर टाका';
             voucherInput.focus();
         } else {
             voucherInput.value = getNextVoucherString(typeSelect);
@@ -2097,7 +2239,7 @@
     }
 
     // ============================================================
-    //  RENDER TABLE & STATS (Filtered Stats Sync)
+    //  RENDER TABLE & STATS (Inline WhatsApp Icon like Screenshot 1)
     // ============================================================
     function renderTable(data) {
         const tbody = document.getElementById('tableBody');
@@ -2124,16 +2266,24 @@
             if (mode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
             else if (mode === 'contra') modeHtml = '<span class="mode-badge mode-contra">🔄 Contra</span>';
 
-            // NO RECEIPT FOR CONTRA ENTRIES
+            // WhatsApp Icon like screenshot (1) right next to Credit Amount
+            let creditAmountHtml = '-';
+            if (item.cashIn > 0 || item.bankIn > 0) {
+                const crAmt = item.cashIn > 0 ? item.cashIn : item.bankIn;
+                const isContra = (mode === 'contra');
+                const waIcon = !isContra ? `<span class="wa-inline-icon" onclick="openWhatsAppModal('${item.id}')" title="Share via WhatsApp">💬</span>` : '';
+                creditAmountHtml = `<span style="color:#28a745; font-weight:600;">${formatIndianNum(crAmt)}</span>${waIcon}`;
+            }
+
+            // ACTION BUTTONS: Print Receipt for Credit, Print Voucher for Debit
             let receiptBtns = '';
             if (mode !== 'contra' && (item.cashIn > 0 || item.bankIn > 0)) {
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
-                    <button class="action-btn wa-btn" onclick="shareReceiptOnWhatsApp('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
+                    <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
                 `;
             }
 
-            // EXPENSE / PAYMENT VOUCHER PRINT (FOR DEBIT)
             let voucherBtn = '';
             if (mode !== 'contra' && (item.cashOut > 0 || item.bankOut > 0)) {
                 voucherBtn = `
@@ -2149,10 +2299,10 @@
                 <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                 <td>${escapeHTML(item.description || '-')}</td>
                 
-                <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                <td style="text-align:right; white-space:nowrap;">${item.cashIn > 0 ? creditAmountHtml : '-'}</td>
                 <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
                 
-                <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                <td style="text-align:right; white-space:nowrap;">${item.bankIn > 0 ? creditAmountHtml : '-'}</td>
                 <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
                 
                 <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
@@ -2219,6 +2369,7 @@
         document.getElementById('filterToDate').value = '';
         document.getElementById('filterModeSelect').value = 'all';
         document.getElementById('filterFYSelect').value = 'all';
+        document.getElementById('filterVoucherTypeSelect').value = 'all';
         filterTable();
     }
 
@@ -2228,15 +2379,17 @@
         const toDate = document.getElementById('filterToDate').value;
         const modeFilter = document.getElementById('filterModeSelect').value;
         const fyFilter = document.getElementById('filterFYSelect').value;
+        const voucherTypeFilter = document.getElementById('filterVoucherTypeSelect').value;
 
         const banner = document.getElementById('filterBanner');
         const bannerText = document.getElementById('filterBannerText');
         const resetTop = document.getElementById('resetFilterTopBtn');
 
-        let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || query || fromDate || toDate;
+        let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || (voucherTypeFilter !== 'all') || query || fromDate || toDate;
 
         if (isFiltered) {
             let filterDesc = [];
+            if (voucherTypeFilter !== 'all') filterDesc.push(`व्हाउचर: ${voucherTypeFilter}`);
             if (fyFilter !== 'all') filterDesc.push(`आर्थिक वर्ष: FY ${fyFilter}`);
             if (modeFilter !== 'all') filterDesc.push(`Mode: ${modeFilter.toUpperCase()}`);
             if (fromDate) filterDesc.push(`From: ${formatDateToDisplay(fromDate)}`);
@@ -2255,6 +2408,18 @@
             if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
             if (modeFilter !== 'all' && t.paymentMode !== modeFilter) return false;
 
+            // 5 VOUCHER TYPE FILTER MATCHING
+            if (voucherTypeFilter !== 'all') {
+                const v = (t.voucher || '').trim();
+                if (voucherTypeFilter === 'PN' && !/^PN/i.test(v)) return false;
+                if (voucherTypeFilter === 'A/VSN' && !/^A\/VSN/i.test(v)) return false;
+                if (voucherTypeFilter === 'VN_IBT' && !(/VN/i.test(v) && /IBT/i.test(v))) return false;
+                if (voucherTypeFilter === 'VN_PURE' && (!/^VN/i.test(v) || /IBT/i.test(v))) return false;
+                if (voucherTypeFilter === 'OTHER') {
+                    if (/^PN/i.test(v) || /^A\/VSN/i.test(v) || /^VN/i.test(v)) return false;
+                }
+            }
+
             const raw = t.rawDate || parseToIsoDate(t.date);
             if (fromDate && raw < fromDate) return false;
             if (toDate && raw > toDate) return false;
@@ -2271,7 +2436,60 @@
     }
 
     // ============================================================
-    //  🧾 RECEIPT PRINT & WHATSAPP (WITH AMOUNT IN WORDS)
+    //  WHATSAPP POPUP MODAL (LIKE SCREENSHOT 2)
+    // ============================================================
+    let currentWhatsAppText = '';
+
+    function openWhatsAppModal(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) return;
+
+        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
+        const amountWords = numberToMarathiWords(receiptAmount);
+        const voucherText = cleanReceiptNum !== '-' ? `📜 *पावती क्र:* ${cleanReceiptNum}\n` : '';
+        const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
+        const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
+
+        currentWhatsAppText = 
+`🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
+श्रीराम नगर भद्रावती (Reg. No. F-0016068)
+----------------------------------------
+📜 *देणगी पावती (Donation Receipt)*
+----------------------------------------
+${voucherText}📅 *दिनांक:* ${item.date}
+🧑‍💼 *दात्याचे नाव:* ${item.name || '-'}
+${modeText}${descText}💰 *स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
+✍️ *अक्षरी:* ${amountWords}
+----------------------------------------
+आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
+
+        document.getElementById('waShareMessagePreview').value = currentWhatsAppText;
+        document.getElementById('whatsappShareModal').style.display = 'flex';
+    }
+
+    function closeWhatsAppModal() {
+        document.getElementById('whatsappShareModal').style.display = 'none';
+    }
+
+    function sendWhatsAppFromModal() {
+        const textToSend = document.getElementById('waShareMessagePreview').value;
+        const encoded = encodeURIComponent(textToSend);
+        window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+        closeWhatsAppModal();
+    }
+
+    function copyWhatsAppMessageFromModal() {
+        const textToCopy = document.getElementById('waShareMessagePreview').value;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast('📋 मेसेज कॉपी झाला!');
+        }).catch(err => {
+            alert('कॉपी करताना त्रुटी आली: ' + err.message);
+        });
+    }
+
+    // ============================================================
+    //  🧾 SINGLE RECEIPT PRINT (WITH AMOUNT IN WORDS)
     // ============================================================
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -2349,36 +2567,8 @@
         printWin.document.close();
     }
 
-    function shareReceiptOnWhatsApp(id) {
-        const item = (transactionsData || []).find(t => t.id === id);
-        if (!item) return;
-
-        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
-        const voucherText = cleanReceiptNum !== '-' ? `*पावती क्र:* ${cleanReceiptNum}\n` : '';
-        const descText = item.description ? `*तपशील:* ${item.description}\n` : '';
-        const modeText = `*पेमेंट मोड:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
-        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
-        const amountWords = numberToMarathiWords(receiptAmount);
-
-        const msg = 
-`🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
-श्रीराम नगर भद्रावती (Reg. No. F-0016068)
-----------------------------------------
-📜 *देणगी पावती (Donation Receipt)*
-----------------------------------------
-${voucherText}*दिनांक:* ${item.date}
-*दात्याचे नाव:* ${item.name || '-'}
-${modeText}${descText}*स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
-*अक्षरी:* ${amountWords}
-----------------------------------------
-आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
-
-        const encodedMsg = encodeURIComponent(msg);
-        window.open(`https://api.whatsapp.com/send?text=${encodedMsg}`, '_blank');
-    }
-
     // ============================================================
-    //  📑 EXPENSE / PAYMENT VOUCHER PRINT (WITH AMOUNT IN WORDS)
+    //  📑 EXPENSE / PAYMENT VOUCHER PRINT (FOR DEBIT)
     // ============================================================
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -2465,8 +2655,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
         const fySelect = document.getElementById('filterFYSelect').value;
         const targetFY = (fySelect !== 'all') ? fySelect : '2026-27';
 
-        // Filter continuous month keys belonging to selected FY
-        // e.g. FY 2024-25 = months from 2024-04 to 2025-03
         const allKeys = Object.keys(monthlyContinuousMap).sort();
         const fyMonthKeys = allKeys.filter(mKey => {
             const [y, m] = mKey.split('-').map(Number);
