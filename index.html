@@ -355,6 +355,7 @@
             max-height: 580px;
             border: 1px solid #d0d7de;
             border-radius: 8px;
+            -webkit-overflow-scrolling: touch;
         }
         table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 1200px; }
         th {
@@ -432,7 +433,7 @@
             padding: 7px 14px;
             border: 1px solid #ced4da;
             border-radius: 20px;
-            width: 190px;
+            width: 180px;
             font-size: 13px;
         }
 
@@ -519,6 +520,20 @@
             gap: 10px;
         }
 
+        /* Backup Reminder Card */
+        .backup-reminder-bar {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #795548;
+        }
+
         /* Modal */
         .modal-overlay {
             display: none;
@@ -564,7 +579,9 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 860px) {
+            #mainAppSection { padding: 12px; }
+            .card { padding: 16px; margin-bottom: 16px; }
             .add-entry-form .field { width: 100%; }
             .add-entry-form input, .add-entry-form select { width: 100%; }
             .voucher-input-group { flex-direction: column; align-items: stretch; width: 100%; }
@@ -643,6 +660,15 @@
             </div>
         </div>
 
+        <!-- AUTO-BACKUP REMINDER BAR -->
+        <div id="backupReminderBar" class="backup-reminder-bar admin-only">
+            <span>💾 <strong>सुरक्षा सूचना:</strong> नवीन नोंदींचा बॅकअप सुरक्षित ठेवण्यासाठी कृपया JSON बॅकअप डाऊनलोड करा.</span>
+            <div>
+                <button class="btn btn-warning btn-sm" onclick="backupData(); dismissBackupReminder();" style="margin:0 4px;">💾 Backup Now</button>
+                <button class="btn btn-secondary btn-sm" onclick="dismissBackupReminder();" style="margin:0;">✖ नंतर</button>
+            </div>
+        </div>
+
         <!-- Top Actions -->
         <div class="flex-between" style="margin-bottom:15px;">
             <h1 style="margin-bottom:0;">📒 TWO-COLUMN CASH BOOK</h1>
@@ -654,7 +680,7 @@
 
         <div id="toast" class="toast">✅ Success!</div>
 
-        <!-- NEW: MONTH-WISE ON-SCREEN VIEWER CARD -->
+        <!-- MONTH-WISE ON-SCREEN VIEWER CARD (Auto-Selects Latest Month) -->
         <div class="card" style="border: 1.5px solid #2a7de1;">
             <div class="flex-between">
                 <div>
@@ -663,7 +689,7 @@
                 </div>
                 <div class="flex-row">
                     <select id="screenMonthSelect" style="padding:8px 12px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:13px;">
-                        <!-- Dynamically filled with continuous months -->
+                        <!-- Dynamically filled with continuous months; latest selected by default -->
                     </select>
                     <button class="btn btn-success" onclick="viewSelectedMonthOnScreen()">👁️ महिना पहा</button>
                     <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
@@ -826,7 +852,7 @@
             </div>
         </div>
 
-        <!-- 5. ADD / EDIT TRANSACTION (Main entry point for edits) -->
+        <!-- 5. ADD / EDIT TRANSACTION (Main entry point with Negative Cash Guard) -->
         <div class="card admin-only" id="addEditCard">
             <h2 id="formTitle">➕ Add New Transaction</h2>
             <div class="edit-indicator" id="editIndicator">
@@ -895,11 +921,21 @@
             </div>
         </div>
 
-        <!-- 6. ALL TRANSACTIONS TABLE (With Edit/Delete options) -->
+        <!-- 6. ALL TRANSACTIONS TABLE (With Financial Year Filter) -->
         <div class="card">
             <div class="flex-between">
                 <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
                 <div class="search-controls">
+                    <!-- FINANCIAL YEAR FILTER DROPDOWN -->
+                    <label>FY:
+                        <select id="filterFYSelect" onchange="filterTable()">
+                            <option value="all">All Financial Years</option>
+                            <option value="2023-24">FY 2023-24</option>
+                            <option value="2024-25">FY 2024-25</option>
+                            <option value="2025-26">FY 2025-26</option>
+                            <option value="2026-27">FY 2026-27</option>
+                        </select>
+                    </label>
                     <label>Mode: 
                         <select id="filterModeSelect" onchange="filterTable()">
                             <option value="all">All Modes</option>
@@ -987,7 +1023,7 @@
     let storage = null;
     let transactionsData = [];
     let viewersData = [];
-    let monthlyContinuousMap = {}; // Stores all continuous months including NIL
+    let monthlyContinuousMap = {};
     let currentRole = 'none';
 
     const monthNamesMarathi = [
@@ -1019,6 +1055,7 @@
                 document.getElementById('mainAppSection').style.display = 'block';
                 initRealtimeSync();
                 initViewersSync();
+                checkBackupReminder();
             } else if (currentRole !== 'viewer') {
                 showFrontPage();
             }
@@ -1299,6 +1336,19 @@
         return new Date().toISOString().split('T')[0];
     }
 
+    function getFinancialYear(isoDateStr) {
+        if (!isoDateStr) return '';
+        const parts = isoDateStr.split('-');
+        if (parts.length < 2) return '';
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        if (m >= 4) {
+            return `${y}-${String(y + 1).slice(-2)}`;
+        } else {
+            return `${y - 1}-${String(y).slice(-2)}`;
+        }
+    }
+
     function parseCSVLine(text) {
         let result = [];
         let insideQuotes = false;
@@ -1466,6 +1516,7 @@
         data.forEach(item => {
             item.rawDate = item.rawDate || parseToIsoDate(item.date);
             item.date = formatDateToDisplay(item.rawDate);
+            item.fy = getFinancialYear(item.rawDate);
             item.paymentMode = inferPaymentMode(item);
 
             const cr = parseFloat(item.credit) || 0;
@@ -1499,7 +1550,6 @@
             item.totalBal = runningCashBal + runningBankBal;
         });
 
-        // Build continuous month map (including NIL months)
         buildContinuousMonthlyMap(data);
 
         return data;
@@ -1515,7 +1565,6 @@
         const [startYear, startMonth] = firstDateStr.split('-').map(Number);
         const [endYear, endMonth] = lastDateStr.split('-').map(Number);
 
-        // Group actual transactions by month
         const rawGroups = {};
         sortedData.forEach(item => {
             const key = item.rawDate.slice(0, 7);
@@ -1530,9 +1579,11 @@
 
         const dropdown = document.getElementById('screenMonthSelect');
         if (dropdown) dropdown.innerHTML = '';
+        let latestMonthKey = '';
 
         while (curY < endYear || (curY === endYear && curM <= endMonth)) {
             const mKey = `${curY}-${String(curM).padStart(2, '0')}`;
+            latestMonthKey = mKey;
             const mLabel = `${monthNamesMarathi[curM - 1]} ${curY}`;
 
             const openCash = carryCash;
@@ -1554,7 +1605,6 @@
             const closeCash = openCash + mCashIn - mCashOut;
             const closeBank = openBank + mBankIn - mBankOut;
 
-            // Save in map
             monthlyContinuousMap[mKey] = {
                 key: mKey,
                 label: mLabel,
@@ -1572,7 +1622,6 @@
                 isNil: (items.length === 0)
             };
 
-            // Populate Dropdown
             if (dropdown) {
                 const opt = document.createElement('option');
                 opt.value = mKey;
@@ -1580,12 +1629,16 @@
                 dropdown.appendChild(opt);
             }
 
-            // Advance Month
             curM++;
             if (curM > 12) {
                 curM = 1;
                 curY++;
             }
+        }
+
+        // AUTO-SELECT LATEST MONTH BY DEFAULT
+        if (dropdown && latestMonthKey) {
+            dropdown.value = latestMonthKey;
         }
     }
 
@@ -1615,6 +1668,27 @@
                 badge.style.background = '#dc3545';
             });
         }
+    }
+
+    // ============================================================
+    //  AUTO-BACKUP REMINDER
+    // ============================================================
+    function checkBackupReminder() {
+        if (currentRole !== 'admin') return;
+        const lastBackupTime = localStorage.getItem('sgtb_last_backup_time');
+        const now = Date.now();
+        const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+
+        if (!lastBackupTime || (now - parseInt(lastBackupTime, 10)) > thirtyDays) {
+            const bar = document.getElementById('backupReminderBar');
+            if (bar) bar.style.display = 'flex';
+        }
+    }
+
+    function dismissBackupReminder() {
+        localStorage.setItem('sgtb_last_backup_time', Date.now().toString());
+        const bar = document.getElementById('backupReminderBar');
+        if (bar) bar.style.display = 'none';
     }
 
     // ============================================================
@@ -1944,6 +2018,7 @@
         document.getElementById('filterFromDate').value = '';
         document.getElementById('filterToDate').value = '';
         document.getElementById('filterModeSelect').value = 'all';
+        document.getElementById('filterFYSelect').value = 'all';
         filterTable();
     }
 
@@ -1952,15 +2027,17 @@
         const fromDate = document.getElementById('filterFromDate').value;
         const toDate = document.getElementById('filterToDate').value;
         const modeFilter = document.getElementById('filterModeSelect').value;
+        const fyFilter = document.getElementById('filterFYSelect').value;
 
         const banner = document.getElementById('filterBanner');
         const bannerText = document.getElementById('filterBannerText');
         const resetTop = document.getElementById('resetFilterTopBtn');
 
-        let isFiltered = (modeFilter !== 'all') || query || fromDate || toDate;
+        let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || query || fromDate || toDate;
 
         if (isFiltered) {
             let filterDesc = [];
+            if (fyFilter !== 'all') filterDesc.push(`आर्थिक वर्ष: FY ${fyFilter}`);
             if (modeFilter !== 'all') filterDesc.push(`Mode: ${modeFilter.toUpperCase()}`);
             if (fromDate) filterDesc.push(`From: ${formatDateToDisplay(fromDate)}`);
             if (toDate) filterDesc.push(`To: ${formatDateToDisplay(toDate)}`);
@@ -1975,6 +2052,7 @@
         }
 
         let filtered = (transactionsData || []).filter(t => {
+            if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
             if (modeFilter !== 'all' && t.paymentMode !== modeFilter) return false;
 
             const raw = t.rawDate || parseToIsoDate(t.date);
@@ -1982,7 +2060,7 @@
             if (toDate && raw > toDate) return false;
 
             if (query) {
-                const combined = `${t.name || ''} ${t.description || ''} ${t.voucher || ''} ${t.date || ''} ${t.paymentMode || ''} ${raw}`.toLowerCase();
+                const combined = `${t.name || ''} ${t.description || ''} ${t.voucher || ''} ${t.date || ''} ${t.paymentMode || ''} ${t.fy || ''} ${raw}`.toLowerCase();
                 if (!combined.includes(query)) return false;
             }
             return true;
@@ -2152,7 +2230,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             let monthTotalDebit = 0;
 
             if (isDebitOnly) {
-                // Filter pure expenses (EXCLUDING CONTRA)
                 const pureExpenses = (mData.items || []).filter(t => t.paymentMode !== 'contra' && (t.debit > 0 || (t.paymentMode === 'cash' && t.cashOut > 0) || (t.paymentMode === 'bank' && t.bankOut > 0)));
 
                 if (pureExpenses.length === 0) {
@@ -2232,7 +2309,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
                 `;
 
             } else {
-                // FULL TWO-COLUMN CASH BOOK (Includes NIL if no entries)
                 if (mData.isNil || mData.items.length === 0) {
                     rowsHtml = `
                     <tr>
@@ -2343,7 +2419,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
     }
 
     // ============================================================
-    //  CRUD OPERATIONS
+    //  CRUD OPERATIONS (With Negative Cash Guard)
     // ============================================================
     let editingId = null;
 
@@ -2364,6 +2440,22 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
         if (!dateVal || !name || isNaN(amount) || amount <= 0) {
             alert('कृपया दिनांक, नाव आणि ० पेक्षा जास्त रक्कम ही सर्व माहिती भरा.');
             return;
+        }
+
+        // NEGATIVE CASH GUARD: Prevent spending cash if Cash in Hand is insufficient
+        if ((modeVal === 'cash' && type === 'debit') || modeVal === 'contra') {
+            let currentAvailableCash = 0;
+            transactionsData.forEach(t => {
+                if (editingId && t.id === editingId) return; // skip currently edited entry
+                currentAvailableCash += ((t.cashIn || 0) - (t.cashOut || 0));
+            });
+
+            if (amount > currentAvailableCash) {
+                const confirmed = confirm(`⚠️ सावधान (Negative Cash Warning):\n\nहातातील चालू शिल्लक फक्त ${formatIndianNum(currentAvailableCash)} आहे, परंतु तुम्ही ${formatIndianNum(amount)} चा रोख खर्च / बँक डिपॉझिट टाकत आहात.\n\nऑडिटच्या नियमानुसार कॅश उणे (Negative) असू शकत नाही. तरीही ही नोंद पुढे चालू ठेवायची आहे का?`);
+                if (!confirmed) {
+                    return;
+                }
+            }
         }
 
         const rawDate = parseToIsoDate(dateVal);
@@ -2637,6 +2729,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
         }
         const json = JSON.stringify(transactionsData, null, 2);
         downloadFile(json, 'TwoColumn_Backup_' + new Date().toISOString().slice(0,10) + '.json', 'application/json');
+        dismissBackupReminder();
         showToast('💾 Backup downloaded!');
     }
 
