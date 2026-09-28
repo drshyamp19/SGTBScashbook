@@ -694,9 +694,7 @@
 </head>
 <body>
 
-<!-- ============================================================
-     1. FRONT / LANDING WELCOME PAGE
-============================================================ -->
+<!-- FRONT / LANDING PAGE -->
 <div id="frontPageSection">
     <div class="front-card">
         <img src="banner.jpg" class="front-banner-img" alt="Temple Banner" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada?w=800&auto=format&fit=crop&q=80'">
@@ -735,9 +733,7 @@
     </div>
 </div>
 
-<!-- ============================================================
-     2. MAIN CASH BOOK DASHBOARD
-============================================================ -->
+<!-- MAIN DASHBOARD -->
 <div id="mainAppSection">
     <div class="container">
         <!-- Header -->
@@ -758,7 +754,7 @@
             </div>
         </div>
 
-        <!-- Security Notice / Backup Bar -->
+        <!-- Security Notice -->
         <div id="backupReminderBar" class="backup-reminder-bar admin-item-block">
             <span>💾 <strong>Security Notice:</strong> Please download JSON backup to keep a backup of new entries safe.</span>
             <div>
@@ -767,48 +763,42 @@
             </div>
         </div>
 
-        <!-- TWO-COLUMN SUMMARY TOP CARD (क्रम: Credit -> Debit -> Cash -> Bank -> Total Balance) -->
+        <!-- TWO-COLUMN SUMMARY TOP CARD -->
         <div class="card-summary-top">
             <div class="flex-between" style="margin-bottom:12px;">
                 <h2>📊 Two-Column Summary <span style="font-size:12px; color:#64748b; font-weight:normal;">(Cash and Bank Balance Sheet)</span></h2>
             </div>
             <div class="stats-grid">
-                <!-- 1. Total Credit -->
                 <div class="stat-box credit-box" onclick="switchToRecordsWithFilter('credit')" title="फक्त जमा नोंदी पहा">
                     <div class="label">📈 Total Credit</div>
                     <div class="value" id="statTotalCredit" style="color:#198754;">₹ 0.00</div>
                     <div style="font-size:11px; color:#666; margin-top:2px;">Cash In + Bank In ↗</div>
                 </div>
 
-                <!-- 2. Total Debit -->
                 <div class="stat-box debit-box" onclick="switchToRecordsWithFilter('debit')" title="फक्त खर्च नोंदी पहा">
                     <div class="label">📉 Total Debit (Total Expenses)</div>
                     <div class="value" id="statTotalDebit" style="color:#dc3545;">₹ 0.00</div>
                     <div style="font-size:11px; color:#666; margin-top:2px;">Cash Out + Bank Out ↗</div>
                 </div>
 
-                <!-- 3. Cash in Hand -->
                 <div class="stat-box cash-box" onclick="switchToRecordsWithMode('cash')" title="फक्त रोख व्यवहार पहा">
                     <div class="label">💵 Cash in Hand</div>
                     <div class="value" id="statCashBal">₹ 0.00</div>
                     <div style="font-size:10.5px; color:#888; margin-top:2px;">In: <span id="statCashIn">₹ 0</span> | Out: <span id="statCashOut">₹ 0</span></div>
                 </div>
 
-                <!-- 4. Bank Balance -->
                 <div class="stat-box bank-box" onclick="switchToRecordsWithMode('bank')" title="फक्त बँक व्यवहार पहा">
                     <div class="label">🏦 Bank Balance</div>
                     <div class="value" id="statBankBal">₹ 0.00</div>
                     <div style="font-size:10.5px; color:#888; margin-top:2px;">In: <span id="statBankIn">₹ 0</span> | Out: <span id="statBankOut">₹ 0</span></div>
                 </div>
 
-                <!-- 5. Total Balance -->
                 <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा चालू एकूण निधी">
                     <div class="label">💰 Total Balance</div>
                     <div class="value" id="statTotalBal">₹ 0.00</div>
                     <div style="font-size:11px; color:#28a745; font-weight:600; margin-top:2px;">Cash + Bank Fund</div>
                 </div>
 
-                <!-- 6. Total Transactions -->
                 <div class="stat-box" onclick="switchAppTab('tabPanelRecords')" title="सर्व नोंदी पहा">
                     <div class="label">🧾 Total Transactions</div>
                     <div class="value" id="totalEntries">0</div>
@@ -835,9 +825,7 @@
 
         <div id="toast" class="toast">✅ Success!</div>
 
-        <!-- ==========================================
-             TAB 1: ➕ ADD ENTRY
-        =========================================== -->
+        <!-- TAB 1: ADD ENTRY -->
         <div id="tabPanelAdd" class="tab-panel-section admin-item-block active">
             <div class="card" id="addEditCard">
                 <h2 id="formTitle">➕ Add New Transaction</h2>
@@ -909,9 +897,7 @@
             </div>
         </div>
 
-        <!-- ==========================================
-             TAB 2: 📋 ALL RECORDS
-        =========================================== -->
+        <!-- TAB 2: ALL RECORDS -->
         <div id="tabPanelRecords" class="tab-panel-section">
             <div class="card">
                 <div class="flex-between">
@@ -996,9 +982,7 @@
             </div>
         </div>
 
-        <!-- ==========================================
-             TAB 3: 📒 CASH BOOK (LEDGER)
-        =========================================== -->
+        <!-- TAB 3: CASH BOOK (LEDGER) -->
         <div id="tabPanelLedger" class="tab-panel-section">
             <div class="card" style="border: 1.5px solid #2a7de1;">
                 <div class="flex-between">
@@ -1078,11 +1062,9 @@
             </div>
         </div>
 
-        <!-- ==========================================
-             TAB 4: ⚙️ MANAGEMENT (FAKT YACH TAB MADHE DISNAR)
-        =========================================== -->
+        <!-- TAB 4: MANAGEMENT -->
         <div id="tabPanelMgmt" class="tab-panel-section admin-item-block">
-            <!-- 1. Admin Security & Account -->
+            <!-- 1. Admin Security -->
             <div class="card">
                 <div class="flex-between">
                     <h2>🔑 Admin Security & Account <span class="badge" style="background:#ffc107; color:#212529; font-size:11px; padding:2px 8px; border-radius:12px;">Admin Only</span></h2>
@@ -1160,10 +1142,7 @@
     </div>
 </div>
 
-<!-- ==========================================
-     3. POPUP MODALS
-=========================================== -->
-<!-- WHATSAPP SHARE MODAL -->
+<!-- MODALS -->
 <div class="modal-overlay" id="whatsappShareModal">
     <div class="wa-modal-box">
         <div class="flex-between" style="margin-bottom:14px;">
@@ -1178,7 +1157,6 @@
     </div>
 </div>
 
-<!-- CHANGE PASSWORD MODAL -->
 <div class="modal-overlay" id="changePasswordModal">
     <div class="modal-box">
         <h3>🔑 Change Admin Password</h3>
@@ -1187,7 +1165,6 @@
         <input type="password" id="newAdminPasswordInput" placeholder="नवीन पासवर्ड टाका">
         <label style="font-size:12px; font-weight:600; color:#555;">Confirm Password:</label>
         <input type="password" id="confirmAdminPasswordInput" placeholder="पासवर्ड पुन्हा टाका">
-        
         <div class="modal-actions">
             <button class="btn btn-secondary btn-sm" onclick="closeChangePasswordModal()">रद्द करा</button>
             <button class="btn btn-warning btn-sm" onclick="performUpdatePassword()">पासवर्ड अपडेट करा</button>
@@ -1195,14 +1172,12 @@
     </div>
 </div>
 
-<!-- FORGOT PASSWORD MODAL -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
         <h3>🔑 Admin Password Reset</h3>
         <p style="font-size:13px; color:#666; margin-bottom:12px;">नोंदणीकृत ईमेल टाका. पासवर्ड रीसेट करण्याची लिंक ईमेलवर पाठवली जाईल.</p>
         <label style="font-size:12px; font-weight:600; color:#555;">Registered Admin Email:</label>
         <input type="email" id="modalResetEmailInput" placeholder="उदा. shyam.mauli@gmail.com">
-        
         <div class="modal-actions">
             <button class="btn btn-secondary btn-sm" onclick="closeForgotModal()">रद्द करा</button>
             <button class="btn btn-warning btn-sm" onclick="performResetPasswordEmail()">रीसेट लिंक पाठवा</button>
@@ -1263,7 +1238,7 @@
                 initRealtimeSync();
                 initViewersSync();
                 checkBackupReminder();
-                switchAppTab('tabPanelAdd'); // Admin starts on Tab 1
+                switchAppTab('tabPanelAdd');
             } else if (currentRole !== 'viewer') {
                 showFrontPage();
             }
@@ -1284,9 +1259,6 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // ============================================================
-    //  🚀 TAB NAVIGATION ENGINE
-    // ============================================================
     function switchAppTab(panelId) {
         document.querySelectorAll('.tab-panel-section').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
@@ -1314,9 +1286,6 @@
         filterTable();
     }
 
-    // ============================================================
-    //  AUTHENTICATION & PASSWORD MANAGEMENT
-    // ============================================================
     function switchLoginTab(tab) {
         document.getElementById('tabAdminBtn').classList.toggle('active', tab === 'admin');
         document.getElementById('tabViewerBtn').classList.toggle('active', tab === 'viewer');
@@ -1342,15 +1311,7 @@
             showToast('🔓 Welcome Admin!');
         } catch(err) {
             console.error("Auth error:", err);
-            let msg = 'लॉगिन अयशस्वी: ';
-            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-                msg += 'ईमेल किंवा पासवर्ड चुकीचा आहे.';
-            } else if (err.code === 'auth/invalid-email') {
-                msg += 'ईमेलचा फॉरमॅट चुकीचा आहे.';
-            } else {
-                msg += err.message;
-            }
-            alert(msg);
+            alert('लॉगिन अयशस्वी: ' + err.message);
         } finally {
             btn.disabled = false;
             btn.textContent = '🔐 Admin Login';
@@ -1384,7 +1345,7 @@
                 document.getElementById('mainAppSection').style.display = 'block';
                 showToast(`👋 Welcome ${viewer.name || viewer.username}!`);
                 initRealtimeSync();
-                switchAppTab('tabPanelRecords'); // Viewers naturally start on Tab 2
+                switchAppTab('tabPanelRecords');
             } else {
                 alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
             }
@@ -1423,7 +1384,7 @@
         try {
             await auth.sendPasswordResetEmail(email);
             closeForgotModal();
-            alert('✅ पासवर्ड रीसेट करण्याची लिंक तुमच्या ईमेलवर पाठवली आहे.');
+            alert('✅ पासवर्ड रीसेट करण्याची लिंक ईमेलवर पाठवली आहे.');
         } catch(err) {
             alert('त्रुटी: ' + err.message);
         }
@@ -1444,7 +1405,7 @@
         const p2 = document.getElementById('confirmAdminPasswordInput').value;
 
         if (!p1 || p1.length < 6) {
-            alert('नवीन पासवर्ड किमान ६ अक्षरांचा असणे आवश्यक आहे.');
+            alert('नवीन पासवर्ड किमान ६ अक्षरांचा असावा.');
             return;
         }
         if (p1 !== p2) {
@@ -1453,23 +1414,17 @@
         }
 
         const user = auth.currentUser;
-        if (!user) {
-            alert('कृपया पुन्हा लॉगिन करा.');
-            return;
-        }
+        if (!user) return;
 
         try {
             await user.updatePassword(p1);
             closeChangePasswordModal();
-            showToast('✅ पासवर्ड यशस्वीरीत्या बदलला गेला!');
+            showToast('✅ पासवर्ड यशस्वीरीत्या बदलला!');
         } catch(err) {
             alert('त्रुटी: ' + err.message);
         }
     }
 
-    // ============================================================
-    //  👥 VIEWER MANAGEMENT
-    // ============================================================
     function initViewersSync() {
         if (db && currentRole === 'admin') {
             db.collection('viewers').onSnapshot((snapshot) => {
@@ -1546,9 +1501,6 @@
         }
     }
 
-    // ============================================================
-    //  SECURITY & UTILITY HELPERS
-    // ============================================================
     function escapeHTML(str) {
         if (!str) return '';
         return String(str)
@@ -1569,7 +1521,7 @@
     }
 
     function parseIndianNum(str) {
-        if (!str) return 0;
+        if (str === null || str === undefined || str === '') return 0;
         const val = parseFloat(String(str).replace(/,/g, '').trim());
         return isNaN(val) ? 0 : val;
     }
@@ -1644,7 +1596,7 @@
 
     function formatDateToDisplay(isoDateStr) {
         if (!isoDateStr) return '';
-        const parts = isoDateStr.split('-');
+        const parts = String(isoDateStr).split('-');
         if (parts.length === 3) {
             const y = parseInt(parts[0], 10);
             const m = parseInt(parts[1], 10) - 1;
@@ -1681,7 +1633,7 @@
 
     function getFinancialYear(isoDateStr) {
         if (!isoDateStr) return '';
-        const parts = isoDateStr.split('-');
+        const parts = String(isoDateStr).split('-');
         if (parts.length < 2) return '';
         const y = parseInt(parts[0], 10);
         const m = parseInt(parts[1], 10);
@@ -1726,7 +1678,7 @@
     }
 
     function inferPaymentMode(item) {
-        if (item.paymentMode) return item.paymentMode.toLowerCase();
+        if (item.paymentMode) return String(item.paymentMode).toLowerCase();
         const text = `${item.description || ''} ${item.name || ''} ${item.voucher || ''}`.toLowerCase();
         if (text.includes('contra') || (text.includes('cash') && text.includes('deposit'))) return 'contra_c2b';
         if (text.includes('cash') || text.includes('rokh')) return 'cash';
@@ -1740,9 +1692,6 @@
         datalist.innerHTML = uniqueNames.map(name => `<option value="${escapeHTML(name)}">`).join('');
     }
 
-    // ============================================================
-    //  🔢 VOUCHER AUTO-INCREMENT
-    // ============================================================
     function getNextVoucherString(selectedType) {
         const pad = (num, size = 2) => String(num).padStart(size, '0');
 
@@ -1846,7 +1795,7 @@
     }
 
     // ============================================================
-    //  ⚡ TWO-COLUMN ENGINE & MONTH MAP (TWO-WAY CONTRA)
+    //  ⚡ TWO-COLUMN ENGINE & MONTH MAP (FIXED FOR EXACT BACKUP VALUES)
     // ============================================================
     function calculateTwoColumnBalances(data) {
         if (!data || !Array.isArray(data)) return [];
@@ -1860,8 +1809,6 @@
             if (vA && vB) {
                 return vA.localeCompare(vB, undefined, { numeric: true, sensitivity: 'base' });
             }
-            if (vA && !vB) return -1;
-            if (!vA && vB) return 1;
             return (a.id || '').localeCompare(b.id || '');
         });
 
@@ -1870,12 +1817,12 @@
 
         data.forEach(item => {
             item.rawDate = item.rawDate || parseToIsoDate(item.date);
-            item.date = formatDateToDisplay(item.rawDate);
-            item.fy = getFinancialYear(item.rawDate);
+            item.date = item.date || formatDateToDisplay(item.rawDate);
+            item.fy = item.fy || getFinancialYear(item.rawDate);
             item.paymentMode = inferPaymentMode(item);
 
-            const cr = parseFloat(item.credit) || 0;
-            const dr = parseFloat(item.debit) || 0;
+            const cr = parseIndianNum(item.credit);
+            const dr = parseIndianNum(item.debit);
 
             let cashIn = 0, cashOut = 0;
             let bankIn = 0, bankOut = 0;
@@ -2029,15 +1976,12 @@
                 filterTable();
             }, (error) => {
                 console.error("Firestore listen error: ", error);
-                badge.innerHTML = '⚠️ Cloud Permission Error';
+                badge.innerHTML = '⚠️ Cloud Error';
                 badge.style.background = '#dc3545';
             });
         }
     }
 
-    // ============================================================
-    //  AUTO-BACKUP REMINDER
-    // ============================================================
     function checkBackupReminder() {
         if (currentRole !== 'admin') return;
         const lastBackupTime = localStorage.getItem('sgtb_last_backup_time');
@@ -2056,9 +2000,6 @@
         if (bar) bar.style.display = 'none';
     }
 
-    // ============================================================
-    //  👁️ MONTH-WISE SCREEN VIEWER
-    // ============================================================
     function viewSelectedMonthOnScreen() {
         const selectedVal = document.getElementById('screenMonthSelect').value;
         const box = document.getElementById('monthlyViewerBox');
@@ -2148,7 +2089,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions). मागील शिल्लक पुढे चालू ठेवली आहे.
+                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
                         </td>
                     </tr>
                 `;
@@ -2196,137 +2137,195 @@
         }
     }
 
-    function printSingleMonthDocument(mData) {
-        let rowsHtml = '';
-        if (mData.isNil || mData.items.length === 0) {
-            rowsHtml = `
-            <tr>
-                <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:12px; font-weight:bold; background:#fafafa;">
-                    ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions). मागील शिल्लक पुढे चालू आहे.
-                </td>
-            </tr>`;
-        } else {
-            mData.items.forEach((item, index) => {
-                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-                rowsHtml += `
-                <tr>
-                    <td style="text-align:center; width:25px;">${index + 1}</td>
-                    <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                    <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                    <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                    <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                    <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                </tr>`;
-            });
+    function renderTable(data, isFiltered) {
+        currentFilteredData = data || [];
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:35px; color:#888;">📭 कोणतीही नोंद सापडली नाही.</td></tr>';
+            return;
         }
 
-        const printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>${mData.label} - Two-Column Cash Book</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { padding: 4px 0 10px 0; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-sub { background-color: #d9480f !important; }
-                th.bank-sub { background-color: #0b5ed7 !important; }
-                .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-            <div class="month-page">
-                <div class="org-title">
-                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
-                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                </div>
-                <div class="month-bar">
-                    <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
-                    <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width:25px;">#</th>
-                            <th rowspan="2" style="width:65px;">दिनांक</th>
-                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
-                            <th rowspan="2" style="width:55px;">मोड</th>
-                            <th rowspan="2">नाव / तपशील</th>
-                            <th rowspan="2">खर्च / देणगी कारण</th>
-                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
-                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
-                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                        </tr>
-                        <tr>
-                            <th class="cash-sub">In (जमा)</th>
-                            <th class="cash-sub">Out (खर्च)</th>
-                            <th class="bank-sub">In (जमा)</th>
-                            <th class="bank-sub">Out (खर्च)</th>
-                            <th>Cash Bal</th>
-                            <th>Bank Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-                <div class="bottom-section">
-                    <table class="summary-table">
-                        <tr>
-                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
-                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
-                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
-                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
-                        </tr>
-                        <tr style="background:#eef4fb;">
-                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
-                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
-                        </tr>
-                        <tr style="background:#fff3cd; text-align:center;">
-                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
-                        </tr>
-                    </table>
-                    <div class="signatures">
-                        <div class="sig-box">तयार करणार (Accountant)</div>
-                        <div class="sig-box">सचिव (Secretary)</div>
-                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                    </div>
-                </div>
-            </div>
-            <script>window.onload = function() { window.print(); };<\/script>
-        </body>
-        </html>`;
+        data.forEach((item, index) => {
+            const row = document.createElement('tr');
+            
+            let voucherDisplay = escapeHTML(item.voucher || '-');
+            const safeDocUrl = sanitizeUrl(item.docUrl);
+            if (safeDocUrl) {
+                voucherDisplay = `<a href="${safeDocUrl}" target="_blank" rel="noopener noreferrer" class="doc-link" title="Click to view file">📄 ${escapeHTML(item.voucher || 'View Bill')} ↗</a>`;
+            } else if (item.voucher) {
+                voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
+            }
 
-        const printWin = window.open('', '_blank');
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
+            const isContra = (item.paymentMode || '').startsWith('contra');
+            let modeHtml = '<span class="mode-badge mode-bank">🏦 Bank</span>';
+            if (item.paymentMode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
+            else if (isContra) modeHtml = `<span class="mode-badge mode-contra">${item.paymentMode === 'contra_b2c' ? '🔄 Contra (Bank→Cash)' : '🔄 Contra (Cash→Bank)'}</span>`;
+
+            let creditAmountHtml = '-';
+            if (item.cashIn > 0 || item.bankIn > 0) {
+                const crAmt = item.cashIn > 0 ? item.cashIn : item.bankIn;
+                const waIcon = !isContra ? `<span class="wa-inline-icon" onclick="openWhatsAppModal('${item.id}')" title="Share via WhatsApp">💬</span>` : '';
+                creditAmountHtml = `<span style="color:#28a745; font-weight:600;">${formatIndianNum(crAmt)}</span>${waIcon}`;
+            }
+
+            let receiptBtns = '';
+            if (!isContra && (item.cashIn > 0 || item.bankIn > 0)) {
+                receiptBtns = `
+                    <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
+                    <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
+                `;
+            }
+
+            let voucherBtn = '';
+            if (!isContra && (item.cashOut > 0 || item.bankOut > 0)) {
+                voucherBtn = `
+                    <button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="खर्च व्हाउचर प्रिंट करा">📑</button>
+                `;
+            }
+
+            row.innerHTML = `
+                <td style="text-align:center;">${index + 1}</td>
+                <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
+                <td>${voucherDisplay}</td>
+                <td style="text-align:center;">${modeHtml}</td>
+                <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                <td>${escapeHTML(item.description || '-')}</td>
+                
+                <td style="text-align:right; white-space:nowrap;">${item.cashIn > 0 ? creditAmountHtml : '-'}</td>
+                <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                
+                <td style="text-align:right; white-space:nowrap;">${item.bankIn > 0 ? creditAmountHtml : '-'}</td>
+                <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                
+                <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+                
+                <td style="text-align:center; white-space:nowrap;" class="admin-item">
+                    ${receiptBtns}
+                    ${voucherBtn}
+                    <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
+                    <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
     }
 
-    // ============================================================
-    //  CRUD OPERATIONS
-    // ============================================================
-    let editingId = null;
+    function updateStats(allData, filteredData, isFiltered) {
+        allData = allData || [];
+        filteredData = filteredData || allData;
+
+        const targetData = isFiltered ? filteredData : allData;
+
+        let totalCashIn = 0, totalCashOut = 0;
+        let totalBankIn = 0, totalBankOut = 0;
+
+        targetData.forEach(t => {
+            totalCashIn += (t.cashIn || 0);
+            totalCashOut += (t.cashOut || 0);
+            totalBankIn += (t.bankIn || 0);
+            totalBankOut += (t.bankOut || 0);
+        });
+
+        const totalCredit = totalCashIn + totalBankIn;
+        const totalDebit = totalCashOut + totalBankOut;
+        const cashBalance = totalCashIn - totalCashOut;
+        const bankBalance = totalBankIn - totalBankOut;
+        const totalSansthaBal = cashBalance + bankBalance;
+
+        document.getElementById('statTotalBal').innerText = formatIndianNum(totalSansthaBal);
+        document.getElementById('statTotalCredit').innerText = formatIndianNum(totalCredit);
+        document.getElementById('statTotalDebit').innerText = formatIndianNum(totalDebit);
+
+        document.getElementById('statCashBal').innerText = formatIndianNum(cashBalance);
+        document.getElementById('statCashIn').innerText = formatIndianNum(totalCashIn);
+        document.getElementById('statCashOut').innerText = formatIndianNum(totalCashOut);
+
+        document.getElementById('statBankBal').innerText = formatIndianNum(bankBalance);
+        document.getElementById('statBankIn').innerText = formatIndianNum(totalBankIn);
+        document.getElementById('statBankOut').innerText = formatIndianNum(totalBankOut);
+
+        document.getElementById('totalEntries').innerText = allData.length;
+    }
+
+    function resetAllFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('filterFromDate').value = '';
+        document.getElementById('filterToDate').value = '';
+        document.getElementById('filterModeSelect').value = 'all';
+        document.getElementById('filterFYSelect').value = 'all';
+        document.getElementById('filterVoucherTypeSelect').value = 'all';
+        document.getElementById('filterFlowTypeSelect').value = 'all';
+        filterTable();
+    }
+
+    function filterTable() {
+        const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+        const fromDate = document.getElementById('filterFromDate').value;
+        const toDate = document.getElementById('filterToDate').value;
+        const modeFilter = document.getElementById('filterModeSelect').value;
+        const fyFilter = document.getElementById('filterFYSelect').value;
+        const voucherTypeFilter = document.getElementById('filterVoucherTypeSelect').value;
+        const flowTypeFilter = document.getElementById('filterFlowTypeSelect').value;
+
+        const banner = document.getElementById('filterBanner');
+        const bannerText = document.getElementById('filterBannerText');
+
+        let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || (voucherTypeFilter !== 'all') || (flowTypeFilter !== 'all') || query || fromDate || toDate;
+
+        if (isFiltered) {
+            let filterDesc = [];
+            if (flowTypeFilter !== 'all') filterDesc.push(`प्रकार: ${flowTypeFilter === 'credit' ? 'जमा (Credit)' : 'खर्च (Debit)'}`);
+            if (voucherTypeFilter !== 'all') filterDesc.push(`व्हाउचर: ${voucherTypeFilter}`);
+            if (fyFilter !== 'all') filterDesc.push(`FY: ${fyFilter}`);
+            if (modeFilter !== 'all') filterDesc.push(`Mode: ${modeFilter.toUpperCase()}`);
+            if (fromDate) filterDesc.push(`From: ${formatDateToDisplay(fromDate)}`);
+            if (toDate) filterDesc.push(`To: ${formatDateToDisplay(toDate)}`);
+            if (query) filterDesc.push(`Keyword: "${query}"`);
+
+            bannerText.innerHTML = `🔍 <strong>सध्याचे फिल्टर:</strong> ${filterDesc.join(' | ')}`;
+            banner.style.display = 'flex';
+        } else {
+            banner.style.display = 'none';
+        }
+
+        let filtered = (transactionsData || []).filter(t => {
+            if (flowTypeFilter === 'credit' && !(t.cashIn > 0 || t.bankIn > 0)) return false;
+            if (flowTypeFilter === 'debit' && !(t.cashOut > 0 || t.bankOut > 0)) return false;
+
+            if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
+            if (modeFilter !== 'all') {
+                if (modeFilter === 'contra' && !t.paymentMode.startsWith('contra')) return false;
+                if (modeFilter !== 'contra' && t.paymentMode !== modeFilter) return false;
+            }
+
+            if (voucherTypeFilter !== 'all') {
+                const v = (t.voucher || '').trim();
+                if (voucherTypeFilter === 'PN' && !/^PN/i.test(v)) return false;
+                if (voucherTypeFilter === 'A/VSN' && !/^A\/VSN/i.test(v)) return false;
+                if (voucherTypeFilter === 'VN_IBT' && !(/VN/i.test(v) && /IBT/i.test(v))) return false;
+                if (voucherTypeFilter === 'VN_PURE' && (!/^VN/i.test(v) || /IBT/i.test(v))) return false;
+                if (voucherTypeFilter === 'OTHER') {
+                    if (/^PN/i.test(v) || /^A\/VSN/i.test(v) || /^VN/i.test(v)) return false;
+                }
+            }
+
+            const raw = t.rawDate || parseToIsoDate(t.date);
+            if (fromDate && raw < fromDate) return false;
+            if (toDate && raw > toDate) return false;
+
+            if (query) {
+                const combined = `${t.name || ''} ${t.description || ''} ${t.voucher || ''} ${t.date || ''} ${t.paymentMode || ''} ${t.fy || ''} ${raw}`.toLowerCase();
+                if (!combined.includes(query)) return false;
+            }
+            return true;
+        });
+
+        renderTable(filtered, isFiltered);
+        updateStats(transactionsData, filtered, isFiltered);
+    }
 
     async function submitTransaction() {
         if (currentRole !== 'admin') return;
@@ -2343,25 +2342,12 @@
         const statusText = document.getElementById('fileUploadStatus');
 
         if (!dateVal || !name || isNaN(amount) || amount <= 0) {
-            alert('कृपया दिनांक, नाव आणि ० पेक्षा जास्त रक्कम ही सर्व माहिती भरा.');
+            alert('कृपया दिनांक, नाव आणि रक्कम ही सर्व माहिती भरा.');
             return;
         }
 
         if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c') {
             type = 'credit';
-        }
-
-        if ((modeVal === 'cash' && type === 'debit') || modeVal === 'contra_c2b') {
-            let currentAvailableCash = 0;
-            transactionsData.forEach(t => {
-                if (editingId && t.id === editingId) return;
-                currentAvailableCash += ((t.cashIn || 0) - (t.cashOut || 0));
-            });
-
-            if (amount > currentAvailableCash) {
-                const confirmed = confirm(`⚠️ सावधान (Negative Cash Warning):\n\nहातातील चालू शिल्लक फक्त ${formatIndianNum(currentAvailableCash)} आहे, परंतु तुम्ही ${formatIndianNum(amount)} चा रोख खर्च / बँक भरणा टाकत आहात.\n\nऑडिटच्या नियमानुसार कॅश उणे (Negative) असू शकत नाही. तरीही ही नोंद पुढे चालू ठेवायची आहे का?`);
-                if (!confirmed) return;
-            }
         }
 
         const rawDate = parseToIsoDate(dateVal);
@@ -2461,12 +2447,6 @@
 
         document.getElementById('newDocUrlInput').value = item.docUrl || '';
         document.getElementById('newDocFile').value = '';
-        
-        if (item.docUrl) {
-            document.getElementById('fileUploadStatus').innerHTML = `✅ <a href="${item.docUrl}" target="_blank" style="color:#0d6efd;">Existing Link Attached ↗</a>`;
-        } else {
-            document.getElementById('fileUploadStatus').textContent = '';
-        }
 
         document.getElementById('newName').value = item.name || '';
         document.getElementById('newDesc').value = item.description || '';
@@ -2531,119 +2511,6 @@
         }
     }
 
-    // ============================================================
-    //  CSV & BACKUP
-    // ============================================================
-    function downloadTemplate() {
-        if (currentRole !== 'admin') return;
-        const headers = ['Date', 'Voucher/Pavti No.', 'Payment Mode', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
-        const sample = ['2026-04-01', 'PN 01', 'bank', 'https://...', 'रमेश पाटील', 'देणगी', '5000', '0'];
-        const csv = headers.join(',') + '\n' + sample.join(',');
-        downloadFile(csv, 'TwoColumn_CashBook_Template.csv', 'text/csv');
-        showToast('📄 Template downloaded!');
-    }
-
-    function exportCSV() {
-        if (currentRole !== 'admin') return;
-        if (!transactionsData || transactionsData.length === 0) {
-            alert('No data to export.');
-            return;
-        }
-        let csv = 'Date,Voucher/Pavti No.,Payment Mode,Drive Link,Name,Description,Credit,Debit,Cash_Bal,Bank_Bal,Total_Bal\n';
-        transactionsData.forEach(t => {
-            const v = `"${(t.voucher || '').replace(/"/g, '""')}"`;
-            const m = `"${(t.paymentMode || 'bank').replace(/"/g, '""')}"`;
-            const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
-            const n = `"${(t.name || '').replace(/"/g, '""')}"`;
-            const d = `"${(t.description || '').replace(/"/g, '""')}"`;
-            csv += `${t.date},${v},${m},${l},${n},${d},${t.credit || 0},${t.debit || 0},${t.cashBal},${t.bankBal},${t.totalBal}\n`;
-        });
-        downloadFile(csv, 'SwamiGopalTirth_TwoColumn_Export.csv', 'text/csv');
-        showToast('⬇️ Two-Column CSV exported!');
-    }
-
-    async function uploadCSV(event) {
-        if (currentRole !== 'admin') return;
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-            const text = e.target.result;
-            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-            if (lines.length < 2) {
-                alert('CSV फाईल रिकामी आहे.');
-                return;
-            }
-
-            const headers = parseCSVLine(lines[0]);
-            const dateIdx = headers.findIndex(h => h.toLowerCase().includes('date'));
-            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('pavti') || h.toLowerCase().includes('bill'));
-            const modeIdx = headers.findIndex(h => h.toLowerCase().includes('mode'));
-            const docUrlIdx = headers.findIndex(h => h.toLowerCase().includes('link') || h.toLowerCase().includes('drive') || h.toLowerCase().includes('url'));
-            const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
-            const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc'));
-            const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit'));
-            const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit'));
-
-            if (dateIdx === -1 || (creditIdx === -1 && debitIdx === -1)) {
-                alert('अवैध CSV फॉरमॅट.');
-                return;
-            }
-
-            let toAdd = [];
-            for (let i = 1; i < lines.length; i++) {
-                const parts = parseCSVLine(lines[i]);
-                if (parts.length < 2) continue;
-
-                const rawDate = parseToIsoDate(parts[dateIdx] || '');
-                const voucher = (voucherIdx !== -1 && parts[voucherIdx]) ? parts[voucherIdx] : '';
-                const mode = (modeIdx !== -1 && parts[modeIdx]) ? parts[modeIdx].toLowerCase() : '';
-                const docUrl = (docUrlIdx !== -1 && parts[docUrlIdx]) ? parts[docUrlIdx] : '';
-                const name = (nameIdx !== -1 && parts[nameIdx]) ? parts[nameIdx] : '';
-                const description = (descIdx !== -1 && parts[descIdx]) ? parts[descIdx] : '';
-                const credit = parseIndianNum(parts[creditIdx] || 0);
-                const debit = parseIndianNum(parts[debitIdx] || 0);
-
-                if (!rawDate || (credit === 0 && debit === 0)) continue;
-
-                toAdd.push({
-                    rawDate: rawDate,
-                    date: formatDateToDisplay(rawDate),
-                    voucher: voucher,
-                    paymentMode: mode || (description.toLowerCase().includes('cash') ? 'cash' : 'bank'),
-                    docUrl: docUrl,
-                    name: name,
-                    description: description,
-                    credit: credit,
-                    debit: debit
-                });
-            }
-
-            if (toAdd.length === 0) {
-                alert('CSV मध्ये कोणत्याही वैध नोंदी सापडल्या नाहीत.');
-                return;
-            }
-
-            try {
-                const chunkSize = 400;
-                for (let i = 0; i < toAdd.length; i += chunkSize) {
-                    const batch = db.batch();
-                    toAdd.slice(i, i + chunkSize).forEach(item => {
-                        const newDoc = db.collection('transactions').doc();
-                        batch.set(newDoc, item);
-                    });
-                    await batch.commit();
-                }
-                showToast(`✅ ${toAdd.length} नोंदी क्लाउडवर इम्पोर्ट झाल्या!`);
-                switchAppTab('tabPanelRecords');
-            } catch(err) {
-                alert('Import error: ' + err.message);
-            }
-            event.target.value = '';
-        };
-        reader.readAsText(file);
-    }
-
     function backupData() {
         if (currentRole !== 'admin') return;
         if (!transactionsData || transactionsData.length === 0) {
@@ -2656,6 +2523,9 @@
         showToast('💾 Backup downloaded!');
     }
 
+    // ============================================================
+    //  🚀 RESTORE EXACTLY MATCHING JSON BACKUP FILE
+    // ============================================================
     function restoreData(event) {
         if (currentRole !== 'admin') return;
         const file = event.target.files[0];
@@ -2674,17 +2544,20 @@
                 for (let i = 0; i < data.length; i += chunkSize) {
                     const batch = db.batch();
                     data.slice(i, i + chunkSize).forEach(item => {
-                        const newDoc = db.collection('transactions').doc();
+                        const newDoc = item.id ? db.collection('transactions').doc(item.id) : db.collection('transactions').doc();
+                        
+                        const rawDate = item.rawDate || parseToIsoDate(item.date);
                         batch.set(newDoc, {
-                            rawDate: item.rawDate || parseToIsoDate(item.date),
-                            date: item.date || formatDateToDisplay(item.rawDate),
+                            rawDate: rawDate,
+                            date: item.date || formatDateToDisplay(rawDate),
                             voucher: item.voucher || '',
                             paymentMode: item.paymentMode || 'bank',
                             docUrl: item.docUrl || '',
                             name: item.name || '',
                             description: item.description || '',
-                            credit: item.credit || 0,
-                            debit: item.debit || 0
+                            credit: (item.credit !== undefined && item.credit !== null) ? Number(item.credit) : 0,
+                            debit: (item.debit !== undefined && item.debit !== null) ? Number(item.debit) : 0,
+                            fy: item.fy || getFinancialYear(rawDate)
                         });
                     });
                     await batch.commit();
@@ -2720,9 +2593,6 @@
         toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
     }
 
-    // ============================================================
-    //  INIT
-    // ============================================================
     window.onload = function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('newDate').value = today;
