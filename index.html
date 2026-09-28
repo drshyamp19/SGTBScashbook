@@ -313,16 +313,18 @@
         .btn-pdf-debit:hover { background: #5a32a3; }
         .btn-pdf-fy { background: #0b5ed7; color: white; }
         .btn-pdf-fy:hover { background: #084298; }
+        .btn-print-filter { background: #17a2b8; color: white; }
+        .btn-print-filter:hover { background: #138496; }
         .btn-sm { padding: 6px 14px; font-size: 12px; margin-top: 0; margin-right: 4px; }
 
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
-        /* Stats Grid */
+        /* Stats Grid (Now with Total Credit and Total Debit) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            gap: 14px;
         }
         .stat-box {
             background: #f8f9fa;
@@ -338,9 +340,12 @@
         .stat-box.active-filter { background: #e7f1ff; outline: 3px solid #2a7de1; }
         .stat-box .label { font-size: 12px; color: #6c757d; font-weight: 600; margin-bottom: 4px; }
         .stat-box .value { font-size: 18px; font-weight: 700; color: #0d2b44; }
-        .stat-box.bank-box { border-left-color: #0d6efd; }
-        .stat-box.cash-box { border-left-color: #fd7e14; }
+        
         .stat-box.total-box { border-left-color: #28a745; }
+        .stat-box.credit-box { border-left-color: #198754; background: #f4fbf7; }
+        .stat-box.debit-box { border-left-color: #dc3545; background: #fff8f8; }
+        .stat-box.cash-box { border-left-color: #fd7e14; }
+        .stat-box.bank-box { border-left-color: #0d6efd; }
 
         .filter-banner {
             background: #eef4fb;
@@ -426,7 +431,7 @@
         .action-btn.voucher-btn { color: #6f42c1; }
         .action-btn.voucher-btn:hover { background: #f0e6ff; }
 
-        /* WhatsApp Circular Icon like screenshot */
+        /* WhatsApp Circular Icon */
         .wa-inline-icon {
             display: inline-flex;
             align-items: center;
@@ -465,7 +470,7 @@
             padding: 7px 14px;
             border: 1px solid #ced4da;
             border-radius: 20px;
-            width: 180px;
+            width: 170px;
             font-size: 13px;
         }
 
@@ -597,7 +602,7 @@
         }
         .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
-        /* EXACT WHATSAPP MODAL LIKE SCREENSHOT (2) */
+        /* WHATSAPP MODAL */
         .wa-modal-box {
             background: white;
             padding: 24px;
@@ -943,28 +948,49 @@
             </div>
         </div>
 
-        <!-- 4. SUMMARY (Two-Column Running Stats - Matches Selected Filter) -->
+        <!-- 4. SUMMARY (Now with Total Credit and Total Debit) -->
         <div class="card">
             <div class="flex-between" style="margin-bottom:12px;">
                 <h2 style="margin-bottom:0;" id="summaryCardHeading">📊 Two-Column Summary <span style="font-size:12px; color:#888; font-weight:normal;">(रोख आणि बँक ताळेबंद)</span></h2>
                 <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
             </div>
             <div class="stats-grid">
+                <!-- 1. Total Sanstha Balance -->
+                <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा चालू एकूण निधी">
+                    <div class="label">💰 Total Balance (एकूण शिल्लक)</div>
+                    <div class="value" id="statTotalBal">₹ 0.00</div>
+                    <div style="font-size:11px; color:#28a745; font-weight:600; margin-top:3px;">Cash + Bank Fund</div>
+                </div>
+
+                <!-- 2. TOTAL CREDIT (NEW) -->
+                <div class="stat-box credit-box" onclick="filterByCreditOnly()" title="एकूण जमा रक्कम पहा">
+                    <div class="label">📈 Total Credit (एकूण जमा)</div>
+                    <div class="value" id="statTotalCredit" style="color:#198754;">₹ 0.00</div>
+                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash In + Bank In</div>
+                </div>
+
+                <!-- 3. TOTAL DEBIT (NEW) -->
+                <div class="stat-box debit-box" onclick="filterByDebitOnly()" title="एकूण खर्च रक्कम पहा">
+                    <div class="label">📉 Total Debit (एकूण खर्च)</div>
+                    <div class="value" id="statTotalDebit" style="color:#dc3545;">₹ 0.00</div>
+                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash Out + Bank Out</div>
+                </div>
+
+                <!-- 4. Cash in Hand -->
                 <div class="stat-box cash-box" onclick="toggleModeFilter('cash')" title="फक्त रोख व्यवहार पहा">
                     <div class="label">💵 Cash in Hand (हातातील रोख)</div>
                     <div class="value" id="statCashBal">₹ 0.00</div>
                     <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statCashIn">₹ 0</span> | Out: <span id="statCashOut">₹ 0</span></div>
                 </div>
+
+                <!-- 5. Bank Balance -->
                 <div class="stat-box bank-box" onclick="toggleModeFilter('bank')" title="फक्त बँक व्यवहार पहा">
                     <div class="label">🏦 Bank Balance (बँक शिल्लक)</div>
                     <div class="value" id="statBankBal">₹ 0.00</div>
                     <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statBankIn">₹ 0</span> | Out: <span id="statBankOut">₹ 0</span></div>
                 </div>
-                <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा एकूण निधी">
-                    <div class="label">💰 Total Sanstha Balance (एकूण निधी)</div>
-                    <div class="value" id="statTotalBal">₹ 0.00</div>
-                    <div style="font-size:11px; color:#888; margin-top:3px;">Cash + Bank</div>
-                </div>
+
+                <!-- 6. Total Transactions -->
                 <div class="stat-box" onclick="resetAllFilters()" title="एकूण नोंदी">
                     <div class="label">🧾 Total Transactions</div>
                     <div class="value" id="totalEntries">0</div>
@@ -986,7 +1012,6 @@
                     <input type="date" id="newDate">
                 </div>
                 <div class="field">
-                    <!-- 5 Voucher Types with Auto-Increment -->
                     <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(5 Options)</span></label>
                     <div class="voucher-input-group">
                         <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
@@ -1043,7 +1068,7 @@
             </div>
         </div>
 
-        <!-- 6. ALL TRANSACTIONS TABLE (With Voucher Type Filter & Inline WhatsApp Icon) -->
+        <!-- 6. ALL TRANSACTIONS TABLE (With Print Filter Button Next to Reset) -->
         <div class="card">
             <div class="flex-between">
                 <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
@@ -1079,6 +1104,8 @@
                     <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
                     <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
                     <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
+                    <!-- NEW: PRINT CURRENT FILTERED TABLE -->
+                    <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️ प्रिंट (Print)</button>
                 </div>
             </div>
 
@@ -1121,7 +1148,7 @@
 </div>
 
 <!-- ============================================================
-     3. POPUP MODALS: WHATSAPP SHARE POPUP LIKE SCREENSHOT (2)
+     3. POPUP MODALS: WHATSAPP SHARE POPUP
 ============================================================ -->
 <div class="modal-overlay" id="whatsappShareModal">
     <div class="wa-modal-box">
@@ -1191,6 +1218,7 @@
     let db = null;
     let storage = null;
     let transactionsData = [];
+    let currentFilteredData = []; // Keeps track of currently filtered transactions
     let viewersData = [];
     let monthlyContinuousMap = {};
     let currentRole = 'none';
@@ -1687,7 +1715,6 @@
             return `A/VSN ${pad(maxAVSN + 1)}`;
         }
 
-        // VN is continuous across normal expense and VN IBT
         let maxVN = 0;
         let maxIBT = 0;
         transactionsData.forEach(t => {
@@ -1712,7 +1739,7 @@
             return `VN ${pad(maxVN + 1)} IBT ${pad(maxIBT + 1)}`;
         }
 
-        return ''; // Other / इतर (Manual)
+        return '';
     }
 
     function handleVoucherTypeChange() {
@@ -1780,7 +1807,6 @@
             item.fy = getFinancialYear(item.rawDate);
             item.paymentMode = inferPaymentMode(item);
 
-            // AUTO-FIX: Description of VN 29 if missing / NaN
             if ((item.voucher || '').trim() === 'VN 29' && (!item.description || item.description === 'NaN' || item.description === 'undefined')) {
                 item.description = 'PN 186 व PN 187 ची रोख रक्कम बँकेत जमा केली (Contra)';
             }
@@ -2239,9 +2265,10 @@
     }
 
     // ============================================================
-    //  RENDER TABLE & STATS (Inline WhatsApp Icon like Screenshot 1)
+    //  RENDER TABLE & STATS (Now with Total Credit & Total Debit)
     // ============================================================
     function renderTable(data) {
+        currentFilteredData = data || [];
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
 
@@ -2266,7 +2293,6 @@
             if (mode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
             else if (mode === 'contra') modeHtml = '<span class="mode-badge mode-contra">🔄 Contra</span>';
 
-            // WhatsApp Icon like screenshot (1) right next to Credit Amount
             let creditAmountHtml = '-';
             if (item.cashIn > 0 || item.bankIn > 0) {
                 const crAmt = item.cashIn > 0 ? item.cashIn : item.bankIn;
@@ -2275,7 +2301,6 @@
                 creditAmountHtml = `<span style="color:#28a745; font-weight:600;">${formatIndianNum(crAmt)}</span>${waIcon}`;
             }
 
-            // ACTION BUTTONS: Print Receipt for Credit, Print Voucher for Debit
             let receiptBtns = '';
             if (mode !== 'contra' && (item.cashIn > 0 || item.bankIn > 0)) {
                 receiptBtns = `
@@ -2335,9 +2360,16 @@
             totalBankOut += (t.bankOut || 0);
         });
 
+        const totalCredit = totalCashIn + totalBankIn;
+        const totalDebit = totalCashOut + totalBankOut;
         const cashBalance = totalCashIn - totalCashOut;
         const bankBalance = totalBankIn - totalBankOut;
         const totalSansthaBal = cashBalance + bankBalance;
+
+        // Populate cards
+        document.getElementById('statTotalBal').innerText = formatIndianNum(totalSansthaBal);
+        document.getElementById('statTotalCredit').innerText = formatIndianNum(totalCredit);
+        document.getElementById('statTotalDebit').innerText = formatIndianNum(totalDebit);
 
         document.getElementById('statCashBal').innerText = formatIndianNum(cashBalance);
         document.getElementById('statCashIn').innerText = formatIndianNum(totalCashIn);
@@ -2346,8 +2378,6 @@
         document.getElementById('statBankBal').innerText = formatIndianNum(bankBalance);
         document.getElementById('statBankIn').innerText = formatIndianNum(totalBankIn);
         document.getElementById('statBankOut').innerText = formatIndianNum(totalBankOut);
-
-        document.getElementById('statTotalBal').innerText = formatIndianNum(totalSansthaBal);
 
         if (isFiltered) {
             document.getElementById('totalEntries').innerText = `${filteredData.length} / ${allData.length}`;
@@ -2360,6 +2390,16 @@
 
     function toggleModeFilter(mode) {
         document.getElementById('filterModeSelect').value = mode;
+        filterTable();
+    }
+
+    function filterByCreditOnly() {
+        document.getElementById('searchInput').value = '';
+        filterTable();
+    }
+
+    function filterByDebitOnly() {
+        document.getElementById('searchInput').value = '';
         filterTable();
     }
 
@@ -2408,7 +2448,6 @@
             if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
             if (modeFilter !== 'all' && t.paymentMode !== modeFilter) return false;
 
-            // 5 VOUCHER TYPE FILTER MATCHING
             if (voucherTypeFilter !== 'all') {
                 const v = (t.voucher || '').trim();
                 if (voucherTypeFilter === 'PN' && !/^PN/i.test(v)) return false;
@@ -2433,6 +2472,153 @@
 
         renderTable(filtered);
         updateStats(transactionsData, filtered, isFiltered);
+    }
+
+    // ============================================================
+    //  🖨️ PRINT FILTERED TRANSACTIONS (Direct from Table)
+    // ============================================================
+    function printFilteredTransactionsTable() {
+        const dataToPrint = currentFilteredData || [];
+        if (dataToPrint.length === 0) {
+            alert('प्रिंट करण्यासाठी कोणत्याही नोंदी सापडल्या नाहीत.');
+            return;
+        }
+
+        const bannerText = document.getElementById('filterBannerText').innerText || 'सर्व व्यवहार';
+
+        let totalCashIn = 0, totalCashOut = 0;
+        let totalBankIn = 0, totalBankOut = 0;
+        let rowsHtml = '';
+
+        dataToPrint.forEach((item, index) => {
+            totalCashIn += (item.cashIn || 0);
+            totalCashOut += (item.cashOut || 0);
+            totalBankIn += (item.bankIn || 0);
+            totalBankOut += (item.bankOut || 0);
+
+            const mLabel = (item.paymentMode || 'bank').toUpperCase();
+
+            rowsHtml += `
+            <tr>
+                <td style="text-align:center; width:25px;">${index + 1}</td>
+                <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
+                <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
+                <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                <td>${escapeHTML(item.description || '-')}</td>
+                <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+            </tr>
+            `;
+        });
+
+        const totalCredit = totalCashIn + totalBankIn;
+        const totalDebit = totalCashOut + totalBankOut;
+        const netDifference = totalCredit - totalDebit;
+
+        const printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Filtered Report - Swami Gopal Tirth Sanstha</title>
+            <style>
+                @page { size: A4 landscape; margin: 8mm; }
+                * { box-sizing: border-box; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
+                .filter-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
+                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
+                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
+                th.cash-sub { background-color: #d9480f !important; }
+                th.bank-sub { background-color: #0b5ed7 !important; }
+                tr { page-break-inside: avoid; }
+                .text-right { text-align: right; }
+                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
+                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
+                .summary-table td { padding: 5px 8px; font-weight: 600; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
+                @media print {
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="org-title">
+                <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                <p>श्रीराम नगर भद्रावती | Two-Column Cash Book (फिल्टर केलेला अहवाल)</p>
+                <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
+            </div>
+
+            <div class="filter-bar">
+                <span>📋 ${escapeHTML(bannerText)}</span>
+                <span>एकूण नोंदी: <strong>${dataToPrint.length}</strong></span>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width:25px;">#</th>
+                        <th rowspan="2" style="width:65px;">दिनांक</th>
+                        <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
+                        <th rowspan="2" style="width:55px;">मोड</th>
+                        <th rowspan="2">नाव / तपशील</th>
+                        <th rowspan="2">खर्च / देणगी कारण</th>
+                        <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
+                        <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
+                        <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
+                    </tr>
+                    <tr>
+                        <th class="cash-sub">In (जमा)</th>
+                        <th class="cash-sub">Out (खर्च)</th>
+                        <th class="bank-sub">In (जमा)</th>
+                        <th class="bank-sub">Out (खर्च)</th>
+                        <th>Cash Bal</th>
+                        <th>Bank Bal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowsHtml}
+                </tbody>
+            </table>
+
+            <div class="bottom-section">
+                <table class="summary-table">
+                    <tr>
+                        <td>एकूण रोख जमा: <strong style="color:#28a745;">${formatIndianNum(totalCashIn)}</strong></td>
+                        <td>एकूण रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(totalCashOut)}</strong></td>
+                        <td>एकूण बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(totalBankIn)}</strong></td>
+                        <td>एकूण बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(totalBankOut)}</strong></td>
+                    </tr>
+                    <tr style="background:#f4fbf7;">
+                        <td colspan="2">📈 एकूण जमा (Total Credit): <strong>${formatIndianNum(totalCredit)}</strong></td>
+                        <td colspan="2">📉 एकूण खर्च (Total Debit): <strong>${formatIndianNum(totalDebit)}</strong></td>
+                    </tr>
+                </table>
+
+                <div class="signatures">
+                    <div class="sig-box">तयार करणार (Accountant)</div>
+                    <div class="sig-box">सचिव (Secretary)</div>
+                    <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); };<\/script>
+        </body>
+        </html>`;
+
+        const printWin = window.open('', '_blank');
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
     }
 
     // ============================================================
@@ -3068,7 +3254,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  CRUD OPERATIONS (With Negative Cash Guard)
+    //  CRUD OPERATIONS
     // ============================================================
     let editingId = null;
 
