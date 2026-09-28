@@ -178,9 +178,9 @@
         .org-header {
             background: linear-gradient(135deg, #0d2b44 0%, #1e4d6b 100%);
             color: white;
-            padding: 20px 25px;
+            padding: 16px 22px;
             border-radius: 16px;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
@@ -194,29 +194,29 @@
             gap: 16px;
         }
         .header-logo-img {
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             border: 3px solid #ffc107;
             background: white;
             object-fit: cover;
         }
         .header-titles h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 2px;
         }
         .header-titles p {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             opacity: 0.9;
         }
         .header-titles .reg {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             background: rgba(255,255,255,0.18);
             display: inline-block;
-            padding: 2px 12px;
+            padding: 2px 10px;
             border-radius: 20px;
-            margin-top: 4px;
+            margin-top: 3px;
             font-weight: 600;
         }
 
@@ -261,6 +261,52 @@
             font-size: 11px;
             background: rgba(0,0,0,0.35);
             font-weight: 500;
+        }
+
+        /* ===== NAVIGATION APP TABS ===== */
+        .app-nav-tabs {
+            display: flex;
+            gap: 8px;
+            background: #e2e8f0;
+            padding: 6px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .nav-tab-item {
+            flex: 1;
+            min-width: 170px;
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 700;
+            color: #475569;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .nav-tab-item:hover {
+            background: rgba(255,255,255,0.6);
+            color: #0d2b44;
+        }
+        .nav-tab-item.active {
+            background: #0d2b44;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(13,43,68,0.25);
+        }
+
+        .tab-panel-section {
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        .tab-panel-section.active {
+            display: block;
         }
 
         .card {
@@ -481,19 +527,19 @@
         .add-entry-form {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
             align-items: flex-end;
         }
         .add-entry-form .field { display: flex; flex-direction: column; gap: 4px; }
         .add-entry-form label { font-size: 12px; font-weight: 600; color: #495057; }
         .add-entry-form input, .add-entry-form select {
-            padding: 8px 12px;
+            padding: 9px 12px;
             border: 1px solid #ced4da;
             border-radius: 6px;
-            min-width: 120px;
-            font-size: 13px;
+            min-width: 130px;
+            font-size: 13.5px;
         }
-        .add-entry-form input[type="number"] { min-width: 130px; }
+        .add-entry-form input[type="number"] { min-width: 140px; }
         .add-entry-form .field-actions { display: flex; gap: 8px; align-items: center; }
 
         .voucher-input-group {
@@ -703,7 +749,7 @@
         body.viewer-mode .action-btn.del-btn { display: none !important; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.96); }
+            from { opacity: 0; transform: scale(0.97); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -719,6 +765,8 @@
             .flex-between { flex-direction: column; align-items: stretch; }
             .search-controls { width: 100%; }
             .search-box { width: 100%; }
+            .app-nav-tabs { flex-wrap: nowrap; overflow-x: auto; }
+            .nav-tab-item { flex: 0 0 auto; font-size: 13px; padding: 10px 14px; }
         }
     </style>
 </head>
@@ -766,7 +814,7 @@
 </div>
 
 <!-- ============================================================
-     2. MAIN CASH BOOK DASHBOARD (Two-Column)
+     2. MAIN CASH BOOK DASHBOARD WITH TABBED NAVIGATION
 ============================================================ -->
 <div id="mainAppSection">
     <div class="container">
@@ -784,7 +832,7 @@
             <div class="header-right-actions">
                 <span id="dbStatusBadge" class="db-status">⏳ Connecting...</span>
                 <span id="userRoleBadge" class="user-role-badge admin">Admin Panel</span>
-                <button class="header-btn pwd-btn-header admin-only" onclick="openChangePasswordModal()">🔑 Change Password</button>
+                <button class="header-btn pwd-btn-header admin-only" onclick="openChangePasswordModal()">🔑 Password</button>
                 <button class="header-btn logout-btn-header" onclick="performLogout()">🚪 Logout</button>
             </div>
         </div>
@@ -798,65 +846,298 @@
             </div>
         </div>
 
-        <!-- Top Actions -->
-        <div class="flex-between" style="margin-bottom:15px;">
-            <h1 style="margin-bottom:0; font-size:1.6rem; color:#0d2b44;">📒 TWO-COLUMN CASH BOOK</h1>
-            <div class="admin-only-inline" style="gap:6px; display:none;">
-                <button class="btn btn-pdf" onclick="generateTwoColumnPDF('all')">📄 संपूर्ण टू-कॉलम वार्षिक PDF</button>
-                <button class="btn btn-pdf-fy" onclick="generateSelectedFY_PDF()">📑 निवडलेल्या आर्थिक वर्षाची (FY) PDF</button>
-                <button class="btn btn-pdf-debit" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च (Debit) PDF</button>
-            </div>
+        <!-- APPLICATION NAVIGATION TABS -->
+        <div class="app-nav-tabs">
+            <button class="nav-tab-item active" id="tabNavLedger" onclick="switchAppTab('tabPanelLedger')">
+                <span>📒</span> कॅश बुक (Ledger)
+            </button>
+            <button class="nav-tab-item admin-only" id="tabNavAdd" onclick="switchAppTab('tabPanelAdd')">
+                <span>➕</span> नवीन नोंद (Add Entry)
+            </button>
+            <button class="nav-tab-item" id="tabNavRecords" onclick="switchAppTab('tabPanelRecords')">
+                <span>📋</span> सर्व व्यवहार (All Records)
+            </button>
+            <button class="nav-tab-item admin-only" id="tabNavMgmt" onclick="switchAppTab('tabPanelMgmt')">
+                <span>⚙️</span> व्यवस्थापन (Management)
+            </button>
         </div>
 
         <div id="toast" class="toast">✅ Success!</div>
 
-        <!-- MONTH-WISE ON-SCREEN VIEWER CARD -->
-        <div class="card" style="border: 1.5px solid #2a7de1;">
-            <div class="flex-between">
-                <div>
-                    <h2 style="margin-bottom:4px;">👁️ मासिक कॅश बुक व्ह्यूअर (Month-wise Screen Viewer)</h2>
-                    <p style="font-size:12px; color:#666;">विशिष्ट महिना किंवा संपूर्ण नोंदी स्क्रीनवर पाहण्यासाठी खालील ड्रॉपडाउन वापरा (Read-Only).</p>
-                </div>
-                <div class="flex-row">
-                    <select id="screenMonthSelect" style="padding:8px 12px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:13px;">
-                        <!-- Dynamically filled -->
-                    </select>
-                    <button class="btn btn-success" onclick="viewSelectedMonthOnScreen()">👁️ महिना पहा</button>
-                    <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
+        <!-- ==========================================
+             TAB 1: 📒 LEDGER & SUMMARY (कॅश बुक)
+        =========================================== -->
+        <div id="tabPanelLedger" class="tab-panel-section active">
+            <!-- Top Action Buttons for PDF -->
+            <div class="flex-between" style="margin-bottom:15px;">
+                <h2 style="margin-bottom:0; font-size:1.3rem; border:none; padding:0; color:#0d2b44;">📒 ताळेबंद व मासिक अहवाल</h2>
+                <div class="admin-only-inline" style="gap:6px; display:none;">
+                    <button class="btn btn-pdf" onclick="generateTwoColumnPDF('all')">📄 संपूर्ण वार्षिक PDF</button>
+                    <button class="btn btn-pdf-fy" onclick="generateSelectedFY_PDF()">📑 निवडलेल्या FY ची PDF</button>
+                    <button class="btn btn-pdf-debit" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च PDF</button>
                 </div>
             </div>
 
-            <!-- The Output Container for Month-wise Screen Ledger -->
-            <div id="monthlyViewerBox" class="monthly-viewer-box">
-                <div class="monthly-viewer-header">
-                    <div>
-                        <h3 id="mViewerTitle" style="color:#0d2b44; font-size:16px;">📅 महिना कॅश बुक</h3>
-                        <span id="mViewerSub" style="font-size:12px; color:#555;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</span>
+            <!-- Summary Cards -->
+            <div class="card">
+                <div class="flex-between" style="margin-bottom:12px;">
+                    <h2 style="margin-bottom:0;" id="summaryCardHeading">📊 Two-Column Summary <span style="font-size:12px; color:#888; font-weight:normal;">(रोख आणि बँक ताळेबंद)</span></h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा चालू एकूण निधी">
+                        <div class="label">💰 Total Balance (एकूण शिल्लक)</div>
+                        <div class="value" id="statTotalBal">₹ 0.00</div>
+                        <div style="font-size:11px; color:#28a745; font-weight:600; margin-top:3px;">Cash + Bank Fund</div>
                     </div>
+
+                    <div class="stat-box credit-box" onclick="switchToRecordsWithFilter('credit')" title="फक्त जमा नोंदी पहा">
+                        <div class="label">📈 Total Credit (एकूण जमा)</div>
+                        <div class="value" id="statTotalCredit" style="color:#198754;">₹ 0.00</div>
+                        <div style="font-size:11px; color:#666; margin-top:3px;">Cash In + Bank In ↗</div>
+                    </div>
+
+                    <div class="stat-box debit-box" onclick="switchToRecordsWithFilter('debit')" title="फक्त खर्च नोंदी पहा">
+                        <div class="label">📉 Total Debit (एकूण खर्च)</div>
+                        <div class="value" id="statTotalDebit" style="color:#dc3545;">₹ 0.00</div>
+                        <div style="font-size:11px; color:#666; margin-top:3px;">Cash Out + Bank Out ↗</div>
+                    </div>
+
+                    <div class="stat-box cash-box" onclick="switchToRecordsWithMode('cash')" title="फक्त रोख व्यवहार पहा">
+                        <div class="label">💵 Cash in Hand (हातातील रोख)</div>
+                        <div class="value" id="statCashBal">₹ 0.00</div>
+                        <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statCashIn">₹ 0</span> | Out: <span id="statCashOut">₹ 0</span></div>
+                    </div>
+
+                    <div class="stat-box bank-box" onclick="switchToRecordsWithMode('bank')" title="फक्त बँक व्यवहार पहा">
+                        <div class="label">🏦 Bank Balance (बँक शिल्लक)</div>
+                        <div class="value" id="statBankBal">₹ 0.00</div>
+                        <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statBankIn">₹ 0</span> | Out: <span id="statBankOut">₹ 0</span></div>
+                    </div>
+
+                    <div class="stat-box" onclick="switchAppTab('tabPanelRecords')" title="सर्व नोंदी पहा">
+                        <div class="label">🧾 Total Transactions</div>
+                        <div class="value" id="totalEntries">0</div>
+                        <div style="font-size:11px; color:#888; margin-top:3px;">नोंदी पहा ↗</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Month-Wise Screen Viewer -->
+            <div class="card" style="border: 1.5px solid #2a7de1;">
+                <div class="flex-between">
                     <div>
-                        <button class="btn btn-warning btn-sm" onclick="printCurrentScreenMonth()">🖨️ या निवडीची प्रिंट / PDF</button>
+                        <h2 style="margin-bottom:4px;">👁️ मासिक कॅश बुक व्ह्यूअर (Month-wise Ledger Viewer)</h2>
+                        <p style="font-size:12px; color:#666;">विशिष्ट महिना किंवा संपूर्ण नोंदी स्क्रीनवर पाहण्यासाठी खालील ड्रॉपडाउन वापरा (Read-Only).</p>
+                    </div>
+                    <div class="flex-row">
+                        <select id="screenMonthSelect" style="padding:8px 12px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:13px;"></select>
+                        <button class="btn btn-success" onclick="viewSelectedMonthOnScreen()">👁️ महिना पहा</button>
+                        <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
                     </div>
                 </div>
 
-                <div class="flex-between" style="background:#eef4fb; padding:8px 14px; border-radius:6px; margin-bottom:10px; font-size:12px;">
-                    <span><strong>मागील रोख शिल्लक (Opening Cash):</strong> <span id="mViewOpenCash" style="color:#d9480f; font-weight:bold;">₹ 0.00</span></span>
-                    <span><strong>मागील बँक शिल्लक (Opening Bank):</strong> <span id="mViewOpenBank" style="color:#0b5ed7; font-weight:bold;">₹ 0.00</span></span>
-                    <span><strong>मागील एकूण निधी:</strong> <span id="mViewOpenTotal" style="font-weight:bold;">₹ 0.00</span></span>
+                <div id="monthlyViewerBox" class="monthly-viewer-box">
+                    <div class="monthly-viewer-header">
+                        <div>
+                            <h3 id="mViewerTitle" style="color:#0d2b44; font-size:16px;">📅 महिना कॅश बुक</h3>
+                            <span id="mViewerSub" style="font-size:12px; color:#555;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-warning btn-sm" onclick="printCurrentScreenMonth()">🖨️ या निवडीची प्रिंट / PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="flex-between" style="background:#eef4fb; padding:8px 14px; border-radius:6px; margin-bottom:10px; font-size:12px;">
+                        <span><strong>मागील रोख शिल्लक (Opening Cash):</strong> <span id="mViewOpenCash" style="color:#d9480f; font-weight:bold;">₹ 0.00</span></span>
+                        <span><strong>मागील बँक शिल्लक (Opening Bank):</strong> <span id="mViewOpenBank" style="color:#0b5ed7; font-weight:bold;">₹ 0.00</span></span>
+                        <span><strong>मागील एकूण निधी:</strong> <span id="mViewOpenTotal" style="font-weight:bold;">₹ 0.00</span></span>
+                    </div>
+
+                    <div class="table-wrapper" style="max-height:430px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" style="width:30px;">#</th>
+                                    <th rowspan="2" style="width:75px;">दिनांक</th>
+                                    <th rowspan="2" style="width:85px;">व्हाउचर क्र.</th>
+                                    <th rowspan="2" style="width:65px;">मोड</th>
+                                    <th rowspan="2">नाव / तपशील</th>
+                                    <th rowspan="2">खर्च / देणगी कारण</th>
+                                    <th colspan="2" class="cash-head">रोख रकाना (Cash ₹)</th>
+                                    <th colspan="2" class="bank-head">बँक रकाना (Bank ₹)</th>
+                                    <th colspan="2" class="bal-head">अखेर शिल्लक (Balance ₹)</th>
+                                </tr>
+                                <tr>
+                                    <th class="sub-header cash-head">In (जमा)</th>
+                                    <th class="sub-header cash-head">Out (खर्च)</th>
+                                    <th class="sub-header bank-head">In (जमा)</th>
+                                    <th class="sub-header bank-head">Out (खर्च)</th>
+                                    <th class="sub-header bal-head">Cash Bal</th>
+                                    <th class="sub-header bal-head">Bank Bal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mViewerTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="background:#f8f9fa; border:1px solid #d0d7de; border-radius:8px; padding:10px; margin-top:10px; font-size:12px;">
+                        <div class="flex-between">
+                            <span>महिना रोख जमा: <strong id="mViewSumCashIn" style="color:#28a745;">₹ 0</strong> | रोख खर्च: <strong id="mViewSumCashOut" style="color:#dc3545;">₹ 0</strong></span>
+                            <span>महिना बँक जमा: <strong id="mViewSumBankIn" style="color:#0b5ed7;">₹ 0</strong> | बँक खर्च: <strong id="mViewSumBankOut" style="color:#d63384;">₹ 0</strong></span>
+                        </div>
+                        <div class="flex-between" style="margin-top:6px; padding-top:6px; border-top:1px dashed #ccc;">
+                            <span>अखेर रोख शिल्लक (Cash In Hand): <strong id="mViewCloseCash" style="color:#d9480f;">₹ 0</strong></span>
+                            <span>अखेर बँक शिल्लक (Bank Balance): <strong id="mViewCloseBank" style="color:#0b5ed7;">₹ 0</strong></span>
+                            <span>💰 महिनाअखेर एकूण संस्था निधी: <strong id="mViewCloseTotal" style="color:#0d2b44; font-size:14px;">₹ 0</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 2: ➕ ADD / EDIT ENTRY (नवीन नोंद)
+        =========================================== -->
+        <div id="tabPanelAdd" class="tab-panel-section admin-only">
+            <div class="card" id="addEditCard">
+                <h2 id="formTitle">➕ Add New Transaction</h2>
+                <div class="edit-indicator" id="editIndicator">
+                    ✏️ Editing: <span id="editDescDisplay"></span>
+                    <span class="cancel-edit" onclick="cancelEdit()">✖ Cancel</span>
+                </div>
+                <div class="add-entry-form">
+                    <div class="field">
+                        <label>📅 Date <span class="required-star">*</span></label>
+                        <input type="date" id="newDate">
+                    </div>
+                    <div class="field">
+                        <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Options)</span></label>
+                        <div class="voucher-input-group">
+                            <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
+                                <option value="PN">PN (सामान्य देणगी)</option>
+                                <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
+                                <option value="VN">VN (सर्व सामान्य खर्च)</option>
+                                <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
+                                <option value="OTHER">Other / इतर (Manual Box)</option>
+                            </select>
+                            <input type="text" id="newVoucher" placeholder="उदा. PN 01">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>💳 Payment Mode <span class="required-star">*</span></label>
+                        <select id="newPaymentMode" onchange="handlePaymentModeChange()">
+                            <option value="bank">🏦 Bank (Online/UPI/NEFT/Cheque)</option>
+                            <option value="cash">💵 Cash (हातातील रोख)</option>
+                            <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
+                            <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
+                        <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
+                    </div>
+                    <div class="field">
+                        <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(पर्यायी लिंक)</span></label>
+                        <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:170px;">
+                        <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
+                    </div>
+                    <div class="field">
+                        <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
+                        <input type="text" id="newName" list="donorNamesList" placeholder="उदा. सौरभ यमावार" style="min-width:180px;" autocomplete="off">
+                        <datalist id="donorNamesList"></datalist>
+                    </div>
+                    <div class="field">
+                        <label>📝 Description <span style="font-weight:400; color:#888;">(तपशील)</span></label>
+                        <input type="text" id="newDesc" placeholder="खर्च किंवा देणगीचे कारण" style="min-width:180px;">
+                    </div>
+                    <div class="field">
+                        <label>💰 Amount (₹) <span class="required-star">*</span></label>
+                        <input type="number" id="newAmount" placeholder="1000" step="0.01">
+                    </div>
+                    <div class="field" id="typeSelectField">
+                        <label>📌 Type <span class="required-star">*</span></label>
+                        <select id="newType" onchange="handleTypeChange()">
+                            <option value="credit">📈 Receipt / Jama (जमा)</option>
+                            <option value="debit">📉 Payment / Kharch (खर्च)</option>
+                        </select>
+                    </div>
+                    <div class="field field-actions">
+                        <button class="btn btn-success" id="addUpdateBtn" onclick="submitTransaction()">➕ Add Transaction</button>
+                        <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">✖ Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 3: 📋 ALL TRANSACTIONS (सर्व व्यवहार)
+        =========================================== -->
+        <div id="tabPanelRecords" class="tab-panel-section">
+            <div class="card">
+                <div class="flex-between">
+                    <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
+                    <div class="search-controls">
+                        <label>Type:
+                            <select id="filterFlowTypeSelect" onchange="filterTable()">
+                                <option value="all">All Types (सर्व)</option>
+                                <option value="credit">📈 Only Credit (जमा)</option>
+                                <option value="debit">📉 Only Debit (खर्च)</option>
+                            </select>
+                        </label>
+                        <label>Voucher:
+                            <select id="filterVoucherTypeSelect" onchange="filterTable()">
+                                <option value="all">All Vouchers</option>
+                                <option value="PN">PN (सामान्य देणगी)</option>
+                                <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
+                                <option value="VN_PURE">VN (सामान्य खर्च)</option>
+                                <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
+                                <option value="OTHER">Other / इतर</option>
+                            </select>
+                        </label>
+                        <label>FY:
+                            <select id="filterFYSelect" onchange="filterTable()">
+                                <option value="all">All FYs</option>
+                                <option value="2023-24">FY 2023-24</option>
+                                <option value="2024-25">FY 2024-25</option>
+                                <option value="2025-26">FY 2025-26</option>
+                                <option value="2026-27">FY 2026-27</option>
+                            </select>
+                        </label>
+                        <label>Mode: 
+                            <select id="filterModeSelect" onchange="filterTable()">
+                                <option value="all">All Modes</option>
+                                <option value="bank">Bank</option>
+                                <option value="cash">Cash</option>
+                                <option value="contra">Contra</option>
+                            </select>
+                        </label>
+                        <label>From: <input type="date" id="filterFromDate" onchange="filterTable()"></label>
+                        <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
+                        <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
+                        <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
+                        <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️ प्रिंट (Print)</button>
+                    </div>
                 </div>
 
-                <div class="table-wrapper" style="max-height:430px;">
-                    <table>
+                <div id="filterBanner" class="filter-banner" style="display:none;">
+                    <span id="filterBannerText">🔍 Active Filter</span>
+                    <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" style="margin:0;">Clear Filter</button>
+                </div>
+
+                <div class="table-wrapper" id="tableWrapper">
+                    <table id="transactionTable">
                         <thead>
                             <tr>
                                 <th rowspan="2" style="width:30px;">#</th>
-                                <th rowspan="2" style="width:75px;">दिनांक</th>
-                                <th rowspan="2" style="width:85px;">व्हाउचर क्र.</th>
-                                <th rowspan="2" style="width:65px;">मोड</th>
-                                <th rowspan="2">नाव / तपशील</th>
-                                <th rowspan="2">खर्च / देणगी कारण</th>
-                                <th colspan="2" class="cash-head">रोख रकाना (Cash ₹)</th>
-                                <th colspan="2" class="bank-head">बँक रकाना (Bank ₹)</th>
-                                <th colspan="2" class="bal-head">अखेर शिल्लक (Balance ₹)</th>
+                                <th rowspan="2" style="width:80px;">📅 Date</th>
+                                <th rowspan="2" style="width:90px;">🔢 Voucher</th>
+                                <th rowspan="2" style="width:70px;">💳 Mode</th>
+                                <th rowspan="2">🧑‍💼 Name</th>
+                                <th rowspan="2">📝 Description</th>
+                                <th colspan="2" class="cash-head">💵 CASH COLUMN (₹)</th>
+                                <th colspan="2" class="bank-head">🏦 BANK COLUMN (₹)</th>
+                                <th colspan="2" class="bal-head">💰 RUNNING BALANCES (₹)</th>
+                                <th rowspan="2" style="width:130px;" class="admin-only">⚡ Actions</th>
                             </tr>
                             <tr>
                                 <th class="sub-header cash-head">In (जमा)</th>
@@ -867,290 +1148,81 @@
                                 <th class="sub-header bal-head">Bank Bal</th>
                             </tr>
                         </thead>
-                        <tbody id="mViewerTableBody"></tbody>
+                        <tbody id="tableBody">
+                            <tr><td colspan="13" style="text-align:center; padding:40px; color:#888;">⏳ Loading two-column transactions...</td></tr>
+                        </tbody>
                     </table>
                 </div>
-
-                <div style="background:#f8f9fa; border:1px solid #d0d7de; border-radius:8px; padding:10px; margin-top:10px; font-size:12px;">
-                    <div class="flex-between">
-                        <span>महिना रोख जमा: <strong id="mViewSumCashIn" style="color:#28a745;">₹ 0</strong> | रोख खर्च: <strong id="mViewSumCashOut" style="color:#dc3545;">₹ 0</strong></span>
-                        <span>महिना बँक जमा: <strong id="mViewSumBankIn" style="color:#0b5ed7;">₹ 0</strong> | बँक खर्च: <strong id="mViewSumBankOut" style="color:#d63384;">₹ 0</strong></span>
-                    </div>
-                    <div class="flex-between" style="margin-top:6px; padding-top:6px; border-top:1px dashed #ccc;">
-                        <span>अखेर रोख शिल्लक (Cash In Hand): <strong id="mViewCloseCash" style="color:#d9480f;">₹ 0</strong></span>
-                        <span>अखेर बँक शिल्लक (Bank Balance): <strong id="mViewCloseBank" style="color:#0b5ed7;">₹ 0</strong></span>
-                        <span>💰 महिनाअखेर एकूण संस्था निधी: <strong id="mViewCloseTotal" style="color:#0d2b44; font-size:14px;">₹ 0</strong></span>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- 1. DATA STORAGE & BACKUP -->
-        <div class="card admin-only">
-            <div class="flex-between">
-                <h2>💾 Cloud & Backup Management <span class="badge">Admin</span></h2>
-                <div>
-                    <button class="btn btn-success btn-sm" onclick="backupData()">💾 Backup (JSON)</button>
-                    <button class="btn btn-warning btn-sm" onclick="document.getElementById('restoreInput').click()">📂 Restore (JSON)</button>
-                    <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
-                    <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Data</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. VIEWER MANAGEMENT -->
-        <div class="card admin-only">
-            <h2>👥 Viewer Management <span class="badge">Admin</span></h2>
-            <div class="add-entry-form" style="margin-bottom:15px;">
-                <div class="field">
-                    <label>👤 Viewer Name (नाव/पद):</label>
-                    <input type="text" id="newViewerName" placeholder="उदा. श्री. शर्मा (विश्वस्त)">
-                </div>
-                <div class="field">
-                    <label>🆔 Username (युझरनेम):</label>
-                    <input type="text" id="newViewerUser" placeholder="उदा. trustee1">
-                </div>
-                <div class="field">
-                    <label>🔑 Password (पासवर्ड):</label>
-                    <input type="password" id="newViewerPass" placeholder="पासवर्ड टाका">
-                </div>
-                <div class="field field-actions">
-                    <button class="btn btn-success" onclick="addNewViewer()">➕ Add Viewer</button>
-                </div>
-            </div>
-            
-            <div class="table-wrapper" style="max-height:180px;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>👤 Name</th>
-                            <th>🆔 Username</th>
-                            <th>🔑 Status</th>
-                            <th style="text-align:center;">⚡ Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="viewersTableBody">
-                        <tr><td colspan="5" style="text-align:center; color:#888;">कोणतेही विवर ॲड केलेले नाहीत.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 3. CSV IMPORT / EXPORT -->
-        <div class="card admin-only" id="csvCard">
-            <h2>📂 CSV Import / Export <span class="badge">Admin</span></h2>
-            <div class="flex-row">
-                <button class="btn btn-secondary" onclick="downloadTemplate()">📄 Download CSV Template</button>
-                <button class="btn btn-success" onclick="exportCSV()">⬇️ Export CSV</button>
-                <div class="file-upload-wrapper admin-only-inline">
-                    <label style="font-weight:600; font-size:13px; color:#495057; margin-right: 6px;">Upload CSV to Cloud:</label>
-                    <input type="file" id="csvUploadInput" accept=".csv" onchange="uploadCSV(event)">
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. SUMMARY (With Working Credit / Debit Toggle) -->
-        <div class="card">
-            <div class="flex-between" style="margin-bottom:12px;">
-                <h2 style="margin-bottom:0;" id="summaryCardHeading">📊 Two-Column Summary <span style="font-size:12px; color:#888; font-weight:normal;">(रोख आणि बँक ताळेबंद)</span></h2>
-                <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
-            </div>
-            <div class="stats-grid">
-                <!-- 1. Total Sanstha Balance -->
-                <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा चालू एकूण निधी">
-                    <div class="label">💰 Total Balance (एकूण शिल्लक)</div>
-                    <div class="value" id="statTotalBal">₹ 0.00</div>
-                    <div style="font-size:11px; color:#28a745; font-weight:600; margin-top:3px;">Cash + Bank Fund</div>
-                </div>
-
-                <!-- 2. TOTAL CREDIT (Clickable Filter) -->
-                <div class="stat-box credit-box" id="boxCredit" onclick="filterByCreditOnly()" title="फक्त जमा नोंदी फिल्टर करा">
-                    <div class="label">📈 Total Credit (एकूण जमा)</div>
-                    <div class="value" id="statTotalCredit" style="color:#198754;">₹ 0.00</div>
-                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash In + Bank In (फिल्टर करा)</div>
-                </div>
-
-                <!-- 3. TOTAL DEBIT (Clickable Filter) -->
-                <div class="stat-box debit-box" id="boxDebit" onclick="filterByDebitOnly()" title="फक्त खर्च नोंदी फिल्टर करा">
-                    <div class="label">📉 Total Debit (एकूण खर्च)</div>
-                    <div class="value" id="statTotalDebit" style="color:#dc3545;">₹ 0.00</div>
-                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash Out + Bank Out (फिल्टर करा)</div>
-                </div>
-
-                <!-- 4. Cash in Hand -->
-                <div class="stat-box cash-box" onclick="toggleModeFilter('cash')" title="फक्त रोख व्यवहार पहा">
-                    <div class="label">💵 Cash in Hand (हातातील रोख)</div>
-                    <div class="value" id="statCashBal">₹ 0.00</div>
-                    <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statCashIn">₹ 0</span> | Out: <span id="statCashOut">₹ 0</span></div>
-                </div>
-
-                <!-- 5. Bank Balance -->
-                <div class="stat-box bank-box" onclick="toggleModeFilter('bank')" title="फक्त बँक व्यवहार पहा">
-                    <div class="label">🏦 Bank Balance (बँक शिल्लक)</div>
-                    <div class="value" id="statBankBal">₹ 0.00</div>
-                    <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statBankIn">₹ 0</span> | Out: <span id="statBankOut">₹ 0</span></div>
-                </div>
-
-                <!-- 6. Total Transactions -->
-                <div class="stat-box" onclick="resetAllFilters()" title="सर्व नोंदी पहा">
-                    <div class="label">🧾 Total Transactions</div>
-                    <div class="value" id="totalEntries">0</div>
-                    <div style="font-size:11px; color:#888; margin-top:3px;">Active Records</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. ADD / EDIT TRANSACTION (Enhanced Contra Support) -->
-        <div class="card admin-only" id="addEditCard">
-            <h2 id="formTitle">➕ Add New Transaction</h2>
-            <div class="edit-indicator" id="editIndicator">
-                ✏️ Editing: <span id="editDescDisplay"></span>
-                <span class="cancel-edit" onclick="cancelEdit()">✖ Cancel</span>
-            </div>
-            <div class="add-entry-form">
-                <div class="field">
-                    <label>📅 Date <span class="required-star">*</span></label>
-                    <input type="date" id="newDate">
-                </div>
-                <div class="field">
-                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Options)</span></label>
-                    <div class="voucher-input-group">
-                        <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
-                            <option value="PN">PN (सामान्य देणगी)</option>
-                            <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
-                            <option value="VN">VN (सर्व सामान्य खर्च)</option>
-                            <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
-                            <option value="OTHER">Other / इतर (Manual Box)</option>
-                        </select>
-                        <input type="text" id="newVoucher" placeholder="उदा. PN 01">
+        <!-- ==========================================
+             TAB 4: ⚙️ MANAGEMENT (व्यवस्थापन)
+        =========================================== -->
+        <div id="tabPanelMgmt" class="tab-panel-section admin-only">
+            <!-- 1. DATA STORAGE & BACKUP -->
+            <div class="card">
+                <div class="flex-between">
+                    <h2>💾 Cloud & Backup Management <span class="badge">Admin</span></h2>
+                    <div>
+                        <button class="btn btn-success btn-sm" onclick="backupData()">💾 Backup (JSON)</button>
+                        <button class="btn btn-warning btn-sm" onclick="document.getElementById('restoreInput').click()">📂 Restore (JSON)</button>
+                        <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
+                        <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Data</button>
                     </div>
                 </div>
-                <div class="field">
-                    <label>💳 Payment Mode <span class="required-star">*</span></label>
-                    <select id="newPaymentMode" onchange="handlePaymentModeChange()">
-                        <option value="bank">🏦 Bank (Online/UPI/NEFT/Cheque)</option>
-                        <option value="cash">💵 Cash (हातातील रोख)</option>
-                        <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
-                        <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
-                    <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
-                </div>
-                <div class="field">
-                    <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(पर्यायी लिंक)</span></label>
-                    <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:170px;">
-                    <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
-                </div>
-                <div class="field">
-                    <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
-                    <input type="text" id="newName" list="donorNamesList" placeholder="उदा. सौरभ यमावार" style="min-width:180px;" autocomplete="off">
-                    <datalist id="donorNamesList"></datalist>
-                </div>
-                <div class="field">
-                    <label>📝 Description <span style="font-weight:400; color:#888;">(तपशील)</span></label>
-                    <input type="text" id="newDesc" placeholder="खर्च किंवा देणगीचे कारण" style="min-width:180px;">
-                </div>
-                <div class="field">
-                    <label>💰 Amount (₹) <span class="required-star">*</span></label>
-                    <input type="number" id="newAmount" placeholder="1000" step="0.01">
-                </div>
-                <div class="field" id="typeSelectField">
-                    <label>📌 Type <span class="required-star">*</span></label>
-                    <select id="newType" onchange="handleTypeChange()">
-                        <option value="credit">📈 Receipt / Jama (जमा)</option>
-                        <option value="debit">📉 Payment / Kharch (खर्च)</option>
-                    </select>
-                </div>
-                <div class="field field-actions">
-                    <button class="btn btn-success" id="addUpdateBtn" onclick="submitTransaction()">➕ Add Transaction</button>
-                    <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">✖ Cancel</button>
-                </div>
             </div>
-        </div>
 
-        <!-- 6. ALL TRANSACTIONS TABLE -->
-        <div class="card">
-            <div class="flex-between">
-                <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
-                <div class="search-controls">
-                    <label>Type:
-                        <select id="filterFlowTypeSelect" onchange="filterTable()">
-                            <option value="all">All Types (सर्व)</option>
-                            <option value="credit">📈 Only Credit (जमा)</option>
-                            <option value="debit">📉 Only Debit (खर्च)</option>
-                        </select>
-                    </label>
-                    <label>Voucher:
-                        <select id="filterVoucherTypeSelect" onchange="filterTable()">
-                            <option value="all">All Vouchers</option>
-                            <option value="PN">PN (सामान्य देणगी)</option>
-                            <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
-                            <option value="VN_PURE">VN (सामान्य खर्च)</option>
-                            <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
-                            <option value="OTHER">Other / इतर</option>
-                        </select>
-                    </label>
-                    <label>FY:
-                        <select id="filterFYSelect" onchange="filterTable()">
-                            <option value="all">All FYs</option>
-                            <option value="2023-24">FY 2023-24</option>
-                            <option value="2024-25">FY 2024-25</option>
-                            <option value="2025-26">FY 2025-26</option>
-                            <option value="2026-27">FY 2026-27</option>
-                        </select>
-                    </label>
-                    <label>Mode: 
-                        <select id="filterModeSelect" onchange="filterTable()">
-                            <option value="all">All Modes</option>
-                            <option value="bank">Bank</option>
-                            <option value="cash">Cash</option>
-                            <option value="contra">Contra</option>
-                        </select>
-                    </label>
-                    <label>From: <input type="date" id="filterFromDate" onchange="filterTable()"></label>
-                    <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
-                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
-                    <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
-                    <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️ प्रिंट (Print)</button>
+            <!-- 2. CSV IMPORT / EXPORT -->
+            <div class="card" id="csvCard">
+                <h2>📂 CSV Import / Export <span class="badge">Admin</span></h2>
+                <div class="flex-row">
+                    <button class="btn btn-secondary" onclick="downloadTemplate()">📄 Download CSV Template</button>
+                    <button class="btn btn-success" onclick="exportCSV()">⬇️ Export CSV</button>
+                    <div class="file-upload-wrapper admin-only-inline">
+                        <label style="font-weight:600; font-size:13px; color:#495057; margin-right:6px;">Upload CSV to Cloud:</label>
+                        <input type="file" id="csvUploadInput" accept=".csv" onchange="uploadCSV(event)">
+                    </div>
                 </div>
             </div>
 
-            <div id="filterBanner" class="filter-banner" style="display:none;">
-                <span id="filterBannerText">🔍 Active Filter</span>
-                <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" style="margin:0;">Clear Filter</button>
-            </div>
-
-            <div class="table-wrapper" id="tableWrapper">
-                <table id="transactionTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width:30px;">#</th>
-                            <th rowspan="2" style="width:80px;">📅 Date</th>
-                            <th rowspan="2" style="width:90px;">🔢 Voucher</th>
-                            <th rowspan="2" style="width:70px;">💳 Mode</th>
-                            <th rowspan="2">🧑‍💼 Name</th>
-                            <th rowspan="2">📝 Description</th>
-                            <th colspan="2" class="cash-head">💵 CASH COLUMN (₹)</th>
-                            <th colspan="2" class="bank-head">🏦 BANK COLUMN (₹)</th>
-                            <th colspan="2" class="bal-head">💰 RUNNING BALANCES (₹)</th>
-                            <th rowspan="2" style="width:130px;" class="admin-only">⚡ Actions</th>
-                        </tr>
-                        <tr>
-                            <th class="sub-header cash-head">In (जमा)</th>
-                            <th class="sub-header cash-head">Out (खर्च)</th>
-                            <th class="sub-header bank-head">In (जमा)</th>
-                            <th class="sub-header bank-head">Out (खर्च)</th>
-                            <th class="sub-header bal-head">Cash Bal</th>
-                            <th class="sub-header bal-head">Bank Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr><td colspan="13" style="text-align:center; padding:40px; color:#888;">⏳ Loading two-column transactions...</td></tr>
-                    </tbody>
-                </table>
+            <!-- 3. VIEWER MANAGEMENT -->
+            <div class="card">
+                <h2>👥 Viewer Management <span class="badge">Admin</span></h2>
+                <div class="add-entry-form" style="margin-bottom:15px;">
+                    <div class="field">
+                        <label>👤 Viewer Name (नाव/पद):</label>
+                        <input type="text" id="newViewerName" placeholder="उदा. श्री. शर्मा (विश्वस्त)">
+                    </div>
+                    <div class="field">
+                        <label>🆔 Username (युझरनेम):</label>
+                        <input type="text" id="newViewerUser" placeholder="उदा. trustee1">
+                    </div>
+                    <div class="field">
+                        <label>🔑 Password (पासवर्ड):</label>
+                        <input type="password" id="newViewerPass" placeholder="पासवर्ड टाका">
+                    </div>
+                    <div class="field field-actions">
+                        <button class="btn btn-success" onclick="addNewViewer()">➕ Add Viewer</button>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper" style="max-height:180px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>👤 Name</th>
+                                <th>🆔 Username</th>
+                                <th>🔑 Status</th>
+                                <th style="text-align:center;">⚡ Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="viewersTableBody">
+                            <tr><td colspan="5" style="text-align:center; color:#888;">कोणतेही विवर ॲड केलेले नाहीत.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -1285,6 +1357,36 @@
     }
 
     // ============================================================
+    //  🚀 TAB NAVIGATION ENGINE (MODULAR TABS)
+    // ============================================================
+    function switchAppTab(panelId) {
+        document.querySelectorAll('.tab-panel-section').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
+
+        const targetPanel = document.getElementById(panelId);
+        if (targetPanel) {
+            targetPanel.classList.add('active');
+        }
+
+        if (panelId === 'tabPanelLedger') document.getElementById('tabNavLedger').classList.add('active');
+        else if (panelId === 'tabPanelAdd') document.getElementById('tabNavAdd').classList.add('active');
+        else if (panelId === 'tabPanelRecords') document.getElementById('tabNavRecords').classList.add('active');
+        else if (panelId === 'tabPanelMgmt') document.getElementById('tabNavMgmt').classList.add('active');
+    }
+
+    function switchToRecordsWithFilter(type) {
+        switchAppTab('tabPanelRecords');
+        document.getElementById('filterFlowTypeSelect').value = type;
+        filterTable();
+    }
+
+    function switchToRecordsWithMode(mode) {
+        switchAppTab('tabPanelRecords');
+        document.getElementById('filterModeSelect').value = mode;
+        filterTable();
+    }
+
+    // ============================================================
     //  AUTHENTICATION & PASSWORD MANAGEMENT
     // ============================================================
     function switchLoginTab(tab) {
@@ -1338,7 +1440,6 @@
 
         try {
             const pHash = await sha256(p);
-            // Check both hashed password and legacy plain password for backward compatibility
             let snap = await db.collection('viewers').where('username', '==', u).where('passwordHash', '==', pHash).get();
             if (snap.empty) {
                 snap = await db.collection('viewers').where('username', '==', u).where('password', '==', p).get();
@@ -1355,6 +1456,7 @@
                 document.getElementById('mainAppSection').style.display = 'block';
                 showToast(`👋 Welcome ${viewer.name || viewer.username}!`);
                 initRealtimeSync();
+                switchAppTab('tabPanelLedger');
             } else {
                 alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
             }
@@ -1857,13 +1959,11 @@
                 bankIn = cr;
                 bankOut = dr;
             } else if (item.paymentMode === 'contra_c2b' || item.paymentMode === 'contra') {
-                // Cash deposited into bank
                 const amt = cr > 0 ? cr : dr;
                 cashOut = amt;
                 bankIn = amt;
                 item.paymentMode = 'contra_c2b';
             } else if (item.paymentMode === 'contra_b2c') {
-                // Cash withdrawn from bank
                 const amt = cr > 0 ? cr : dr;
                 cashIn = amt;
                 bankOut = amt;
@@ -2304,7 +2404,7 @@
     }
 
     // ============================================================
-    //  RENDER TABLE & STATS (Fixed & Dynamic Balance Handling)
+    //  RENDER TABLE & STATS
     // ============================================================
     function renderTable(data, isFiltered) {
         currentFilteredData = data || [];
@@ -2425,21 +2525,6 @@
         }
     }
 
-    function toggleModeFilter(mode) {
-        document.getElementById('filterModeSelect').value = mode;
-        filterTable();
-    }
-
-    function filterByCreditOnly() {
-        document.getElementById('filterFlowTypeSelect').value = 'credit';
-        filterTable();
-    }
-
-    function filterByDebitOnly() {
-        document.getElementById('filterFlowTypeSelect').value = 'debit';
-        filterTable();
-    }
-
     function resetAllFilters() {
         document.getElementById('searchInput').value = '';
         document.getElementById('filterFromDate').value = '';
@@ -2462,7 +2547,6 @@
 
         const banner = document.getElementById('filterBanner');
         const bannerText = document.getElementById('filterBannerText');
-        const resetTop = document.getElementById('resetFilterTopBtn');
 
         let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || (voucherTypeFilter !== 'all') || (flowTypeFilter !== 'all') || query || fromDate || toDate;
 
@@ -2478,10 +2562,8 @@
 
             bannerText.innerHTML = `🔍 <strong>सध्याचे फिल्टर:</strong> ${filterDesc.join(' | ')}`;
             banner.style.display = 'flex';
-            resetTop.style.display = 'inline-block';
         } else {
             banner.style.display = 'none';
-            resetTop.style.display = 'none';
         }
 
         let filtered = (transactionsData || []).filter(t => {
@@ -2600,7 +2682,7 @@
         <body>
             <div class="org-title">
                 <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                <p>श्रीराम नगर भद्रावती | Two-Column Cash Book (फिल्टर केलेला अहवाल)</p>
+                <p>श्रीराम नगर भद्रावती | Two-Column Cash Book (फिल्टर अहवाल)</p>
                 <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
             </div>
 
@@ -2720,7 +2802,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  🧾 SINGLE RECEIPT PRINT
+    //  🧾 SINGLE RECEIPT PRINT (WITH OFFICIAL DIGITAL SEAL & SIGN)
     // ============================================================
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -2740,18 +2822,66 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                 @page { size: A5 landscape; margin: 8mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
                 body { color: #111; margin: 0; padding: 15px; }
-                .receipt-box { border: 2px solid #0d2b44; border-radius: 12px; padding: 20px; position: relative; }
+                .receipt-box { border: 2.5px solid #0d2b44; border-radius: 12px; padding: 20px; position: relative; background: #fff; }
                 .header { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 10px; }
-                .header h1 { margin: 0; font-size: 20px; color: #0d2b44; }
+                .header h1 { margin: 0; font-size: 20px; color: #0d2b44; font-weight: 800; }
                 .header p { margin: 3px 0; font-size: 13px; color: #555; }
                 .reg-tag { display: inline-block; background: #fff3cd; color: #856404; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; }
-                .receipt-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; }
-                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+                .receipt-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; color: #0d2b44; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13.5px; }
                 .details-table td { padding: 8px 6px; }
                 .amount-highlight { font-size: 18px; font-weight: bold; color: #0d2b44; background: #eef4fb; padding: 6px 14px; border-radius: 6px; border: 1px dashed #2a7de1; display: inline-block; }
                 .words-text { font-size: 13px; font-weight: bold; color: #084298; margin-top: 4px; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 35px; padding: 0 20px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 150px; font-size: 12px; font-weight: bold; padding-top: 4px; }
+                
+                /* Digital Stamp & Signatures Container */
+                .bottom-auth-section {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    margin-top: 25px;
+                    padding: 0 15px;
+                    position: relative;
+                }
+                .sig-box {
+                    text-align: center;
+                    border-top: 1px dashed #333;
+                    width: 140px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding-top: 4px;
+                }
+                
+                /* Official Circular Seal Style */
+                .official-stamp {
+                    width: 105px;
+                    height: 105px;
+                    border: 3px dashed #0b5ed7;
+                    border-radius: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    padding: 6px;
+                    color: #084298;
+                    font-size: 9px;
+                    font-weight: 700;
+                    transform: rotate(-7deg);
+                    opacity: 0.9;
+                    box-shadow: 0 0 0 2px #cfe2ff;
+                    user-select: none;
+                }
+                .official-stamp .stamp-title { font-size: 9px; line-height: 1.1; margin-bottom: 2px; }
+                .official-stamp .stamp-sub { font-size: 8px; color: #0d2b44; border-top: 1px solid #0b5ed7; border-bottom: 1px solid #0b5ed7; padding: 1px 0; margin: 2px 0; }
+                .official-stamp .stamp-verified { font-size: 9px; color: #198754; font-weight: 800; letter-spacing: 0.5px; }
+
+                /* Digital Signature Graphic */
+                .digital-sign-preview {
+                    font-family: 'Brush Script MT', cursive, sans-serif;
+                    font-size: 20px;
+                    color: #0b5ed7;
+                    margin-bottom: 2px;
+                }
             </style>
         </head>
         <body>
@@ -2777,16 +2907,31 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                         <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="padding-top:10px;">
+                        <td colspan="2" style="padding-top:8px;">
                             <strong>स्वीकारलेली रक्कम:</strong> 
                             <span class="amount-highlight">${formatIndianNum(receiptAmount)}</span>
                             <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
                         </td>
                     </tr>
                 </table>
-                <div class="signatures">
-                    <div class="sig-box">दात्याची स्वाक्षरी</div>
-                    <div class="sig-box">स्वीकारणारा / खजिनदार</div>
+
+                <div class="bottom-auth-section">
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        दात्याची स्वाक्षरी
+                    </div>
+
+                    <!-- Digital Stamp (मुद्रा) -->
+                    <div class="official-stamp">
+                        <span class="stamp-title">स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                        <span class="stamp-sub">भद्रावती F-0016068</span>
+                        <span class="stamp-verified">✓ अधिकृत पावती</span>
+                    </div>
+
+                    <div class="sig-box">
+                        <div class="digital-sign-preview">Secretary / Treasurer</div>
+                        स्वीकारणारा / खजिनदार
+                    </div>
                 </div>
             </div>
             <script>window.onload = function() { window.print(); };<\/script>
@@ -2800,7 +2945,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  📑 PAYMENT VOUCHER PRINT (FOR DEBIT)
+    //  📑 PAYMENT VOUCHER PRINT (WITH OFFICIAL STAMP)
     // ============================================================
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -2820,18 +2965,52 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                 @page { size: A5 landscape; margin: 8mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
                 body { color: #111; margin: 0; padding: 15px; }
-                .voucher-box { border: 2px solid #800020; border-radius: 12px; padding: 20px; position: relative; }
+                .voucher-box { border: 2.5px solid #800020; border-radius: 12px; padding: 20px; position: relative; background:#fff; }
                 .header { text-align: center; border-bottom: 2px solid #800020; padding-bottom: 10px; }
-                .header h1 { margin: 0; font-size: 20px; color: #800020; }
+                .header h1 { margin: 0; font-size: 20px; color: #800020; font-weight: 800; }
                 .header p { margin: 3px 0; font-size: 13px; color: #555; }
                 .reg-tag { display: inline-block; background: #fdf2e9; color: #a04000; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; border: 1px solid #f5cba7; }
                 .voucher-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; color: #800020; }
-                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13.5px; }
                 .details-table td { padding: 8px 6px; }
                 .amount-highlight { font-size: 18px; font-weight: bold; color: #800020; background: #fbf2f4; padding: 6px 14px; border-radius: 6px; border: 1px dashed #c0392b; display: inline-block; }
                 .words-text { font-size: 13px; font-weight: bold; color: #721c24; margin-top: 4px; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 35px; padding: 0 15px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 130px; font-size: 11.5px; font-weight: bold; padding-top: 4px; }
+                
+                .bottom-auth-section {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    margin-top: 25px;
+                    padding: 0 15px;
+                }
+                .sig-box {
+                    text-align: center;
+                    border-top: 1px dashed #333;
+                    width: 130px;
+                    font-size: 11.5px;
+                    font-weight: bold;
+                    padding-top: 4px;
+                }
+                .official-stamp {
+                    width: 100px;
+                    height: 100px;
+                    border: 3px dashed #800020;
+                    border-radius: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    padding: 6px;
+                    color: #800020;
+                    font-size: 9px;
+                    font-weight: 700;
+                    transform: rotate(-6deg);
+                    opacity: 0.9;
+                }
+                .official-stamp .stamp-title { font-size: 9px; line-height: 1.1; margin-bottom: 2px; }
+                .official-stamp .stamp-sub { font-size: 8px; border-top: 1px solid #800020; border-bottom: 1px solid #800020; padding: 1px 0; margin: 2px 0; }
+                .official-stamp .stamp-verified { font-size: 9px; color: #800020; font-weight: 800; }
             </style>
         </head>
         <body>
@@ -2857,17 +3036,30 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                         <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="padding-top:10px;">
+                        <td colspan="2" style="padding-top:8px;">
                             <strong>अदा केलेली रक्कम:</strong> 
                             <span class="amount-highlight">${formatIndianNum(expenseAmount)}</span>
                             <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
                         </td>
                     </tr>
                 </table>
-                <div class="signatures">
-                    <div class="sig-box">रक्कम घेणाऱ्याची सही</div>
-                    <div class="sig-box">तयार करणार (Accountant)</div>
-                    <div class="sig-box">सचिव / अध्यक्ष</div>
+
+                <div class="bottom-auth-section">
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        रक्कम घेणाऱ्याची सही
+                    </div>
+
+                    <div class="official-stamp">
+                        <span class="stamp-title">स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                        <span class="stamp-sub">भद्रावती F-0016068</span>
+                        <span class="stamp-verified">✓ पास / अदा</span>
+                    </div>
+
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        सचिव / अध्यक्ष
+                    </div>
                 </div>
             </div>
             <script>window.onload = function() { window.print(); };<\/script>
@@ -3324,12 +3516,10 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             return;
         }
 
-        // Automatic type setting for contra
         if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c') {
-            type = 'credit'; // handled directly via engine logic
+            type = 'credit';
         }
 
-        // Negative cash check (for current date cash outflow)
         if ((modeVal === 'cash' && type === 'debit') || modeVal === 'contra_c2b') {
             let currentAvailableCash = 0;
             transactionsData.forEach(t => {
@@ -3399,6 +3589,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             statusText.textContent = '';
 
             handleVoucherTypeChange();
+            switchAppTab('tabPanelRecords'); // Automatically switch to view recorded data
         } catch(err) {
             alert('Error: ' + err.message);
         } finally {
@@ -3414,6 +3605,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         if (!item) return;
 
         editingId = id;
+        switchAppTab('tabPanelAdd'); // Switch directly to Add/Edit tab
+
         document.getElementById('formTitle').textContent = '✏️ Edit Transaction';
         document.getElementById('editIndicator').style.display = 'block';
         document.getElementById('editDescDisplay').textContent = item.name || item.description || 'Entry';
@@ -3485,7 +3678,6 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         }
     }
 
-    // Fixed: Chunk deletion for 500 limit safety
     async function clearAllData() {
         if (currentRole !== 'admin') return;
         if (!confirm('⚠️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
@@ -3493,7 +3685,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         try {
             const snapshot = await db.collection('transactions').get();
             const docs = snapshot.docs;
-            const chunkSize = 400; // Safe below 500 limit
+            const chunkSize = 400;
 
             for (let i = 0; i < docs.length; i += chunkSize) {
                 const batch = db.batch();
@@ -3509,7 +3701,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  CSV & BACKUP (Chunk-based restore for scale)
+    //  CSV & BACKUP
     // ============================================================
     function downloadTemplate() {
         if (currentRole !== 'admin') return;
@@ -3612,6 +3804,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                     await batch.commit();
                 }
                 showToast(`✅ ${toAdd.length} नोंदी क्लाउडवर इम्पोर्ट झाल्या!`);
+                switchAppTab('tabPanelRecords');
             } catch(err) {
                 alert('Import error: ' + err.message);
             }
@@ -3646,7 +3839,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                 }
                 if (!confirm(`क्लाउडवर ${data.length} नोंदी रिस्टोअर करायच्या आहेत का?`)) return;
 
-                const chunkSize = 400; // Batch limit protection
+                const chunkSize = 400;
                 for (let i = 0; i < data.length; i += chunkSize) {
                     const batch = db.batch();
                     data.slice(i, i + chunkSize).forEach(item => {
@@ -3666,6 +3859,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                     await batch.commit();
                 }
                 showToast(`✅ Restored ${data.length} entries successfully!`);
+                switchAppTab('tabPanelRecords');
             } catch(err) {
                 alert('Restore error: ' + err.message);
             }
