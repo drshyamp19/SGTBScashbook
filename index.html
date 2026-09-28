@@ -356,7 +356,7 @@
             border: 1px solid #e9ecef;
             border-radius: 8px;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 950px; }
         th {
             background: #0d2b44;
             color: white;
@@ -391,6 +391,8 @@
         .action-btn.edit-btn:hover { background: #d4e4ff; }
         .action-btn.del-btn { color: #dc3545; }
         .action-btn.del-btn:hover { background: #ffd4d4; }
+        .action-btn.wa-btn { color: #25D366; }
+        .action-btn.wa-btn:hover { background: #d4f8e0; }
 
         .search-controls {
             display: flex;
@@ -716,8 +718,10 @@
                     <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
                 </div>
                 <div class="field">
-                    <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
-                    <input type="text" id="newName" placeholder="उदा. सौरभ यमावार" style="min-width:180px;">
+                    <!-- Feature 1: Donor Name Compulsory (*) + Datalist Autocomplete -->
+                    <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
+                    <input type="text" id="newName" list="donorNamesList" placeholder="उदा. सौरभ यमावार" style="min-width:180px;" autocomplete="off">
+                    <datalist id="donorNamesList"></datalist>
                 </div>
                 <div class="field">
                     <label>📝 Description <span style="font-weight:400; color:#888;">(optional)</span></label>
@@ -770,7 +774,7 @@
                             <th style="text-align:right;">📈 Credit (₹)</th>
                             <th style="text-align:right;">📉 Debit (₹)</th>
                             <th style="text-align:right;">💰 Balance (₹)</th>
-                            <th style="text-align:center; width:120px;" class="admin-only">⚡ Actions</th>
+                            <th style="text-align:center; width:140px;" class="admin-only">⚡ Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -830,7 +834,6 @@
         console.error("Firebase init error:", err);
     }
 
-    // Monitor Firebase Auth State (Auto-login for Admin)
     if (auth) {
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -1150,6 +1153,14 @@
         return result;
     }
 
+    // Update Datalist with all unique donor names
+    function updateDonorNamesDatalist() {
+        const datalist = document.getElementById('donorNamesList');
+        if (!datalist) return;
+        const uniqueNames = [...new Set(transactionsData.map(t => (t.name || '').trim()).filter(Boolean))].sort();
+        datalist.innerHTML = uniqueNames.map(name => `<option value="${escapeHTML(name)}">`).join('');
+    }
+
     // ============================================================
     //  DATABASE & REALTIME LISTENER
     // ============================================================
@@ -1195,6 +1206,7 @@
                     list.push({ id: doc.id, ...doc.data() });
                 });
                 transactionsData = calculateRunningBalances(list);
+                updateDonorNamesDatalist();
                 filterTable();
             }, (error) => {
                 console.error("Firestore listen error: ", error);
@@ -1228,10 +1240,13 @@
                 voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
             }
 
-            // Print Receipt action if Credit
-            let receiptBtn = '';
+            // Feature 3: Single Print + WhatsApp Share Button for Credit Entries
+            let receiptBtns = '';
             if (item.credit > 0) {
-                receiptBtn = `<button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>`;
+                receiptBtns = `
+                    <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
+                    <button class="action-btn wa-btn" onclick="shareReceiptOnWhatsApp('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
+                `;
             }
 
             row.innerHTML = `
@@ -1244,7 +1259,7 @@
                 <td style="text-align:right; color:#dc3545; font-weight:600;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
                 <td style="text-align:right; font-weight:700;">${formatIndianNum(item.balance)}</td>
                 <td style="text-align:center; white-space:nowrap;" class="admin-only">
-                    ${receiptBtn}
+                    ${receiptBtns}
                     <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
                     <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
                 </td>
@@ -1378,7 +1393,7 @@
                         <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || 'दात्याचे नाव नाही')}</td>
+                        <td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || '-')}</td>
                     </tr>
                     <tr>
                         <td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td>
@@ -1407,8 +1422,32 @@
         printWin.document.close();
     }
 
+    // Feature 3: Share Receipt on WhatsApp
+    function shareReceiptOnWhatsApp(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) return;
+
+        const voucherText = item.voucher ? `*पावती क्र:* ${item.voucher}\n` : '';
+        const descText = item.description ? `*तपशील:* ${item.description}\n` : '';
+
+        const msg = 
+`🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
+श्रीराम नगर भद्रावती (Reg. No. F-0016068)
+----------------------------------------
+📜 *देणगी पावती (Donation Receipt)*
+----------------------------------------
+${voucherText}*दिनांक:* ${item.date}
+*दात्याचे नाव:* ${item.name || '-'}
+${descText}*स्वीकारलेली रक्कम:* ${formatIndianNum(item.credit)}
+----------------------------------------
+आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
+
+        const encodedMsg = encodeURIComponent(msg);
+        window.open(`https://api.whatsapp.com/send?text=${encodedMsg}`, '_blank');
+    }
+
     // ============================================================
-    //  🖨️ GENERATE MONTH-WISE PDF
+    //  🖨️ GENERATE MONTH-WISE PDF (Feature 2: Page Overflow Fix)
     // ============================================================
 
     function generateMonthwisePDF(type = 'all') {
@@ -1454,25 +1493,35 @@
             <meta charset="UTF-8">
             <title>${reportTitle} - Swami Gopal Tirth Sanstha</title>
             <style>
-                @page { size: A4 landscape; margin: 10mm; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 12px; }
-                .month-page { page-break-after: always; break-after: page; padding: 10px 0 20px 0; }
+                @page { size: A4 landscape; margin: 8mm; }
+                * { box-sizing: border-box; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 11px; }
+                .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
                 .month-page:last-child { page-break-after: avoid; break-after: avoid; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 8px; margin-bottom: 12px; }
-                .org-title h1 { margin: 0 0 4px 0; font-size: 20px; color: #0d2b44; }
-                .org-title p { margin: 2px 0; font-size: 12px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 14px; border-radius: 12px; margin-top: 4px; border: 1px solid #d0dbe5; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 8px 14px; border: 1px solid #bdd5ea; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11.5px; }
-                th, td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 8px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 17px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
+                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 8px; font-size: 11px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10.5px; }
+                th, td { border: 1px solid #bbb; padding: 4px 6px; text-align: left; }
                 th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; }
+                tr { page-break-inside: avoid; }
                 .text-right { text-align: right; }
                 .credit-text { color: #198754; font-weight: 700; }
                 .debit-text { color: #dc3545; font-weight: 700; }
-                .summary-table { width: 100%; margin-top: 10px; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 12px; }
-                .summary-table td { padding: 8px 12px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 45px; padding: 0 40px; font-weight: bold; font-size: 12px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 180px; padding-top: 6px; }
+                
+                /* Overflow & orphan signatures protection */
+                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
+                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 11px; margin-bottom: 0; }
+                .summary-table td { padding: 6px 10px; font-weight: 600; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
+                
+                @media print {
+                    .no-print { display: none !important; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
             </style>
         </head>
         <body>
@@ -1496,25 +1545,25 @@
                 if (isDebitOnly) {
                     rowsHtml += `
                     <tr>
-                        <td style="text-align:center; width:35px;">${index + 1}</td>
-                        <td style="white-space:nowrap; width:90px;">${escapeHTML(item.date)}</td>
-                        <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                        <td style="text-align:center; width:30px;">${index + 1}</td>
+                        <td style="white-space:nowrap; width:80px;">${escapeHTML(item.date)}</td>
+                        <td style="width:100px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
                         <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                         <td>${escapeHTML(item.description || '-')}</td>
-                        <td class="text-right debit-text" style="width:130px; font-size:13px;">${formatIndianNum(item.debit)}</td>
+                        <td class="text-right debit-text" style="width:120px; font-size:11px;">${formatIndianNum(item.debit)}</td>
                     </tr>
                     `;
                 } else {
                     rowsHtml += `
                     <tr>
-                        <td style="text-align:center; width:35px;">${index + 1}</td>
-                        <td style="white-space:nowrap; width:85px;">${escapeHTML(item.date)}</td>
-                        <td style="width:110px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                        <td style="text-align:center; width:30px;">${index + 1}</td>
+                        <td style="white-space:nowrap; width:80px;">${escapeHTML(item.date)}</td>
+                        <td style="width:100px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
                         <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                         <td>${escapeHTML(item.description || '-')}</td>
-                        <td class="text-right credit-text" style="width:105px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
-                        <td class="text-right debit-text" style="width:105px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
-                        <td class="text-right" style="font-weight:bold; width:115px;">${formatIndianNum(item.balance)}</td>
+                        <td class="text-right credit-text" style="width:95px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
+                        <td class="text-right debit-text" style="width:95px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
+                        <td class="text-right" style="font-weight:bold; width:105px;">${formatIndianNum(item.balance)}</td>
                     </tr>
                     `;
                 }
@@ -1539,23 +1588,23 @@
                     <thead>
                         ${isDebitOnly ? `
                         <tr>
-                            <th style="width:35px;">#</th>
-                            <th style="width:90px;">📅 दिनांक</th>
-                            <th style="width:110px;">🔢 व्हाउचर/बिल क्र.</th>
+                            <th style="width:30px;">#</th>
+                            <th style="width:80px;">📅 दिनांक</th>
+                            <th style="width:100px;">🔢 व्हाउचर/बिल क्र.</th>
                             <th>🧑‍💼 कोणास दिले (Recipient/Party)</th>
                             <th>📝 खर्चाचा तपशील (Description)</th>
-                            <th class="text-right" style="width:130px;">📉 खर्च रक्कम (Debit ₹)</th>
+                            <th class="text-right" style="width:120px;">📉 खर्च रक्कम (Debit ₹)</th>
                         </tr>
                         ` : `
                         <tr>
-                            <th style="width:35px;">#</th>
-                            <th style="width:85px;">📅 दिनांक</th>
-                            <th style="width:110px;">🔢 व्हाउचर/पावती क्र.</th>
+                            <th style="width:30px;">#</th>
+                            <th style="width:80px;">📅 दिनांक</th>
+                            <th style="width:100px;">🔢 व्हाउचर/पावती क्र.</th>
                             <th>🧑‍💼 खातेदार / दात्याचे नाव</th>
                             <th>📝 तपशील (Description)</th>
-                            <th class="text-right" style="width:105px;">📈 जमा (Credit ₹)</th>
-                            <th class="text-right" style="width:105px;">📉 खर्च (Debit ₹)</th>
-                            <th class="text-right" style="width:115px;">💰 शिल्लक (Balance ₹)</th>
+                            <th class="text-right" style="width:95px;">📈 जमा (Credit ₹)</th>
+                            <th class="text-right" style="width:95px;">📉 खर्च (Debit ₹)</th>
+                            <th class="text-right" style="width:105px;">💰 शिल्लक (Balance ₹)</th>
                         </tr>
                         `}
                     </thead>
@@ -1564,25 +1613,27 @@
                     </tbody>
                 </table>
 
-                <table class="summary-table">
-                    ${isDebitOnly ? `
-                    <tr>
-                        <td colspan="2" style="font-size:13px; text-align:right;">📅 महिना (${monthLabel}) एकूण खर्च (Total Debit): <strong class="debit-text" style="font-size:15px; margin-left:10px;">${formatIndianNum(monthDebit)}</strong></td>
-                    </tr>
-                    ` : `
-                    <tr>
-                        <td>मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></td>
-                        <td class="credit-text">चालू महिना जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
-                        <td class="debit-text">चालू महिना खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
-                        <td style="background:#eef4fb; font-size:13px;">अखेर शिल्लक (Closing): <strong>${formatIndianNum(closingBalance)}</strong></td>
-                    </tr>
-                    `}
-                </table>
+                <div class="bottom-section">
+                    <table class="summary-table">
+                        ${isDebitOnly ? `
+                        <tr>
+                            <td colspan="2" style="font-size:11px; text-align:right;">📅 महिना (${monthLabel}) एकूण खर्च (Total Debit): <strong class="debit-text" style="font-size:12px; margin-left:10px;">${formatIndianNum(monthDebit)}</strong></td>
+                        </tr>
+                        ` : `
+                        <tr>
+                            <td>मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></td>
+                            <td class="credit-text">चालू महिना जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
+                            <td class="debit-text">चालू महिना खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
+                            <td style="background:#eef4fb; font-size:11px;">अखेर शिल्लक (Closing): <strong>${formatIndianNum(closingBalance)}</strong></td>
+                        </tr>
+                        `}
+                    </table>
 
-                <div class="signatures">
-                    <div class="sig-box">तयार करणार (Accountant)</div>
-                    <div class="sig-box">सचिव (Secretary)</div>
-                    <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                    <div class="signatures">
+                        <div class="sig-box">तयार करणार (Accountant)</div>
+                        <div class="sig-box">सचिव (Secretary)</div>
+                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                    </div>
                 </div>
             </div>
             `;
@@ -1621,8 +1672,9 @@
         const submitBtn = document.getElementById('addUpdateBtn');
         const statusText = document.getElementById('fileUploadStatus');
 
-        if (!dateVal || isNaN(amount) || amount <= 0) {
-            alert('कृपया योग्य तारीख निवडा आणि रक्कम ० पेक्षा जास्त टाका.');
+        // Feature 1: Name validation is now required
+        if (!dateVal || !name || isNaN(amount) || amount <= 0) {
+            alert('कृपया दिनांक, नाव आणि ० पेक्षा जास्त रक्कम ही सर्व माहिती भरा.');
             return;
         }
 
