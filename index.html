@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था - Cash Book</title>
+    <title>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था - Two-Column Cash Book</title>
     
     <!-- Google Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -23,7 +23,7 @@
             min-height: 100vh;
         }
 
-        /* ===== FRONT / LANDING PAGE STYLES ===== */
+        /* ===== FRONT / LANDING PAGE ===== */
         #frontPageSection {
             display: flex;
             justify-content: center;
@@ -159,13 +159,13 @@
             width: 100%;
         }
 
-        /* ===== MAIN APP DASHBOARD STYLES ===== */
+        /* ===== MAIN DASHBOARD STYLES ===== */
         #mainAppSection {
             display: none;
             padding: 20px;
         }
         .container {
-            max-width: 1500px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -311,9 +311,10 @@
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
         }
         .stat-box {
@@ -330,13 +331,9 @@
         .stat-box.active-filter { background: #e7f1ff; outline: 3px solid #2a7de1; }
         .stat-box .label { font-size: 12px; color: #6c757d; font-weight: 600; margin-bottom: 4px; }
         .stat-box .value { font-size: 18px; font-weight: 700; color: #0d2b44; }
-        .stat-box.credit { border-left-color: #28a745; }
-        .stat-box.credit.active-filter { outline-color: #28a745; background: #eaf8ee; }
-        .stat-box.debit { border-left-color: #dc3545; }
-        .stat-box.debit.active-filter { outline-color: #dc3545; background: #fdebee; }
-        .stat-box.balance { border-left-color: #ffc107; }
-        .stat-box.bank-bal { border-left-color: #0d6efd; }
-        .stat-box.cash-bal { border-left-color: #fd7e14; }
+        .stat-box.bank-box { border-left-color: #0d6efd; }
+        .stat-box.cash-box { border-left-color: #fd7e14; }
+        .stat-box.total-box { border-left-color: #28a745; }
 
         .filter-banner {
             background: #eef4fb;
@@ -351,39 +348,48 @@
             font-weight: 600;
         }
 
+        /* Two-Column Multi-Header Table */
         .table-wrapper {
             overflow-x: auto;
             margin-top: 12px;
-            max-height: 550px;
-            border: 1px solid #e9ecef;
+            max-height: 600px;
+            border: 1px solid #d0d7de;
             border-radius: 8px;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1000px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 1200px; }
         th {
             background: #0d2b44;
             color: white;
-            padding: 10px 8px;
-            text-align: left;
+            padding: 8px 6px;
+            text-align: center;
             position: sticky;
             top: 0;
             z-index: 10;
             white-space: nowrap;
+            border: 1px solid #1e4d6b;
         }
-        td { padding: 9px 8px; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
-        tr:hover { background: #f1f8ff; }
+        th.sub-header {
+            font-size: 11px;
+            padding: 6px 4px;
+        }
+        th.cash-head { background: #d9480f; }
+        th.bank-head { background: #0b5ed7; }
+        th.bal-head { background: #198754; }
+
+        td { padding: 8px 6px; border-bottom: 1px solid #e9ecef; border-right: 1px solid #f0f0f0; vertical-align: middle; }
+        tr:hover { background: #f8fbff; }
 
         .mode-badge {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 2px 7px;
             border-radius: 12px;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 700;
-            text-align: center;
             white-space: nowrap;
         }
         .mode-bank { background: #cfe2ff; color: #084298; }
         .mode-cash { background: #ffe5d0; color: #d9480f; }
-        .mode-contra { background: #e2d9f3; color: #59359a; }
+        .mode-contra { background: #e2d9f3; color: #59359a; font-weight: 800; border: 1px dashed #6f42c1; }
 
         .doc-link {
             color: #0d6efd;
@@ -398,8 +404,8 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 15px;
-            padding: 4px 6px;
+            font-size: 14px;
+            padding: 3px 5px;
             border-radius: 4px;
         }
         .action-btn.edit-btn { color: #2a7de1; }
@@ -426,7 +432,7 @@
             padding: 7px 14px;
             border: 1px solid #ced4da;
             border-radius: 20px;
-            width: 200px;
+            width: 190px;
             font-size: 13px;
         }
 
@@ -459,7 +465,7 @@
             font-weight: 600;
         }
         .voucher-input-group input {
-            min-width: 140px;
+            min-width: 135px;
         }
 
         .toast {
@@ -493,7 +499,7 @@
 
         .required-star { color: #dc3545; font-weight: 700; }
 
-        /* Modal Styles */
+        /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -524,7 +530,7 @@
         }
         .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
-        /* Admin / Viewer Visibility Guards */
+        /* Admin / Viewer Guards */
         .admin-only { display: none; }
         body.admin-mode .admin-only { display: block; }
         body.admin-mode .admin-only-inline { display: inline-flex !important; }
@@ -554,7 +560,7 @@
 <body>
 
 <!-- ============================================================
-     1. FRONT / LANDING WELCOME PAGE (Before Login)
+     1. FRONT / LANDING WELCOME PAGE
 ============================================================ -->
 <div id="frontPageSection">
     <div class="front-card">
@@ -569,13 +575,11 @@
             <p class="sub">श्रीराम नगर भद्रावती</p>
             <span class="front-reg">📜 Registration No.: F-0016068(CDP)</span>
 
-            <!-- Login Tabs -->
             <div class="login-tabs">
                 <button class="login-tab-btn active" id="tabAdminBtn" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
                 <button class="login-tab-btn" id="tabViewerBtn" onclick="switchLoginTab('viewer')">👁️ Viewer (विश्वस्त) Login</button>
             </div>
 
-            <!-- Firebase Auth Admin Login Form -->
             <div id="adminLoginForm" class="login-form-box">
                 <label>Admin Email (फायरबेस ईमेल):</label>
                 <input type="email" id="adminEmailInput" placeholder="उदा. shyam.mauli@gmail.com">
@@ -585,7 +589,6 @@
                 <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password (ईमेलवर लिंक मिळवा)</span>
             </div>
 
-            <!-- Viewer Login Form -->
             <div id="viewerLoginForm" class="login-form-box" style="display:none;">
                 <label>Viewer Username (युझरनेम):</label>
                 <input type="text" id="viewerUsernameInput" placeholder="उदा. trustee1">
@@ -598,17 +601,17 @@
 </div>
 
 <!-- ============================================================
-     2. MAIN CASH BOOK APP DASHBOARD (After Login)
+     2. MAIN CASH BOOK DASHBOARD (Two-Column)
 ============================================================ -->
 <div id="mainAppSection">
     <div class="container">
-        <!-- Dashboard Header -->
+        <!-- Header -->
         <div class="org-header">
             <div class="header-left-brand">
                 <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/65x65/ffc107/0d2b44?text=LOGO'">
                 <div class="header-titles">
                     <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
-                    <p>श्रीराम नगर भद्रावती</p>
+                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
                     <span class="reg">📜 Registration No.: F-0016068(CDP)</span>
                 </div>
             </div>
@@ -620,18 +623,18 @@
             </div>
         </div>
 
-        <!-- Title & Monthly PDF Buttons -->
+        <!-- Top Actions -->
         <div class="flex-between" style="margin-bottom:15px;">
-            <h1 style="margin-bottom:0;">📒 CASH BOOK</h1>
+            <h1 style="margin-bottom:0;">📒 TWO-COLUMN CASH BOOK</h1>
             <div class="admin-only-inline" style="gap:6px; display:none;">
-                <button class="btn btn-pdf" onclick="generateMonthwisePDF('all')">📄 मासिक कॅश बुक PDF</button>
-                <button class="btn btn-pdf-debit" onclick="generateMonthwisePDF('debit')">📉 मासिक खर्च (Debit) PDF</button>
+                <button class="btn btn-pdf" onclick="generateTwoColumnPDF('all')">📄 टू-कॉलम मासिक PDF</button>
+                <button class="btn btn-pdf-debit" onclick="generateTwoColumnPDF('debit')">📉 मासिक खर्च (Debit) PDF</button>
             </div>
         </div>
 
         <div id="toast" class="toast">✅ Success!</div>
 
-        <!-- 1. DATA STORAGE & BACKUP (Admin only) -->
+        <!-- 1. DATA STORAGE & BACKUP -->
         <div class="card admin-only">
             <div class="flex-between">
                 <h2>💾 Cloud & Backup Management <span class="badge">Admin</span></h2>
@@ -644,9 +647,9 @@
             </div>
         </div>
 
-        <!-- 2. VIEWER MANAGEMENT (Admin only) -->
+        <!-- 2. VIEWER MANAGEMENT -->
         <div class="card admin-only">
-            <h2>👥 Viewer Management (विवर युझर्स तयार करा / डिलीट करा) <span class="badge">Admin</span></h2>
+            <h2>👥 Viewer Management <span class="badge">Admin</span></h2>
             <div class="add-entry-form" style="margin-bottom:15px;">
                 <div class="field">
                     <label>👤 Viewer Name (नाव/पद):</label>
@@ -665,14 +668,14 @@
                 </div>
             </div>
             
-            <div class="table-wrapper" style="max-height:200px;">
+            <div class="table-wrapper" style="max-height:180px;">
                 <table>
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>👤 Name (नाव)</th>
+                            <th>👤 Name</th>
                             <th>🆔 Username</th>
-                            <th>🔑 Password (Protected)</th>
+                            <th>🔑 Password</th>
                             <th style="text-align:center;">⚡ Action</th>
                         </tr>
                     </thead>
@@ -683,7 +686,7 @@
             </div>
         </div>
 
-        <!-- 3. CSV IMPORT / EXPORT (Admin only) -->
+        <!-- 3. CSV IMPORT / EXPORT -->
         <div class="card admin-only" id="csvCard">
             <h2>📂 CSV Import / Export <span class="badge">Admin</span></h2>
             <div class="flex-row">
@@ -696,37 +699,37 @@
             </div>
         </div>
 
-        <!-- 4. SUMMARY (Clickable Cards with Cash vs Bank) -->
+        <!-- 4. SUMMARY (Two-Column Running Stats) -->
         <div class="card">
             <div class="flex-between" style="margin-bottom:12px;">
-                <h2 style="margin-bottom:0;">📊 Summary <span style="font-size:12px; color:#888; font-weight:normal;">(कार्डवर क्लिक करून फिल्टर करा)</span></h2>
+                <h2 style="margin-bottom:0;">📊 Two-Column Summary <span style="font-size:12px; color:#888; font-weight:normal;">(रोख आणि बँक ताळेबंद)</span></h2>
                 <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
             </div>
             <div class="stats-grid">
-                <div class="stat-box credit" id="statCardCredit" onclick="toggleTypeFilter('credit')" title="Click to view ONLY Credit (जमा)">
-                    <div class="label">📈 Total Credit</div>
-                    <div class="value" id="totalCredit">₹ 0.00</div>
+                <div class="stat-box cash-box" onclick="toggleModeFilter('cash')" title="फक्त रोख व्यवहार पहा">
+                    <div class="label">💵 Cash in Hand (हातातील रोख)</div>
+                    <div class="value" id="statCashBal">₹ 0.00</div>
+                    <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statCashIn">₹ 0</span> | Out: <span id="statCashOut">₹ 0</span></div>
                 </div>
-                <div class="stat-box debit" id="statCardDebit" onclick="toggleTypeFilter('debit')" title="Click to view ONLY Debit (खर्च)">
-                    <div class="label">📉 Total Debit</div>
-                    <div class="value" id="totalDebit">₹ 0.00</div>
+                <div class="stat-box bank-box" onclick="toggleModeFilter('bank')" title="फक्त बँक व्यवहार पहा">
+                    <div class="label">🏦 Bank Balance (बँक शिल्लक)</div>
+                    <div class="value" id="statBankBal">₹ 0.00</div>
+                    <div style="font-size:11px; color:#888; margin-top:3px;">In: <span id="statBankIn">₹ 0</span> | Out: <span id="statBankOut">₹ 0</span></div>
                 </div>
-                <div class="stat-box bank-bal" onclick="toggleModeFilter('bank')" title="Click to view ONLY Bank Transactions">
-                    <div class="label">🏦 Bank Balance</div>
-                    <div class="value" id="bankBalance">₹ 0.00</div>
+                <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा एकूण निधी">
+                    <div class="label">💰 Total Sanstha Balance (एकूण निधी)</div>
+                    <div class="value" id="statTotalBal">₹ 0.00</div>
+                    <div style="font-size:11px; color:#888; margin-top:3px;">Cash + Bank</div>
                 </div>
-                <div class="stat-box cash-bal" onclick="toggleModeFilter('cash')" title="Click to view ONLY Cash Transactions">
-                    <div class="label">💵 Cash in Hand</div>
-                    <div class="value" id="cashBalance">₹ 0.00</div>
-                </div>
-                <div class="stat-box balance" id="statCardBalance" onclick="resetAllFilters()" title="Click to reset filter">
-                    <div class="label">💰 Total Balance</div>
-                    <div class="value" id="closingBalance">₹ 0.00</div>
+                <div class="stat-box" onclick="resetAllFilters()" title="एकूण नोंदी">
+                    <div class="label">🧾 Total Transactions</div>
+                    <div class="value" id="totalEntries">0</div>
+                    <div style="font-size:11px; color:#888; margin-top:3px;">Active Records</div>
                 </div>
             </div>
         </div>
 
-        <!-- 5. ADD / EDIT TRANSACTION (Admin only) -->
+        <!-- 5. ADD / EDIT TRANSACTION -->
         <div class="card admin-only" id="addEditCard">
             <h2 id="formTitle">➕ Add New Transaction</h2>
             <div class="edit-indicator" id="editIndicator">
@@ -739,11 +742,11 @@
                     <input type="date" id="newDate">
                 </div>
                 <div class="field">
-                    <!-- Dropdown with 5 Options + Auto-Generated Number -->
+                    <!-- 5 Voucher Types with Auto-Increment -->
                     <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Auto/Manual)</span></label>
                     <div class="voucher-input-group">
                         <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
-                            <option value="PN">PN (देणगी जमा)</option>
+                            <option value="PN">PN (देणगी पावती)</option>
                             <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
                             <option value="VN">VN (खर्च/व्हाउचर)</option>
                             <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
@@ -753,11 +756,12 @@
                     </div>
                 </div>
                 <div class="field">
+                    <!-- Payment Mode -->
                     <label>💳 Payment Mode <span class="required-star">*</span></label>
-                    <select id="newPaymentMode">
-                        <option value="bank">🏦 Bank (UPI/NEFT/Cheque)</option>
-                        <option value="cash">💵 Cash (रोख)</option>
-                        <option value="contra">🔄 Contra (रोख बँकेत जमा)</option>
+                    <select id="newPaymentMode" onchange="handlePaymentModeChange()">
+                        <option value="bank">🏦 Bank (Online/UPI/NEFT/Cheque)</option>
+                        <option value="cash">💵 Cash (हातातील रोख)</option>
+                        <option value="contra">🔄 Contra (रोख बँकेत जमा / Cash to Bank)</option>
                     </select>
                 </div>
                 <div class="field">
@@ -770,7 +774,7 @@
                     <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
                 </div>
                 <div class="field">
-                    <!-- Donor Name Compulsory (*) + Datalist Autocomplete -->
+                    <!-- Donor Name Compulsory + Autocomplete -->
                     <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
                     <input type="text" id="newName" list="donorNamesList" placeholder="उदा. सौरभ यमावार" style="min-width:180px;" autocomplete="off">
                     <datalist id="donorNamesList"></datalist>
@@ -786,8 +790,8 @@
                 <div class="field">
                     <label>📌 Type <span class="required-star">*</span></label>
                     <select id="newType" onchange="handleTypeChange()">
-                        <option value="credit">📈 Credit (जमा)</option>
-                        <option value="debit">📉 Debit (खर्च)</option>
+                        <option value="credit">📈 Receipt / Jama (जमा)</option>
+                        <option value="debit">📉 Payment / Kharch (खर्च)</option>
                     </select>
                 </div>
                 <div class="field field-actions">
@@ -797,10 +801,10 @@
             </div>
         </div>
 
-        <!-- 6. TRANSACTIONS TABLE -->
+        <!-- 6. TWO-COLUMN TRANSACTIONS TABLE -->
         <div class="card">
             <div class="flex-between">
-                <h2>📋 All Transactions</h2>
+                <h2>📋 Two-Column Ledger (रोख व बँक नोंदवही)</h2>
                 <div class="search-controls">
                     <label>Mode: 
                         <select id="filterModeSelect" onchange="filterTable()">
@@ -826,20 +830,28 @@
                 <table id="transactionTable">
                     <thead>
                         <tr>
-                            <th style="width:35px;">#</th>
-                            <th>📅 Date</th>
-                            <th>🔢 Voucher</th>
-                            <th>💳 Mode</th>
-                            <th>🧑‍💼 Name</th>
-                            <th>📝 Description</th>
-                            <th style="text-align:right;">📈 Credit (₹)</th>
-                            <th style="text-align:right;">📉 Debit (₹)</th>
-                            <th style="text-align:right;">💰 Balance (₹)</th>
-                            <th style="text-align:center; width:130px;" class="admin-only">⚡ Actions</th>
+                            <th rowspan="2" style="width:30px;">#</th>
+                            <th rowspan="2" style="width:80px;">📅 Date</th>
+                            <th rowspan="2" style="width:90px;">🔢 Voucher</th>
+                            <th rowspan="2" style="width:70px;">💳 Mode</th>
+                            <th rowspan="2">🧑‍💼 Name</th>
+                            <th rowspan="2">📝 Description</th>
+                            <th colspan="2" class="cash-head">💵 CASH COLUMN (₹)</th>
+                            <th colspan="2" class="bank-head">🏦 BANK COLUMN (₹)</th>
+                            <th colspan="2" class="bal-head">💰 RUNNING BALANCES (₹)</th>
+                            <th rowspan="2" style="width:120px;" class="admin-only">⚡ Actions</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header cash-head">In (जमा)</th>
+                            <th class="sub-header cash-head">Out (खर्च)</th>
+                            <th class="sub-header bank-head">In (जमा)</th>
+                            <th class="sub-header bank-head">Out (खर्च)</th>
+                            <th class="sub-header bal-head">Cash Bal</th>
+                            <th class="sub-header bal-head">Bank Bal</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <tr><td colspan="10" style="text-align:center; padding:40px; color:#888;">⏳ Loading cloud transactions...</td></tr>
+                        <tr><td colspan="13" style="text-align:center; padding:40px; color:#888;">⏳ Loading two-column transactions...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -847,7 +859,7 @@
     </div>
 </div>
 
-<!-- ===== FORGOT PASSWORD MODAL (FIREBASE AUTH RESET EMAIL) ===== -->
+<!-- FORGOT MODAL -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
         <h3>🔑 Admin Password Reset</h3>
@@ -864,7 +876,7 @@
 
 <script>
     // ============================================================
-    //  🔥 FIREBASE CONFIGURATION
+    //  🔥 FIREBASE INITIALIZATION
     // ============================================================
     const firebaseConfig = {
       apiKey: "AIzaSyBEq-G3qqFHsUkV5SnQpPUXHWaz1HV4DLM",
@@ -882,7 +894,6 @@
     let transactionsData = [];
     let viewersData = [];
     let currentRole = 'none'; // 'none' | 'admin' | 'viewer'
-    let activeTypeFilter = 'all';
 
     try {
         if (!firebase.apps.length) {
@@ -890,7 +901,7 @@
         }
         auth = firebase.auth();
         db = firebase.firestore();
-        try { storage = firebase.storage(); } catch(e) { console.warn("Storage warning:", e); }
+        try { storage = firebase.storage(); } catch(e) { console.warn("Storage:", e); }
     } catch(err) {
         console.error("Firebase init error:", err);
     }
@@ -921,9 +932,8 @@
     }
 
     // ============================================================
-    //  AUTHENTICATION (Admin & Viewer)
+    //  AUTHENTICATION
     // ============================================================
-
     function switchLoginTab(tab) {
         document.getElementById('tabAdminBtn').classList.toggle('active', tab === 'admin');
         document.getElementById('tabViewerBtn').classList.toggle('active', tab === 'viewer');
@@ -1031,9 +1041,8 @@
     }
 
     // ============================================================
-    //  👥 VIEWER MANAGEMENT (CRUD in Firestore)
+    //  👥 VIEWER MANAGEMENT
     // ============================================================
-
     function initViewersSync() {
         if (db && currentRole === 'admin') {
             db.collection('viewers').onSnapshot((snapshot) => {
@@ -1041,7 +1050,7 @@
                 snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
                 viewersData = list;
                 renderViewersTable(viewersData);
-            }, (err) => console.error("Viewers fetch error:", err));
+            }, (err) => console.error("Viewers error:", err));
         }
     }
 
@@ -1094,7 +1103,7 @@
             document.getElementById('newViewerPass').value = '';
             showToast('✅ नवीन विवर युझर तयार झाला!');
         } catch(e) {
-            alert('Error creating viewer: ' + e.message);
+            alert('Error: ' + e.message);
         }
     }
 
@@ -1112,7 +1121,6 @@
     // ============================================================
     //  SECURITY & UTILITY HELPERS
     // ============================================================
-
     function escapeHTML(str) {
         if (!str) return '';
         return String(str)
@@ -1214,7 +1222,6 @@
         return result;
     }
 
-    // Helper: Remove prefixes like PN, VN, A/VSN for clean receipt print
     function getCleanReceiptNumber(rawStr) {
         if (!rawStr) return '-';
         return rawStr
@@ -1224,16 +1231,14 @@
             .trim() || rawStr;
     }
 
-    // Helper: Deduce default payment mode from existing CSV descriptions if missing
     function inferPaymentMode(item) {
-        if (item.paymentMode) return item.paymentMode;
+        if (item.paymentMode) return item.paymentMode.toLowerCase();
         const text = `${item.description || ''} ${item.name || ''} ${item.voucher || ''}`.toLowerCase();
         if (text.includes('contra') || (text.includes('cash') && text.includes('deposit'))) return 'contra';
         if (text.includes('cash') || text.includes('rokh')) return 'cash';
-        return 'bank'; // Default fallback for UPI, NEFT, Cheque, IMPS
+        return 'bank';
     }
 
-    // Datalist Autocomplete Updater
     function updateDonorNamesDatalist() {
         const datalist = document.getElementById('donorNamesList');
         if (!datalist) return;
@@ -1242,9 +1247,8 @@
     }
 
     // ============================================================
-    //  🔢 AUTO-INCREMENT LOGIC FOR VOUCHERS (5 OPTIONS)
+    //  🔢 AUTO-INCREMENT LOGIC (5 OPTIONS)
     // ============================================================
-
     function getNextVoucherString(selectedType) {
         const pad = (num, size = 2) => String(num).padStart(size, '0');
 
@@ -1272,7 +1276,7 @@
             return `A/VSN ${pad(maxAVSN + 1)}`;
         }
 
-        // VN: Continuous across normal expenses and VN IBT
+        // VN is continuous across normal expense and VN IBT
         let maxVN = 0;
         let maxIBT = 0;
         transactionsData.forEach(t => {
@@ -1294,7 +1298,6 @@
         }
 
         if (selectedType === 'VN_IBT') {
-            // Continuous VN + Independent IBT counter
             return `VN ${pad(maxVN + 1)} IBT ${pad(maxIBT + 1)}`;
         }
 
@@ -1330,11 +1333,18 @@
         handleVoucherTypeChange();
     }
 
-    // ============================================================
-    //  DATABASE & REALTIME LISTENER
-    // ============================================================
+    function handlePaymentModeChange() {
+        const mode = document.getElementById('newPaymentMode').value;
+        if (mode === 'contra') {
+            // Contra is typically depositing cash into bank
+            document.getElementById('newDesc').value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited in Bank)';
+        }
+    }
 
-    function calculateRunningBalances(data) {
+    // ============================================================
+    //  ⚡ TWO-COLUMN RUNNING BALANCE LOGIC (THE HEART OF THE ENGINE)
+    // ============================================================
+    function calculateTwoColumnBalances(data) {
         if (!data || !Array.isArray(data)) return [];
         data.sort((a, b) => {
             const dateA = a.rawDate || parseToIsoDate(a.date);
@@ -1351,16 +1361,47 @@
             return (a.id || '').localeCompare(b.id || '');
         });
 
-        let runningBalance = 0;
+        let runningCashBal = 0;
+        let runningBankBal = 0;
+
         data.forEach(item => {
             item.rawDate = item.rawDate || parseToIsoDate(item.date);
             item.date = formatDateToDisplay(item.rawDate);
-            item.credit = parseFloat(item.credit) || 0;
-            item.debit = parseFloat(item.debit) || 0;
             item.paymentMode = inferPaymentMode(item);
-            runningBalance += (item.credit - item.debit);
-            item.balance = runningBalance;
+
+            const cr = parseFloat(item.credit) || 0;
+            const dr = parseFloat(item.debit) || 0;
+
+            let cashIn = 0, cashOut = 0;
+            let bankIn = 0, bankOut = 0;
+
+            if (item.paymentMode === 'cash') {
+                cashIn = cr;
+                cashOut = dr;
+            } else if (item.paymentMode === 'bank') {
+                bankIn = cr;
+                bankOut = dr;
+            } else if (item.paymentMode === 'contra') {
+                // CONTRA: Cash In Hand moves into Bank
+                // Handled gracefully without double counting!
+                const amt = cr > 0 ? cr : dr;
+                cashOut = amt;
+                bankIn = amt;
+            }
+
+            item.cashIn = cashIn;
+            item.cashOut = cashOut;
+            item.bankIn = bankIn;
+            item.bankOut = bankOut;
+
+            runningCashBal += (cashIn - cashOut);
+            runningBankBal += (bankIn - bankOut);
+
+            item.cashBal = runningCashBal;
+            item.bankBal = runningBankBal;
+            item.totalBal = runningCashBal + runningBankBal;
         });
+
         return data;
     }
 
@@ -1375,10 +1416,9 @@
                 snapshot.forEach(doc => {
                     list.push({ id: doc.id, ...doc.data() });
                 });
-                transactionsData = calculateRunningBalances(list);
+                transactionsData = calculateTwoColumnBalances(list);
                 updateDonorNamesDatalist();
-                
-                // Auto populate voucher if field is currently empty
+
                 const currentVoucherInput = document.getElementById('newVoucher');
                 if (!currentVoucherInput.value) {
                     handleVoucherTypeChange();
@@ -1394,15 +1434,14 @@
     }
 
     // ============================================================
-    //  RENDER & UI UPDATES
+    //  RENDER TABLE & STATS
     // ============================================================
-
     function renderTable(data) {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
 
         if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:35px; color:#888;">📭 No matching transactions found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:35px; color:#888;">📭 No matching transactions found.</td></tr>';
             return;
         }
 
@@ -1412,20 +1451,20 @@
             let voucherDisplay = escapeHTML(item.voucher || '-');
             const safeDocUrl = sanitizeUrl(item.docUrl);
             if (safeDocUrl) {
-                voucherDisplay = `<a href="${safeDocUrl}" target="_blank" rel="noopener noreferrer" class="doc-link" title="Click to view uploaded bill/receipt">📄 ${escapeHTML(item.voucher || 'View Bill')} ↗</a>`;
+                voucherDisplay = `<a href="${safeDocUrl}" target="_blank" rel="noopener noreferrer" class="doc-link" title="Click to view file">📄 ${escapeHTML(item.voucher || 'View Bill')} ↗</a>`;
             } else if (item.voucher) {
                 voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
             }
 
-            // Payment Mode Badge
+            // Mode Badge
             const mode = item.paymentMode || 'bank';
             let modeHtml = '<span class="mode-badge mode-bank">🏦 Bank</span>';
             if (mode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
             else if (mode === 'contra') modeHtml = '<span class="mode-badge mode-contra">🔄 Contra</span>';
 
-            // Single Print + WhatsApp Share Button for Credit Entries
+            // Print & WhatsApp button (if any receipt in Cash In or Bank In)
             let receiptBtns = '';
-            if (item.credit > 0) {
+            if (item.cashIn > 0 || item.bankIn > 0) {
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
                     <button class="action-btn wa-btn" onclick="shareReceiptOnWhatsApp('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
@@ -1433,15 +1472,25 @@
             }
 
             row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${escapeHTML(item.date)}</td>
+                <td style="text-align:center;">${index + 1}</td>
+                <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
                 <td>${voucherDisplay}</td>
-                <td>${modeHtml}</td>
+                <td style="text-align:center;">${modeHtml}</td>
                 <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                 <td>${escapeHTML(item.description || '-')}</td>
-                <td style="text-align:right; color:#28a745; font-weight:600;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
-                <td style="text-align:right; color:#dc3545; font-weight:600;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
-                <td style="text-align:right; font-weight:700;">${formatIndianNum(item.balance)}</td>
+                
+                <!-- Cash Column -->
+                <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                
+                <!-- Bank Column -->
+                <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                
+                <!-- Running Balances -->
+                <td style="text-align:right; font-weight:600; color:#d9480f;">${formatIndianNum(item.cashBal)}</td>
+                <td style="text-align:right; font-weight:700; color:#0d2b44;">${formatIndianNum(item.bankBal)}</td>
+                
                 <td style="text-align:center; white-space:nowrap;" class="admin-only">
                     ${receiptBtns}
                     <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
@@ -1455,37 +1504,36 @@
     function updateStats(allData, filteredData) {
         allData = allData || [];
         filteredData = filteredData || allData;
-        let totalCredit = 0, totalDebit = 0;
-        let bankBal = 0, cashBal = 0;
 
-        allData.forEach(t => { 
-            const cr = t.credit || 0;
-            const dr = t.debit || 0;
-            totalCredit += cr; 
-            totalDebit += dr; 
+        let totalCashIn = 0, totalCashOut = 0;
+        let totalBankIn = 0, totalBankOut = 0;
 
-            const m = t.paymentMode || 'bank';
-            if (m === 'bank') {
-                bankBal += (cr - dr);
-            } else if (m === 'cash') {
-                cashBal += (cr - dr);
-            } else if (m === 'contra') {
-                // Contra: Deposited cash into bank (Bank increases, Cash decreases)
-                bankBal += cr;
-                cashBal -= cr;
-            }
+        allData.forEach(t => {
+            totalCashIn += (t.cashIn || 0);
+            totalCashOut += (t.cashOut || 0);
+            totalBankIn += (t.bankIn || 0);
+            totalBankOut += (t.bankOut || 0);
         });
 
-        document.getElementById('totalCredit').innerText = formatIndianNum(totalCredit);
-        document.getElementById('totalDebit').innerText = formatIndianNum(totalDebit);
-        document.getElementById('closingBalance').innerText = formatIndianNum(totalCredit - totalDebit);
-        document.getElementById('bankBalance').innerText = formatIndianNum(bankBal);
-        document.getElementById('cashBalance').innerText = formatIndianNum(cashBal);
-    }
+        const cashBalance = totalCashIn - totalCashOut;
+        const bankBalance = totalBankIn - totalBankOut;
+        const totalSansthaBal = cashBalance + bankBalance;
 
-    function toggleTypeFilter(type) {
-        activeTypeFilter = (activeTypeFilter === type) ? 'all' : type;
-        filterTable();
+        document.getElementById('statCashBal').innerText = formatIndianNum(cashBalance);
+        document.getElementById('statCashIn').innerText = formatIndianNum(totalCashIn);
+        document.getElementById('statCashOut').innerText = formatIndianNum(totalCashOut);
+
+        document.getElementById('statBankBal').innerText = formatIndianNum(bankBalance);
+        document.getElementById('statBankIn').innerText = formatIndianNum(totalBankIn);
+        document.getElementById('statBankOut').innerText = formatIndianNum(totalBankOut);
+
+        document.getElementById('statTotalBal').innerText = formatIndianNum(totalSansthaBal);
+
+        if (filteredData.length !== allData.length) {
+            document.getElementById('totalEntries').innerText = `${filteredData.length} / ${allData.length}`;
+        } else {
+            document.getElementById('totalEntries').innerText = allData.length;
+        }
     }
 
     function toggleModeFilter(mode) {
@@ -1494,7 +1542,6 @@
     }
 
     function resetAllFilters() {
-        activeTypeFilter = 'all';
         document.getElementById('searchInput').value = '';
         document.getElementById('filterFromDate').value = '';
         document.getElementById('filterToDate').value = '';
@@ -1508,19 +1555,14 @@
         const toDate = document.getElementById('filterToDate').value;
         const modeFilter = document.getElementById('filterModeSelect').value;
 
-        document.getElementById('statCardCredit').classList.toggle('active-filter', activeTypeFilter === 'credit');
-        document.getElementById('statCardDebit').classList.toggle('active-filter', activeTypeFilter === 'debit');
-        
         const banner = document.getElementById('filterBanner');
         const bannerText = document.getElementById('filterBannerText');
         const resetTop = document.getElementById('resetFilterTopBtn');
 
-        let isFiltered = (activeTypeFilter !== 'all') || (modeFilter !== 'all') || query || fromDate || toDate;
+        let isFiltered = (modeFilter !== 'all') || query || fromDate || toDate;
 
         if (isFiltered) {
             let filterDesc = [];
-            if (activeTypeFilter === 'credit') filterDesc.push('फक्त जमा (Only Credit)');
-            if (activeTypeFilter === 'debit') filterDesc.push('फक्त खर्च (Only Debit)');
             if (modeFilter !== 'all') filterDesc.push(`Mode: ${modeFilter.toUpperCase()}`);
             if (fromDate) filterDesc.push(`From: ${formatDateToDisplay(fromDate)}`);
             if (toDate) filterDesc.push(`To: ${formatDateToDisplay(toDate)}`);
@@ -1535,8 +1577,6 @@
         }
 
         let filtered = (transactionsData || []).filter(t => {
-            if (activeTypeFilter === 'credit' && (!t.credit || t.credit <= 0)) return false;
-            if (activeTypeFilter === 'debit' && (!t.debit || t.debit <= 0)) return false;
             if (modeFilter !== 'all' && t.paymentMode !== modeFilter) return false;
 
             const raw = t.rawDate || parseToIsoDate(t.date);
@@ -1555,15 +1595,14 @@
     }
 
     // ============================================================
-    //  🧾 SINGLE RECEIPT PRINT (देणगी पावती - PN/VN विना फक्त नंबर)
+    //  🧾 SINGLE RECEIPT PRINT (Clean Prefix-Free Number)
     // ============================================================
-
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
 
-        // Clean number without 'PN'
         const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
 
         const receiptHtml = `
         <!DOCTYPE html>
@@ -1612,7 +1651,7 @@
                     <tr>
                         <td colspan="2" style="padding-top:14px;">
                             <strong>स्वीकारलेली रक्कम:</strong> 
-                            <span class="amount-highlight">${formatIndianNum(item.credit)}</span>
+                            <span class="amount-highlight">${formatIndianNum(receiptAmount)}</span>
                         </td>
                     </tr>
                 </table>
@@ -1633,7 +1672,6 @@
         printWin.document.close();
     }
 
-    // Share Receipt on WhatsApp (Clean number without PN)
     function shareReceiptOnWhatsApp(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
@@ -1642,6 +1680,7 @@
         const voucherText = cleanReceiptNum !== '-' ? `*पावती क्र:* ${cleanReceiptNum}\n` : '';
         const descText = item.description ? `*तपशील:* ${item.description}\n` : '';
         const modeText = `*पेमेंट मोड:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
+        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
 
         const msg = 
 `🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
@@ -1651,7 +1690,7 @@
 ----------------------------------------
 ${voucherText}*दिनांक:* ${item.date}
 *दात्याचे नाव:* ${item.name || '-'}
-${modeText}${descText}*स्वीकारलेली रक्कम:* ${formatIndianNum(item.credit)}
+${modeText}${descText}*स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
 ----------------------------------------
 आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
 
@@ -1660,10 +1699,9 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
     }
 
     // ============================================================
-    //  🖨️ GENERATE MONTH-WISE PDF (Page Overflow Fix)
+    //  🖨️ TWO-COLUMN MONTH-WISE PDF REPORT (AUDIT FORMAT)
     // ============================================================
-
-    function generateMonthwisePDF(type = 'all') {
+    function generateTwoColumnPDF(type = 'all') {
         if (currentRole !== 'admin') return;
         if (!transactionsData || transactionsData.length === 0) {
             alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
@@ -1672,9 +1710,9 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
 
         let dataToPrint = transactionsData;
         if (type === 'debit') {
-            dataToPrint = transactionsData.filter(t => t.debit && t.debit > 0);
+            dataToPrint = transactionsData.filter(t => (t.cashOut > 0 || t.bankOut > 0));
             if (dataToPrint.length === 0) {
-                alert('खर्चाच्या (Debit) कोणत्याही नोंदी उपलब्ध नाहीत.');
+                alert('खर्चाच्या कोणत्याही नोंदी उपलब्ध नाहीत.');
                 return;
             }
         }
@@ -1688,7 +1726,8 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
         });
 
         const sortedKeys = Object.keys(groups).sort();
-        let runningTotalBal = 0;
+        let runningCashBal = 0;
+        let runningBankBal = 0;
 
         const monthNames = [
             "जानेवारी (January)", "फेब्रुवारी (February)", "मार्च (March)", "एप्रिल (April)",
@@ -1696,38 +1735,35 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             "सप्टेंबर (September)", "ऑक्टोबर (October)", "नोव्हेंबर (November)", "डिसेंबर (December)"
         ];
 
-        const isDebitOnly = (type === 'debit');
-        const reportTitle = isDebitOnly ? '📉 मासिक खर्च नोंदवही (Monthly Expense / Debit Book)' : '📒 मासिक कॅश बुक (Monthly Cash Book)';
-
         let printHtml = `
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>${reportTitle} - Swami Gopal Tirth Sanstha</title>
+            <title>टू-कॉलम मासिक कॅश बुक - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
                 * { box-sizing: border-box; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 11px; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
                 .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
                 .month-page:last-child { page-break-after: avoid; break-after: avoid; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 8px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 17px; color: #0d2b44; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
                 .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
                 .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 8px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10.5px; }
-                th, td { border: 1px solid #bbb; padding: 4px 6px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; }
+                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
+                
+                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
+                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
+                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
+                th.cash-sub { background-color: #d9480f !important; }
+                th.bank-sub { background-color: #0b5ed7 !important; }
                 tr { page-break-inside: avoid; }
                 .text-right { text-align: right; }
-                .credit-text { color: #198754; font-weight: 700; }
-                .debit-text { color: #dc3545; font-weight: 700; }
                 
-                /* Overflow & signature split protection */
                 .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 11px; margin-bottom: 0; }
-                .summary-table td { padding: 6px 10px; font-weight: 600; }
+                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
+                .summary-table td { padding: 5px 8px; font-weight: 600; }
                 .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
                 .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
                 
@@ -1745,87 +1781,80 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             const monthLabel = monthNames[parseInt(month, 10) - 1] + " " + year;
             const items = groups[key];
 
-            const openingBalance = runningTotalBal;
-            let monthCredit = 0;
-            let monthDebit = 0;
+            const openingCash = runningCashBal;
+            const openingBank = runningBankBal;
+
+            let mCashIn = 0, mCashOut = 0;
+            let mBankIn = 0, mBankOut = 0;
 
             let rowsHtml = '';
             items.forEach((item, index) => {
-                monthCredit += (item.credit || 0);
-                monthDebit += (item.debit || 0);
-                runningTotalBal = item.balance;
+                mCashIn += (item.cashIn || 0);
+                mCashOut += (item.cashOut || 0);
+                mBankIn += (item.bankIn || 0);
+                mBankOut += (item.bankOut || 0);
+
+                runningCashBal = item.cashBal;
+                runningBankBal = item.bankBal;
 
                 const mLabel = (item.paymentMode || 'bank').toUpperCase();
 
-                if (isDebitOnly) {
-                    rowsHtml += `
-                    <tr>
-                        <td style="text-align:center; width:30px;">${index + 1}</td>
-                        <td style="white-space:nowrap; width:75px;">${escapeHTML(item.date)}</td>
-                        <td style="width:90px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                        <td style="width:65px; font-size:10px; font-weight:600;">${mLabel}</td>
-                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                        <td>${escapeHTML(item.description || '-')}</td>
-                        <td class="text-right debit-text" style="width:110px; font-size:11px;">${formatIndianNum(item.debit)}</td>
-                    </tr>
-                    `;
-                } else {
-                    rowsHtml += `
-                    <tr>
-                        <td style="text-align:center; width:30px;">${index + 1}</td>
-                        <td style="white-space:nowrap; width:75px;">${escapeHTML(item.date)}</td>
-                        <td style="width:90px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                        <td style="width:65px; font-size:10px; font-weight:600;">${mLabel}</td>
-                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                        <td>${escapeHTML(item.description || '-')}</td>
-                        <td class="text-right credit-text" style="width:90px;">${item.credit > 0 ? formatIndianNum(item.credit) : '-'}</td>
-                        <td class="text-right debit-text" style="width:90px;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
-                        <td class="text-right" style="font-weight:bold; width:100px;">${formatIndianNum(item.balance)}</td>
-                    </tr>
-                    `;
-                }
+                rowsHtml += `
+                <tr>
+                    <td style="text-align:center; width:25px;">${index + 1}</td>
+                    <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
+                    <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                    <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
+                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                    <td>${escapeHTML(item.description || '-')}</td>
+                    <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                    <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                    <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                    <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                    <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                    <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+                </tr>
+                `;
             });
 
-            const closingBalance = openingBalance + monthCredit - monthDebit;
+            const closingCash = openingCash + mCashIn - mCashOut;
+            const closingBank = openingBank + mBankIn - mBankOut;
+            const closingTotal = closingCash + closingBank;
 
             printHtml += `
             <div class="month-page">
                 <div class="org-title">
                     <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | ${reportTitle}</p>
+                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
                     <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                 </div>
 
                 <div class="month-bar">
                     <span>📅 महिना: <strong>${monthLabel}</strong></span>
-                    ${!isDebitOnly ? `<span>💰 मागील शिल्लक (Opening): <strong>${formatIndianNum(openingBalance)}</strong></span>` : `<span>📉 चालू महिन्यातील एकूण खर्च नोंदी: <strong>${items.length}</strong></span>`}
+                    <span>मागील शिल्लक (Opening): Cash: <strong>${formatIndianNum(openingCash)}</strong> | Bank: <strong>${formatIndianNum(openingBank)}</strong></span>
                 </div>
 
                 <table>
                     <thead>
-                        ${isDebitOnly ? `
                         <tr>
-                            <th style="width:30px;">#</th>
-                            <th style="width:75px;">📅 दिनांक</th>
-                            <th style="width:90px;">🔢 व्हाउचर क्र.</th>
-                            <th style="width:65px;">💳 प्रकार</th>
-                            <th>🧑‍💼 कोणास दिले (Recipient/Party)</th>
-                            <th>📝 खर्चाचा तपशील (Description)</th>
-                            <th class="text-right" style="width:110px;">📉 खर्च (Debit ₹)</th>
+                            <th rowspan="2" style="width:25px;">#</th>
+                            <th rowspan="2" style="width:65px;">दिनांक</th>
+                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
+                            <th rowspan="2" style="width:55px;">मोड</th>
+                            <th rowspan="2">नाव / तपशील</th>
+                            <th rowspan="2">खर्च / देणगी कारण</th>
+                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
+                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
+                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
                         </tr>
-                        ` : `
                         <tr>
-                            <th style="width:30px;">#</th>
-                            <th style="width:75px;">📅 दिनांक</th>
-                            <th style="width:90px;">🔢 व्हाउचर क्र.</th>
-                            <th style="width:65px;">💳 प्रकार</th>
-                            <th>🧑‍💼 खातेदार / दात्याचे नाव</th>
-                            <th>📝 तपशील (Description)</th>
-                            <th class="text-right" style="width:90px;">📈 जमा (Credit ₹)</th>
-                            <th class="text-right" style="width:90px;">📉 खर्च (Debit ₹)</th>
-                            <th class="text-right" style="width:100px;">💰 शिल्लक (Balance ₹)</th>
+                            <th class="cash-sub">In (जमा)</th>
+                            <th class="cash-sub">Out (खर्च)</th>
+                            <th class="bank-sub">In (जमा)</th>
+                            <th class="bank-sub">Out (खर्च)</th>
+                            <th>Cash Bal</th>
+                            <th>Bank Bal</th>
                         </tr>
-                        `}
                     </thead>
                     <tbody>
                         ${rowsHtml}
@@ -1834,18 +1863,19 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
 
                 <div class="bottom-section">
                     <table class="summary-table">
-                        ${isDebitOnly ? `
                         <tr>
-                            <td colspan="2" style="font-size:11px; text-align:right;">📅 महिना (${monthLabel}) एकूण खर्च (Total Debit): <strong class="debit-text" style="font-size:12px; margin-left:10px;">${formatIndianNum(monthDebit)}</strong></td>
+                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mCashIn)}</strong></td>
+                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mCashOut)}</strong></td>
+                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mBankIn)}</strong></td>
+                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mBankOut)}</strong></td>
                         </tr>
-                        ` : `
-                        <tr>
-                            <td>मागील शिल्लक: <strong>${formatIndianNum(openingBalance)}</strong></td>
-                            <td class="credit-text">जमा (Credit): <strong>${formatIndianNum(monthCredit)}</strong></td>
-                            <td class="debit-text">खर्च (Debit): <strong>${formatIndianNum(monthDebit)}</strong></td>
-                            <td style="background:#eef4fb; font-size:11px;">अखेर शिल्लक: <strong>${formatIndianNum(closingBalance)}</strong></td>
+                        <tr style="background:#eef4fb;">
+                            <td colspan="2">अखेर रोख शिल्लक (Cash In Hand): <strong>${formatIndianNum(closingCash)}</strong></td>
+                            <td colspan="2">अखेर बँक शिल्लक (Bank Balance): <strong>${formatIndianNum(closingBank)}</strong></td>
                         </tr>
-                        `}
+                        <tr style="background:#fff3cd; text-align:center;">
+                            <td colspan="4" style="font-size:12px;">💰 संस्थेचा चालू एकूण निधी (Total Closing Balance): <strong>${formatIndianNum(closingTotal)}</strong></td>
+                        </tr>
                     </table>
 
                     <div class="signatures">
@@ -1875,7 +1905,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
     // ============================================================
     //  CRUD OPERATIONS
     // ============================================================
-
     let editingId = null;
 
     async function submitTransaction() {
@@ -1892,7 +1921,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
         const submitBtn = document.getElementById('addUpdateBtn');
         const statusText = document.getElementById('fileUploadStatus');
 
-        // Validation: Date, Name, Amount compulsory
         if (!dateVal || !name || isNaN(amount) || amount <= 0) {
             alert('कृपया दिनांक, नाव आणि ० पेक्षा जास्त रक्कम ही सर्व माहिती भरा.');
             return;
@@ -1931,17 +1959,17 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
                 docUrl: finalDocUrl,
                 name: name,
                 description: desc,
-                credit: type === 'credit' ? amount : 0,
-                debit: type === 'debit' ? amount : 0
+                credit: (type === 'credit') ? amount : 0,
+                debit: (type === 'debit') ? amount : 0
             };
 
             if (db) {
                 if (editingId) {
                     await db.collection('transactions').doc(editingId).update(payload);
-                    showToast('✅ Cloud transaction updated!');
+                    showToast('✅ Transaction updated successfully!');
                 } else {
                     await db.collection('transactions').add(payload);
-                    showToast('✅ Cloud transaction added!');
+                    showToast('✅ Transaction added successfully!');
                 }
             }
 
@@ -1953,7 +1981,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             document.getElementById('newAmount').value = '';
             statusText.textContent = '';
 
-            // Auto-advance next voucher number
             handleVoucherTypeChange();
         } catch(err) {
             alert('Error: ' + err.message);
@@ -1979,7 +2006,6 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
 
         document.getElementById('newDate').value = item.rawDate || parseToIsoDate(item.date);
         
-        // Auto detect voucher dropdown
         const v = item.voucher || '';
         const vSelect = document.getElementById('voucherTypeSelect');
         if (/^PN/i.test(v)) vSelect.value = 'PN';
@@ -2001,7 +2027,9 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
 
         document.getElementById('newName').value = item.name || '';
         document.getElementById('newDesc').value = item.description || '';
-        document.getElementById('newAmount').value = item.credit > 0 ? item.credit : item.debit;
+        
+        const amt = item.credit > 0 ? item.credit : item.debit;
+        document.getElementById('newAmount').value = amt;
         document.getElementById('newType').value = item.credit > 0 ? 'credit' : 'debit';
 
         document.getElementById('addEditCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2048,20 +2076,19 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             cancelEdit();
             showToast('🗑️ All cloud data cleared!');
         } catch(err) {
-            alert('Error clearing data: ' + err.message);
+            alert('Error: ' + err.message);
         }
     }
 
     // ============================================================
     //  CSV & BACKUP
     // ============================================================
-
     function downloadTemplate() {
         if (currentRole !== 'admin') return;
         const headers = ['Date', 'Voucher/Pavti No.', 'Payment Mode', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
         const sample = ['2026-04-01', 'PN 01', 'bank', 'https://...', 'रमेश पाटील', 'देणगी', '5000', '0'];
         const csv = headers.join(',') + '\n' + sample.join(',');
-        downloadFile(csv, 'CashBook_Template.csv', 'text/csv');
+        downloadFile(csv, 'TwoColumn_CashBook_Template.csv', 'text/csv');
         showToast('📄 Template downloaded!');
     }
 
@@ -2071,17 +2098,17 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             alert('No data to export.');
             return;
         }
-        let csv = 'Date,Voucher/Pavti No.,Payment Mode,Drive Link,Name,Description,Credit,Debit,Balance\n';
+        let csv = 'Date,Voucher/Pavti No.,Payment Mode,Drive Link,Name,Description,Credit,Debit,Cash_Bal,Bank_Bal,Total_Bal\n';
         transactionsData.forEach(t => {
             const v = `"${(t.voucher || '').replace(/"/g, '""')}"`;
             const m = `"${(t.paymentMode || 'bank').replace(/"/g, '""')}"`;
             const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
             const n = `"${(t.name || '').replace(/"/g, '""')}"`;
             const d = `"${(t.description || '').replace(/"/g, '""')}"`;
-            csv += `${t.date},${v},${m},${l},${n},${d},${t.credit || 0},${t.debit || 0},${t.balance}\n`;
+            csv += `${t.date},${v},${m},${l},${n},${d},${t.credit || 0},${t.debit || 0},${t.cashBal},${t.bankBal},${t.totalBal}\n`;
         });
-        downloadFile(csv, 'SwamiGopalTirth_CashBook_Export.csv', 'text/csv');
-        showToast('⬇️ CSV exported!');
+        downloadFile(csv, 'SwamiGopalTirth_TwoColumn_Export.csv', 'text/csv');
+        showToast('⬇️ Two-Column CSV exported!');
     }
 
     async function uploadCSV(event) {
@@ -2108,7 +2135,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit'));
 
             if (dateIdx === -1 || (creditIdx === -1 && debitIdx === -1)) {
-                alert('अवैध CSV फॉरमॅट. Date आणि Credit/Debit कॉलम्स आवश्यक आहेत.');
+                alert('अवैध CSV फॉरमॅट.');
                 return;
             }
 
@@ -2128,7 +2155,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
 
                 if (!rawDate || (credit === 0 && debit === 0)) continue;
 
-                const itemObj = {
+                toAdd.push({
                     rawDate: rawDate,
                     date: formatDateToDisplay(rawDate),
                     voucher: voucher,
@@ -2138,9 +2165,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
                     description: description,
                     credit: credit,
                     debit: debit
-                };
-
-                toAdd.push(itemObj);
+                });
             }
 
             if (toAdd.length === 0) {
@@ -2171,7 +2196,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             return;
         }
         const json = JSON.stringify(transactionsData, null, 2);
-        downloadFile(json, 'CashBook_CloudBackup_' + new Date().toISOString().slice(0,10) + '.json', 'application/json');
+        downloadFile(json, 'TwoColumn_Backup_' + new Date().toISOString().slice(0,10) + '.json', 'application/json');
         showToast('💾 Backup downloaded!');
     }
 
@@ -2184,7 +2209,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
             try {
                 let data = JSON.parse(e.target.result);
                 if (!Array.isArray(data)) {
-                    alert('Invalid backup file format.');
+                    alert('Invalid backup format.');
                     return;
                 }
                 if (!confirm(`क्लाउडवर ${data.length} नोंदी रिस्टोअर करायच्या आहेत का?`)) return;
@@ -2207,7 +2232,7 @@ ${modeText}${descText}*स्वीकारलेली रक्कम:* ${for
                 await batch.commit();
                 showToast(`✅ Restored ${data.length} entries successfully!`);
             } catch(err) {
-                alert('Error reading backup: ' + err.message);
+                alert('Restore error: ' + err.message);
             }
         };
         reader.readAsText(file);
