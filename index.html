@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
     
     <!-- Google Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
@@ -35,7 +36,7 @@
             background: white;
             border-radius: 24px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            max-width: 600px;
+            max-width: 520px;
             width: 100%;
             overflow: hidden;
             text-align: center;
@@ -43,7 +44,7 @@
         }
         .front-banner-img {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
             display: block;
             border-bottom: 4px solid #ffc107;
@@ -53,13 +54,13 @@
             position: relative;
         }
         .front-logo-wrapper {
-            margin-top: -65px;
+            margin-top: -60px;
             margin-bottom: 12px;
             display: inline-block;
         }
         .front-logo-img {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             border: 4px solid white;
             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
@@ -68,13 +69,13 @@
         }
         .front-card h1 {
             color: #0d2b44;
-            font-size: 1.85rem;
+            font-size: 1.6rem;
             font-weight: 800;
             line-height: 1.3;
             margin-bottom: 5px;
         }
         .front-card p.sub {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             color: #555;
             font-weight: 600;
             margin-bottom: 8px;
@@ -82,12 +83,12 @@
         .front-reg {
             background: #fff3cd;
             color: #856404;
-            padding: 5px 18px;
+            padding: 4px 16px;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             display: inline-block;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             border: 1px solid #ffeeba;
         }
 
@@ -180,36 +181,34 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 15px;
-            position: relative;
         }
         .header-left-brand {
             display: flex;
             align-items: center;
             gap: 16px;
-            text-align: left;
         }
         .header-logo-img {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             border: 3px solid #ffc107;
             background: white;
             object-fit: cover;
         }
         .header-titles h2 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 2px;
         }
         .header-titles p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             opacity: 0.9;
         }
         .header-titles .reg {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             background: rgba(255,255,255,0.18);
             display: inline-block;
-            padding: 3px 14px;
+            padding: 2px 12px;
             border-radius: 20px;
             margin-top: 4px;
             font-weight: 600;
@@ -222,7 +221,7 @@
             flex-wrap: wrap;
         }
         .logout-btn-header {
-            background: rgba(220,53,69,0.8);
+            background: rgba(220,53,69,0.85);
             border: 1px solid #dc3545;
             color: white;
             padding: 7px 18px;
@@ -260,9 +259,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.07);
             padding: 22px;
             margin-bottom: 22px;
-            transition: box-shadow 0.2s;
         }
-        .card:hover { box-shadow: 0 6px 25px rgba(0,0,0,0.1); }
         .card h2 {
             font-size: 1.15rem;
             color: #1a3c5e;
@@ -296,7 +293,7 @@
             align-items: center;
             gap: 6px;
         }
-        .btn:hover { background: #1a5fb0; transform: scale(1.02); }
+        .btn:hover { background: #1a5fb0; }
         .btn-danger { background: #dc3545; }
         .btn-danger:hover { background: #b02a37; }
         .btn-success { background: #28a745; }
@@ -316,9 +313,8 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
-            margin-bottom: 5px;
         }
         .stat-box {
             background: #f8f9fa;
@@ -333,7 +329,7 @@
         .stat-box:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
         .stat-box.active-filter { background: #e7f1ff; outline: 3px solid #2a7de1; }
         .stat-box .label { font-size: 13px; color: #6c757d; font-weight: 600; }
-        .stat-box .value { font-size: 21px; font-weight: 700; color: #0d2b44; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: #0d2b44; }
         .stat-box.credit { border-left-color: #28a745; }
         .stat-box.credit.active-filter { outline-color: #28a745; background: #eaf8ee; }
         .stat-box.debit { border-left-color: #dc3545; }
@@ -357,11 +353,10 @@
             overflow-x: auto;
             margin-top: 12px;
             max-height: 550px;
-            overflow-y: auto;
             border: 1px solid #e9ecef;
             border-radius: 8px;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
         th {
             background: #0d2b44;
             color: white;
@@ -372,7 +367,7 @@
             z-index: 10;
             white-space: nowrap;
         }
-        td { padding: 8px 8px; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
+        td { padding: 9px 8px; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
         tr:hover { background: #f1f8ff; }
 
         .doc-link {
@@ -383,14 +378,13 @@
             align-items: center;
             gap: 4px;
         }
-        .doc-link:hover { color: #0a58ca; }
 
         .action-btn {
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 16px;
-            padding: 2px 6px;
+            font-size: 15px;
+            padding: 4px 6px;
             border-radius: 4px;
         }
         .action-btn.edit-btn { color: #2a7de1; }
@@ -428,7 +422,7 @@
         .add-entry-form .field { display: flex; flex-direction: column; gap: 4px; }
         .add-entry-form label { font-size: 12px; font-weight: 600; color: #495057; }
         .add-entry-form input, .add-entry-form select {
-            padding: 7px 12px;
+            padding: 8px 12px;
             border: 1px solid #ced4da;
             border-radius: 6px;
             min-width: 120px;
@@ -450,7 +444,6 @@
             z-index: 9999;
             font-weight: 500;
             font-size: 14px;
-            max-width: 400px;
         }
         .toast.error { background: #dc3545; }
 
@@ -500,13 +493,12 @@
         }
         .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
-        /* Admin-only visibility */
+        /* Admin / Viewer Visibility Guards */
         .admin-only { display: none; }
         body.admin-mode .admin-only { display: block; }
         body.admin-mode .admin-only-inline { display: inline-flex !important; }
         body.viewer-mode .admin-only,
         body.viewer-mode .admin-only-inline { display: none !important; }
-
         body.viewer-mode .action-btn.edit-btn,
         body.viewer-mode .action-btn.del-btn { display: none !important; }
 
@@ -517,15 +509,13 @@
 
         @media (max-width: 800px) {
             .add-entry-form .field { width: 100%; }
-            .add-entry-form input { width: 100%; }
+            .add-entry-form input, .add-entry-form select { width: 100%; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .org-header { flex-direction: column; align-items: stretch; text-align: center; }
             .header-left-brand { flex-direction: column; text-align: center; }
             .flex-between { flex-direction: column; align-items: stretch; }
             .search-controls { width: 100%; }
             .search-box { width: 100%; }
-            .front-card h1 { font-size: 1.45rem; }
-            .front-banner-img { height: 160px; }
         }
     </style>
 </head>
@@ -536,13 +526,11 @@
 ============================================================ -->
 <div id="frontPageSection">
     <div class="front-card">
-        <!-- Temple Banner Image (banner.jpg) -->
         <img src="banner.jpg" class="front-banner-img" alt="Temple Banner" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada?w=800&auto=format&fit=crop&q=80'">
         
         <div class="front-content">
-            <!-- Circular Logo (logo.jpg) -->
             <div class="front-logo-wrapper">
-                <img src="logo.jpg" class="front-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/120x120/ffc107/0d2b44?text=LOGO'">
+                <img src="logo.jpg" class="front-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/110x110/ffc107/0d2b44?text=LOGO'">
             </div>
 
             <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
@@ -555,18 +543,20 @@
                 <button class="login-tab-btn" id="tabViewerBtn" onclick="switchLoginTab('viewer')">👁️ Viewer (विश्वस्त) Login</button>
             </div>
 
-            <!-- Admin Login Form -->
+            <!-- Firebase Auth Admin Login Form -->
             <div id="adminLoginForm" class="login-form-box">
+                <label>Admin Email (फायरबेस ईमेल):</label>
+                <input type="email" id="adminEmailInput" placeholder="उदा. admin@sgtb.org">
                 <label>Admin Password:</label>
                 <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
-                <button class="login-submit-btn admin-btn" onclick="loginAsAdmin()">🔐 Admin Login</button>
-                <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password?</span>
+                <button class="login-submit-btn admin-btn" id="adminSubmitBtn" onclick="loginAsAdmin()">🔐 Admin Login</button>
+                <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password (ईमेलवर लिंक मिळवा)</span>
             </div>
 
             <!-- Viewer Login Form -->
             <div id="viewerLoginForm" class="login-form-box" style="display:none;">
                 <label>Viewer Username (युझरनेम):</label>
-                <input type="text" id="viewerUsernameInput" placeholder="e.g. trustee1">
+                <input type="text" id="viewerUsernameInput" placeholder="उदा. trustee1">
                 <label>Viewer Password (पासवर्ड):</label>
                 <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
                 <button class="login-submit-btn viewer-btn" onclick="loginAsViewer()">👁️ Viewer Login (पहा)</button>
@@ -580,10 +570,10 @@
 ============================================================ -->
 <div id="mainAppSection">
     <div class="container">
-        <!-- Dashboard Header with Logo -->
+        <!-- Dashboard Header -->
         <div class="org-header">
             <div class="header-left-brand">
-                <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/70x70/ffc107/0d2b44?text=LOGO'">
+                <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/65x65/ffc107/0d2b44?text=LOGO'">
                 <div class="header-titles">
                     <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
                     <p>श्रीराम नगर भद्रावती</p>
@@ -594,11 +584,11 @@
             <div class="header-right-actions">
                 <span id="dbStatusBadge" class="db-status">⏳ Connecting...</span>
                 <span id="userRoleBadge" class="user-role-badge admin">Admin Panel</span>
-                <button class="logout-btn-header" onclick="logoutToFrontPage()">🚪 Logout</button>
+                <button class="logout-btn-header" onclick="performLogout()">🚪 Logout</button>
             </div>
         </div>
 
-        <!-- Title & Admin PDF Action Buttons -->
+        <!-- Title & Monthly PDF Buttons -->
         <div class="flex-between" style="margin-bottom:15px;">
             <h1 style="margin-bottom:0;">📒 CASH BOOK</h1>
             <div class="admin-only-inline" style="gap:6px; display:none;">
@@ -618,7 +608,6 @@
                     <button class="btn btn-warning btn-sm" onclick="document.getElementById('restoreInput').click()">📂 Restore (JSON)</button>
                     <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
                     <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Data</button>
-                    <button class="btn change-pwd-btn btn-sm" onclick="changePassword()">🔑 Change Password</button>
                 </div>
             </div>
         </div>
@@ -629,15 +618,15 @@
             <div class="add-entry-form" style="margin-bottom:15px;">
                 <div class="field">
                     <label>👤 Viewer Name (नाव/पद):</label>
-                    <input type="text" id="newViewerName" placeholder="e.g. श्री. शर्मा (विश्वस्त)">
+                    <input type="text" id="newViewerName" placeholder="उदा. श्री. शर्मा (विश्वस्त)">
                 </div>
                 <div class="field">
                     <label>🆔 Username (युझरनेम):</label>
-                    <input type="text" id="newViewerUser" placeholder="e.g. trustee1">
+                    <input type="text" id="newViewerUser" placeholder="उदा. trustee1">
                 </div>
                 <div class="field">
                     <label>🔑 Password (पासवर्ड):</label>
-                    <input type="text" id="newViewerPass" placeholder="e.g. pass123">
+                    <input type="password" id="newViewerPass" placeholder="पासवर्ड टाका">
                 </div>
                 <div class="field field-actions">
                     <button class="btn btn-success" onclick="addNewViewer()">➕ Add Viewer</button>
@@ -651,7 +640,7 @@
                             <th>#</th>
                             <th>👤 Name (नाव)</th>
                             <th>🆔 Username</th>
-                            <th>🔑 Password</th>
+                            <th>🔑 Password (Protected)</th>
                             <th style="text-align:center;">⚡ Action</th>
                         </tr>
                     </thead>
@@ -681,7 +670,7 @@
                 <h2 style="margin-bottom:0;">📊 Summary <span style="font-size:12px; color:#888; font-weight:normal;">(कार्डवर क्लिक करून फिल्टर करा)</span></h2>
                 <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" id="resetFilterTopBtn" style="display:none;">✖ सर्व फिल्टर काढा (Show All)</button>
             </div>
-            <div class="stats-grid" id="statsGrid">
+            <div class="stats-grid">
                 <div class="stat-box credit" id="statCardCredit" onclick="toggleTypeFilter('credit')" title="Click to view ONLY Credit (जमा)">
                     <div class="label">📈 Total Credit (फक्त जमा)</div>
                     <div class="value" id="totalCredit">₹ 0.00</div>
@@ -715,7 +704,7 @@
                 </div>
                 <div class="field">
                     <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(optional)</span></label>
-                    <input type="text" id="newVoucher" placeholder="e.g. V-001 / P-101">
+                    <input type="text" id="newVoucher" placeholder="उदा. V-001 / P-101">
                 </div>
                 <div class="field">
                     <label>📎 Upload File <span style="font-weight:400; color:#888;">(फोटो किंवा PDF)</span></label>
@@ -728,11 +717,11 @@
                 </div>
                 <div class="field">
                     <label>🧑‍💼 Donor/Payer Name <span style="font-weight:400; color:#888;">(optional)</span></label>
-                    <input type="text" id="newName" placeholder="e.g. Saurabh Yamawar" style="min-width:180px;">
+                    <input type="text" id="newName" placeholder="उदा. सौरभ यमावार" style="min-width:180px;">
                 </div>
                 <div class="field">
                     <label>📝 Description <span style="font-weight:400; color:#888;">(optional)</span></label>
-                    <input type="text" id="newDesc" placeholder="Expense or Donation reason" style="min-width:190px;">
+                    <input type="text" id="newDesc" placeholder="खर्च किंवा देणगीचे कारण" style="min-width:190px;">
                 </div>
                 <div class="field">
                     <label>💰 Amount (₹) <span class="required-star">*</span></label>
@@ -752,14 +741,14 @@
             </div>
         </div>
 
-        <!-- 6. TRANSACTIONS TABLE (Visible to Admin & Viewer) -->
+        <!-- 6. TRANSACTIONS TABLE -->
         <div class="card">
             <div class="flex-between">
                 <h2>📋 All Transactions</h2>
                 <div class="search-controls">
                     <label>From: <input type="date" id="filterFromDate" onchange="filterTable()" title="Start Date"></label>
                     <label>To: <input type="date" id="filterToDate" onchange="filterTable()" title="End Date"></label>
-                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (Name/Desc/Date/Voucher)" onkeyup="filterTable()">
+                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search (नाव/तपशील/पावती)" onkeyup="filterTable()">
                     <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()" title="Reset Filters">✖ Reset</button>
                 </div>
             </div>
@@ -781,7 +770,7 @@
                             <th style="text-align:right;">📈 Credit (₹)</th>
                             <th style="text-align:right;">📉 Debit (₹)</th>
                             <th style="text-align:right;">💰 Balance (₹)</th>
-                            <th style="text-align:center; width:80px;" class="admin-only">⚡ Actions</th>
+                            <th style="text-align:center; width:120px;" class="admin-only">⚡ Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -793,26 +782,24 @@
     </div>
 </div>
 
-<!-- ===== FORGOT PASSWORD MODAL ===== -->
+<!-- ===== FORGOT PASSWORD MODAL (FIREBASE AUTH RESET EMAIL) ===== -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
-        <h3>🔑 Reset Admin Password</h3>
-        <label style="font-size:12px; font-weight:600; color:#555;">Secret Security / Recovery Key:</label>
-        <input type="password" id="modalPinInput" placeholder="Enter Secret Key">
-        
-        <label style="font-size:12px; font-weight:600; color:#555;">New Password (नवीन पासवर्ड):</label>
-        <input type="password" id="modalNewPasswordInput" placeholder="नवीन पासवर्ड टाका">
+        <h3>🔑 Admin Password Reset</h3>
+        <p style="font-size:13px; color:#666; margin-bottom:12px;">तुमचा नोंदणीकृत ईमेल टाका. पासवर्ड रीसेट करण्याची सुरक्षित लिंक ईमेलवर पाठवली जाईल.</p>
+        <label style="font-size:12px; font-weight:600; color:#555;">Registered Admin Email:</label>
+        <input type="email" id="modalResetEmailInput" placeholder="उदा. admin@sgtb.org">
         
         <div class="modal-actions">
-            <button class="btn btn-secondary btn-sm" onclick="closeForgotModal()">Cancel</button>
-            <button class="btn btn-warning btn-sm" onclick="performResetPassword()">Reset & Login</button>
+            <button class="btn btn-secondary btn-sm" onclick="closeForgotModal()">रद्द करा</button>
+            <button class="btn btn-warning btn-sm" onclick="performResetPasswordEmail()">रीसेट लिंक पाठवा</button>
         </div>
     </div>
 </div>
 
 <script>
     // ============================================================
-    //  🔥 FIREBASE CONFIGURATION (Connected)
+    //  🔥 FIREBASE CONFIGURATION
     // ============================================================
     const firebaseConfig = {
       apiKey: "AIzaSyBEq-G3qqFHsUkV5SnQpPUXHWaz1HV4DLM",
@@ -824,11 +811,11 @@
       measurementId: "G-B1F6WVTXY2"
     };
 
+    let auth = null;
     let db = null;
     let storage = null;
     let transactionsData = [];
     let viewersData = [];
-    let isFirebaseReady = false;
     let currentRole = 'none'; // 'none' | 'admin' | 'viewer'
     let activeTypeFilter = 'all';
 
@@ -836,15 +823,41 @@
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+        auth = firebase.auth();
         db = firebase.firestore();
-        try { storage = firebase.storage(); } catch(e) { console.warn("Storage not initialized:", e); }
-        isFirebaseReady = true;
+        try { storage = firebase.storage(); } catch(e) { console.warn("Storage warning:", e); }
     } catch(err) {
         console.error("Firebase init error:", err);
     }
 
+    // Monitor Firebase Auth State (Auto-login for Admin)
+    if (auth) {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentRole = 'admin';
+                document.body.className = 'admin-mode';
+                document.getElementById('userRoleBadge').textContent = `Admin (${user.email})`;
+                document.getElementById('userRoleBadge').className = 'user-role-badge admin';
+                
+                document.getElementById('frontPageSection').style.display = 'none';
+                document.getElementById('mainAppSection').style.display = 'block';
+                initRealtimeSync();
+                initViewersSync();
+            } else if (currentRole !== 'viewer') {
+                showFrontPage();
+            }
+        });
+    }
+
+    function showFrontPage() {
+        currentRole = 'none';
+        document.body.className = '';
+        document.getElementById('mainAppSection').style.display = 'none';
+        document.getElementById('frontPageSection').style.display = 'flex';
+    }
+
     // ============================================================
-    //  FRONT PAGE & LOGIN SWITCHING
+    //  AUTHENTICATION (Admin & Viewer)
     // ============================================================
 
     function switchLoginTab(tab) {
@@ -854,27 +867,40 @@
         document.getElementById('viewerLoginForm').style.display = (tab === 'viewer') ? 'block' : 'none';
     }
 
-    function loginAsAdmin() {
-        const enteredPwd = document.getElementById('adminPasswordInput').value;
-        const currentAdminPwd = localStorage.getItem('adminPassword') || 'admin123';
+    async function loginAsAdmin() {
+        const email = document.getElementById('adminEmailInput').value.trim();
+        const pwd = document.getElementById('adminPasswordInput').value;
+        const btn = document.getElementById('adminSubmitBtn');
 
-        if (enteredPwd === currentAdminPwd) {
-            currentRole = 'admin';
-            document.body.className = 'admin-mode';
-            document.getElementById('userRoleBadge').textContent = 'Admin Panel';
-            document.getElementById('userRoleBadge').className = 'user-role-badge admin';
-            
-            document.getElementById('frontPageSection').style.display = 'none';
-            document.getElementById('mainAppSection').style.display = 'block';
+        if (!email || !pwd) {
+            alert('कृपया ॲडमिनचा ईमेल आणि पासवर्ड दोन्ही टाका.');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '⏳ Verifying...';
+
+        try {
+            await auth.signInWithEmailAndPassword(email, pwd);
             showToast('🔓 Welcome Admin!');
-            initRealtimeSync();
-            initViewersSync();
-        } else {
-            alert('❌ चुकीचा पासवर्ड! (Incorrect Admin Password)');
+        } catch(err) {
+            console.error("Auth error:", err);
+            let msg = 'लॉगिन अयशस्वी: ';
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                msg += 'ईमेल किंवा पासवर्ड चुकीचा आहे.';
+            } else if (err.code === 'auth/invalid-email') {
+                msg += 'ईमेलचा फॉरमॅट चुकीचा आहे.';
+            } else {
+                msg += err.message;
+            }
+            alert(msg);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '🔐 Admin Login';
         }
     }
 
-    function loginAsViewer() {
+    async function loginAsViewer() {
         const u = document.getElementById('viewerUsernameInput').value.trim();
         const p = document.getElementById('viewerPasswordInput').value.trim();
 
@@ -883,28 +909,33 @@
             return;
         }
 
-        const found = viewersData.find(v => v.username === u && v.password === p);
-
-        if (found) {
-            currentRole = 'viewer';
-            document.body.className = 'viewer-mode';
-            document.getElementById('userRoleBadge').textContent = `Viewer: ${found.name || found.username}`;
-            document.getElementById('userRoleBadge').className = 'user-role-badge viewer';
-            
-            document.getElementById('frontPageSection').style.display = 'none';
-            document.getElementById('mainAppSection').style.display = 'block';
-            showToast(`👋 Welcome ${found.name || found.username}!`);
-            initRealtimeSync();
-        } else {
-            alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
+        try {
+            const snap = await db.collection('viewers').where('username', '==', u).where('password', '==', p).get();
+            if (!snap.empty) {
+                const viewer = snap.docs[0].data();
+                currentRole = 'viewer';
+                document.body.className = 'viewer-mode';
+                document.getElementById('userRoleBadge').textContent = `Viewer: ${viewer.name || viewer.username}`;
+                document.getElementById('userRoleBadge').className = 'user-role-badge viewer';
+                
+                document.getElementById('frontPageSection').style.display = 'none';
+                document.getElementById('mainAppSection').style.display = 'block';
+                showToast(`👋 Welcome ${viewer.name || viewer.username}!`);
+                initRealtimeSync();
+            } else {
+                alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
+            }
+        } catch(e) {
+            alert('लॉगिन करताना त्रुटी आली: ' + e.message);
         }
     }
 
-    function logoutToFrontPage() {
+    async function performLogout() {
+        if (currentRole === 'admin' && auth) {
+            await auth.signOut();
+        }
         currentRole = 'none';
-        document.body.className = '';
-        document.getElementById('mainAppSection').style.display = 'none';
-        document.getElementById('frontPageSection').style.display = 'flex';
+        showFrontPage();
         document.getElementById('adminPasswordInput').value = '';
         document.getElementById('viewerPasswordInput').value = '';
         cancelEdit();
@@ -912,69 +943,27 @@
     }
 
     function openForgotModal() {
-        document.getElementById('modalPinInput').value = '';
-        document.getElementById('modalNewPasswordInput').value = '';
+        document.getElementById('modalResetEmailInput').value = document.getElementById('adminEmailInput').value;
         document.getElementById('forgotModal').style.display = 'flex';
-        setTimeout(() => document.getElementById('modalPinInput').focus(), 100);
     }
 
     function closeForgotModal() {
         document.getElementById('forgotModal').style.display = 'none';
     }
 
-    function performResetPassword() {
-        const pin = document.getElementById('modalPinInput').value.trim();
-        const newPwd = document.getElementById('modalNewPasswordInput').value.trim();
-
-        const isPinValid = (pin === "123456") || 
-                           (pin.toLowerCase() === "f-0016068(cdp)".toLowerCase()) || 
-                           (pin === "F-0016068");
-
-        if (!isPinValid) {
-            alert('❌ चुकीचा Secret Security Key!');
+    async function performResetPasswordEmail() {
+        const email = document.getElementById('modalResetEmailInput').value.trim();
+        if (!email) {
+            alert('कृपया नोंदणीकृत ईमेल पत्ता टाका.');
             return;
         }
-
-        if (!newPwd || newPwd.length < 4) {
-            alert('❌ नवीन पासवर्ड किमान ४ अक्षरांचा असावा.');
-            return;
+        try {
+            await auth.sendPasswordResetEmail(email);
+            closeForgotModal();
+            alert('✅ पासवर्ड रीसेट करण्याची लिंक तुमच्या ईमेलवर पाठवली आहे. कृपया इनबॉक्स तपासा.');
+        } catch(err) {
+            alert('त्रुटी: ' + err.message);
         }
-
-        localStorage.setItem('adminPassword', newPwd);
-        closeForgotModal();
-
-        currentRole = 'admin';
-        document.body.className = 'admin-mode';
-        document.getElementById('userRoleBadge').textContent = 'Admin Panel';
-        document.getElementById('userRoleBadge').className = 'user-role-badge admin';
-        document.getElementById('frontPageSection').style.display = 'none';
-        document.getElementById('mainAppSection').style.display = 'block';
-        
-        showToast('✅ पासवर्ड यशस्वीरित्या बदलला आणि लॉगिन झाले!');
-        initRealtimeSync();
-        initViewersSync();
-    }
-
-    function changePassword() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
-        const currentPwd = prompt('Enter CURRENT password:');
-        const stored = localStorage.getItem('adminPassword') || 'admin123';
-        if (currentPwd !== stored) {
-            alert('❌ Current password is incorrect.');
-            return;
-        }
-        const newPwd = prompt('Enter NEW password:');
-        if (!newPwd || newPwd.length < 4) {
-            alert('❌ Password must be at least 4 characters long.');
-            return;
-        }
-        const confirmPwd = prompt('Confirm NEW password:');
-        if (newPwd !== confirmPwd) {
-            alert('❌ Passwords do not match.');
-            return;
-        }
-        localStorage.setItem('adminPassword', newPwd);
-        showToast('✅ Password changed successfully!');
     }
 
     // ============================================================
@@ -982,7 +971,7 @@
     // ============================================================
 
     function initViewersSync() {
-        if (isFirebaseReady && db) {
+        if (db && currentRole === 'admin') {
             db.collection('viewers').onSnapshot((snapshot) => {
                 let list = [];
                 snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
@@ -1008,7 +997,7 @@
                 <td>${idx + 1}</td>
                 <td><strong>${escapeHTML(v.name || '-')}</strong></td>
                 <td><code>${escapeHTML(v.username || '-')}</code></td>
-                <td><code>${escapeHTML(v.password || '-')}</code></td>
+                <td><code>••••••••</code></td>
                 <td style="text-align:center;">
                     <button class="action-btn del-btn" onclick="deleteViewer('${v.id}')" title="Delete Viewer">🗑️ Delete</button>
                 </td>
@@ -1018,7 +1007,7 @@
     }
 
     async function addNewViewer() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         const name = document.getElementById('newViewerName').value.trim();
         const user = document.getElementById('newViewerUser').value.trim();
         const pass = document.getElementById('newViewerPass').value.trim();
@@ -1046,7 +1035,7 @@
     }
 
     async function deleteViewer(id) {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         if (!confirm('या विवरचे खाते डिलीट करायचे आहे का?')) return;
         try {
             await db.collection('viewers').doc(id).delete();
@@ -1061,7 +1050,7 @@
     // ============================================================
 
     function escapeHTML(str) {
-        if (str === null || str === undefined) return '';
+        if (!str) return '';
         return String(str)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -1134,8 +1123,6 @@
                 return `${String(y).padStart(4, '20')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             }
         }
-        const d = new Date(dateStr);
-        if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
         return new Date().toISOString().split('T')[0];
     }
 
@@ -1181,7 +1168,6 @@
             }
             if (vA && !vB) return -1;
             if (!vA && vB) return 1;
-
             return (a.id || '').localeCompare(b.id || '');
         });
 
@@ -1199,7 +1185,7 @@
 
     function initRealtimeSync() {
         const badge = document.getElementById('dbStatusBadge');
-        if (isFirebaseReady && db) {
+        if (db) {
             db.collection('transactions').onSnapshot((snapshot) => {
                 badge.innerHTML = '🟢 Cloud Live (Synced)';
                 badge.style.background = '#28a745';
@@ -1242,6 +1228,12 @@
                 voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
             }
 
+            // Print Receipt action if Credit
+            let receiptBtn = '';
+            if (item.credit > 0) {
+                receiptBtn = `<button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>`;
+            }
+
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${escapeHTML(item.date)}</td>
@@ -1252,6 +1244,7 @@
                 <td style="text-align:right; color:#dc3545; font-weight:600;">${item.debit > 0 ? formatIndianNum(item.debit) : '-'}</td>
                 <td style="text-align:right; font-weight:700;">${formatIndianNum(item.balance)}</td>
                 <td style="text-align:center; white-space:nowrap;" class="admin-only">
+                    ${receiptBtn}
                     <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
                     <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
                 </td>
@@ -1342,11 +1335,84 @@
     }
 
     // ============================================================
-    //  🖨️ GENERATE MONTH-WISE PDF (All Cash Book & Debit Only Book)
+    //  🧾 SINGLE RECEIPT PRINT (देणगी पावती)
+    // ============================================================
+
+    function printSingleReceipt(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) return;
+
+        const receiptHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>पावती - ${escapeHTML(item.voucher || item.name)}</title>
+            <style>
+                @page { size: A5 landscape; margin: 8mm; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 15px; }
+                .receipt-box { border: 2px solid #0d2b44; border-radius: 12px; padding: 20px; position: relative; }
+                .header { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 10px; }
+                .header h1 { margin: 0; font-size: 20px; color: #0d2b44; }
+                .header p { margin: 3px 0; font-size: 13px; color: #555; }
+                .reg-tag { display: inline-block; background: #fff3cd; color: #856404; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; }
+                .receipt-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+                .details-table td { padding: 8px 6px; }
+                .amount-highlight { font-size: 18px; font-weight: bold; color: #0d2b44; background: #eef4fb; padding: 6px 14px; border-radius: 6px; border: 1px dashed #2a7de1; display: inline-block; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 40px; padding: 0 20px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 150px; font-size: 12px; font-weight: bold; padding-top: 4px; }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-box">
+                <div class="header">
+                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <p>श्रीराम नगर भद्रावती</p>
+                    <span class="reg-tag">📜 Reg. No.: F-0016068(CDP)</span>
+                </div>
+                <div class="receipt-title">देणगी / पावती (Receipt)</div>
+                <table class="details-table">
+                    <tr>
+                        <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(item.voucher || '-')}</td>
+                        <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || 'दात्याचे नाव नाही')}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top:14px;">
+                            <strong>स्वीकारलेली रक्कम:</strong> 
+                            <span class="amount-highlight">${formatIndianNum(item.credit)}</span>
+                        </td>
+                    </tr>
+                </table>
+                <div class="signatures">
+                    <div class="sig-box">दात्याची स्वाक्षरी</div>
+                    <div class="sig-box">स्वीकारणारा / खजिनदार</div>
+                </div>
+            </div>
+            <script>
+                window.onload = function() { window.print(); };
+            <\/script>
+        </body>
+        </html>`;
+
+        const printWin = window.open('', '_blank');
+        printWin.document.open();
+        printWin.document.write(receiptHtml);
+        printWin.document.close();
+    }
+
+    // ============================================================
+    //  🖨️ GENERATE MONTH-WISE PDF
     // ============================================================
 
     function generateMonthwisePDF(type = 'all') {
-        if (currentRole !== 'admin') { alert('फक्त ऍडमिनला PDF जनरेट करण्याची परवानगी आहे.'); return; }
+        if (currentRole !== 'admin') return;
         if (!transactionsData || transactionsData.length === 0) {
             alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
             return;
@@ -1389,7 +1455,6 @@
             <title>${reportTitle} - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 10mm; }
-                * { box-sizing: border-box; }
                 body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 12px; }
                 .month-page { page-break-after: always; break-after: page; padding: 10px 0 20px 0; }
                 .month-page:last-child { page-break-after: avoid; break-after: avoid; }
@@ -1408,10 +1473,6 @@
                 .summary-table td { padding: 8px 12px; font-weight: 600; }
                 .signatures { display: flex; justify-content: space-between; margin-top: 45px; padding: 0 40px; font-weight: bold; font-size: 12px; }
                 .sig-box { text-align: center; border-top: 1px dashed #333; width: 180px; padding-top: 6px; }
-                @media print {
-                    .no-print { display: none !important; }
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                }
             </style>
         </head>
         <body>
@@ -1542,13 +1603,13 @@
     }
 
     // ============================================================
-    //  CRUD
+    //  CRUD OPERATIONS
     // ============================================================
 
     let editingId = null;
 
     async function submitTransaction() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         const dateVal = document.getElementById('newDate').value;
         const voucher = document.getElementById('newVoucher').value.trim();
         const fileInput = document.getElementById('newDocFile');
@@ -1561,7 +1622,7 @@
         const statusText = document.getElementById('fileUploadStatus');
 
         if (!dateVal || isNaN(amount) || amount <= 0) {
-            alert('Please select a valid Date and enter Amount greater than 0.');
+            alert('कृपया योग्य तारीख निवडा आणि रक्कम ० पेक्षा जास्त टाका.');
             return;
         }
 
@@ -1609,8 +1670,6 @@
                     await db.collection('transactions').add(payload);
                     showToast('✅ Cloud transaction added!');
                 }
-            } else {
-                throw new Error("Database not connected.");
             }
 
             cancelEdit();
@@ -1631,9 +1690,9 @@
     }
 
     function editEntry(id) {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         const item = (transactionsData || []).find(t => t.id === id);
-        if (!item) { alert('Entry not found!'); return; }
+        if (!item) return;
 
         editingId = id;
         document.getElementById('formTitle').textContent = '✏️ Edit Transaction';
@@ -1679,8 +1738,8 @@
     }
 
     async function deleteEntry(id) {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
-        if (!confirm('Delete this entry permanently from the Cloud?')) return;
+        if (currentRole !== 'admin') return;
+        if (!confirm('ही नोंद कायमस्वरूपी डिलीट करायची आहे का?')) return;
         
         try {
             await db.collection('transactions').doc(id).delete();
@@ -1692,8 +1751,8 @@
     }
 
     async function clearAllData() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
-        if (!confirm('⚠️ Are you sure you want to permanently DELETE ALL cloud transactions?')) return;
+        if (currentRole !== 'admin') return;
+        if (!confirm('⚠️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
         
         try {
             const snapshot = await db.collection('transactions').get();
@@ -1712,16 +1771,16 @@
     // ============================================================
 
     function downloadTemplate() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         const headers = ['Date', 'Voucher/Pavti No.', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
-        const sample = ['2023-07-31', 'V-001', 'https://...', 'Saurabh Yamawar', 'Gurupournima donation', '11000', '0'];
+        const sample = ['2026-04-01', 'V-001', 'https://...', 'रमेश पाटील', 'देणगी', '5000', '0'];
         const csv = headers.join(',') + '\n' + sample.join(',');
         downloadFile(csv, 'CashBook_Template.csv', 'text/csv');
         showToast('📄 Template downloaded!');
     }
 
     function exportCSV() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         if (!transactionsData || transactionsData.length === 0) {
             alert('No data to export.');
             return;
@@ -1739,7 +1798,7 @@
     }
 
     async function uploadCSV(event) {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -1747,7 +1806,7 @@
             const text = e.target.result;
             const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
             if (lines.length < 2) {
-                alert('CSV file is empty or missing data.');
+                alert('CSV फाईल रिकामी आहे.');
                 return;
             }
 
@@ -1761,7 +1820,7 @@
             const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit'));
 
             if (dateIdx === -1 || (creditIdx === -1 && debitIdx === -1)) {
-                alert('Invalid CSV header. Required columns: Date, Credit/Debit.');
+                alert('अवैध CSV फॉरमॅट. Date आणि Credit/Debit कॉलम्स आवश्यक आहेत.');
                 return;
             }
 
@@ -1793,7 +1852,7 @@
             }
 
             if (toAdd.length === 0) {
-                alert('No valid transactions found in CSV.');
+                alert('CSV मध्ये कोणत्याही वैध नोंदी सापडल्या नाहीत.');
                 return;
             }
 
@@ -1804,7 +1863,7 @@
                     batch.set(newDoc, item);
                 });
                 await batch.commit();
-                showToast(`✅ ${toAdd.length} transactions imported to Cloud!`);
+                showToast(`✅ ${toAdd.length} नोंदी क्लाउडवर इम्पोर्ट झाल्या!`);
             } catch(err) {
                 alert('Import error: ' + err.message);
             }
@@ -1814,7 +1873,7 @@
     }
 
     function backupData() {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         if (!transactionsData || transactionsData.length === 0) {
             alert('No data to backup.');
             return;
@@ -1825,7 +1884,7 @@
     }
 
     function restoreData(event) {
-        if (currentRole !== 'admin') { alert('Admin access required.'); return; }
+        if (currentRole !== 'admin') return;
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -1836,7 +1895,7 @@
                     alert('Invalid backup file format.');
                     return;
                 }
-                if (!confirm(`Restore ${data.length} transactions to Cloud?`)) return;
+                if (!confirm(`क्लाउडवर ${data.length} नोंदी रिस्टोअर करायच्या आहेत का?`)) return;
 
                 const batch = db.batch();
                 data.forEach(item => {
@@ -1884,20 +1943,11 @@
     }
 
     // ============================================================
-    //  INIT (Start at Front Page)
+    //  INIT
     // ============================================================
-
     window.onload = function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('newDate').value = today;
-
-        if (isFirebaseReady && db) {
-            db.collection('viewers').onSnapshot((snapshot) => {
-                let list = [];
-                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-                viewersData = list;
-            });
-        }
     };
 </script>
 </body>
