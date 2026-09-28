@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था - Two-Column Cash Book</title>
     
+    <!-- Google Fonts for crisp Marathi rendering -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+
     <!-- Google Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -16,11 +21,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Noto Sans Devanagari', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
             background: #f0f4f9;
             min-height: 100vh;
+            color: #212529;
         }
 
         /* ===== FRONT / LANDING PAGE ===== */
@@ -165,7 +171,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1600px;
+            max-width: 1650px;
             margin: 0 auto;
         }
 
@@ -257,7 +263,6 @@
             font-weight: 500;
         }
 
-        h1 { color: #0d2b44; font-size: 1.65rem; }
         .card {
             background: white;
             border-radius: 12px;
@@ -320,7 +325,7 @@
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
-        /* Stats Grid (Now with Total Credit and Total Debit) */
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -364,16 +369,16 @@
         .table-wrapper {
             overflow-x: auto;
             margin-top: 12px;
-            max-height: 580px;
+            max-height: 600px;
             border: 1px solid #d0d7de;
             border-radius: 8px;
             -webkit-overflow-scrolling: touch;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 1200px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 1250px; }
         th {
             background: #0d2b44;
             color: white;
-            padding: 8px 6px;
+            padding: 9px 6px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -431,7 +436,6 @@
         .action-btn.voucher-btn { color: #6f42c1; }
         .action-btn.voucher-btn:hover { background: #f0e6ff; }
 
-        /* WhatsApp Circular Icon */
         .wa-inline-icon {
             display: inline-flex;
             align-items: center;
@@ -517,7 +521,7 @@
             box-shadow: 0 6px 25px rgba(0,0,0,0.25);
             display: none;
             z-index: 9999;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 14px;
         }
         .toast.error { background: #dc3545; }
@@ -796,7 +800,7 @@
 
         <!-- Top Actions -->
         <div class="flex-between" style="margin-bottom:15px;">
-            <h1 style="margin-bottom:0;">📒 TWO-COLUMN CASH BOOK</h1>
+            <h1 style="margin-bottom:0; font-size:1.6rem; color:#0d2b44;">📒 TWO-COLUMN CASH BOOK</h1>
             <div class="admin-only-inline" style="gap:6px; display:none;">
                 <button class="btn btn-pdf" onclick="generateTwoColumnPDF('all')">📄 संपूर्ण टू-कॉलम वार्षिक PDF</button>
                 <button class="btn btn-pdf-fy" onclick="generateSelectedFY_PDF()">📑 निवडलेल्या आर्थिक वर्षाची (FY) PDF</button>
@@ -815,7 +819,7 @@
                 </div>
                 <div class="flex-row">
                     <select id="screenMonthSelect" style="padding:8px 12px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:13px;">
-                        <!-- Dynamically filled: "all" + continuous months -->
+                        <!-- Dynamically filled -->
                     </select>
                     <button class="btn btn-success" onclick="viewSelectedMonthOnScreen()">👁️ महिना पहा</button>
                     <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
@@ -863,9 +867,7 @@
                                 <th class="sub-header bal-head">Bank Bal</th>
                             </tr>
                         </thead>
-                        <tbody id="mViewerTableBody">
-                            <!-- Injected dynamically -->
-                        </tbody>
+                        <tbody id="mViewerTableBody"></tbody>
                     </table>
                 </div>
 
@@ -924,7 +926,7 @@
                             <th>#</th>
                             <th>👤 Name</th>
                             <th>🆔 Username</th>
-                            <th>🔑 Password</th>
+                            <th>🔑 Status</th>
                             <th style="text-align:center;">⚡ Action</th>
                         </tr>
                     </thead>
@@ -942,13 +944,13 @@
                 <button class="btn btn-secondary" onclick="downloadTemplate()">📄 Download CSV Template</button>
                 <button class="btn btn-success" onclick="exportCSV()">⬇️ Export CSV</button>
                 <div class="file-upload-wrapper admin-only-inline">
-                    <label style="font-weight:600; font-size:13px; color:#495057;">Upload CSV to Cloud:</label>
+                    <label style="font-weight:600; font-size:13px; color:#495057; margin-right: 6px;">Upload CSV to Cloud:</label>
                     <input type="file" id="csvUploadInput" accept=".csv" onchange="uploadCSV(event)">
                 </div>
             </div>
         </div>
 
-        <!-- 4. SUMMARY (Now with Total Credit and Total Debit) -->
+        <!-- 4. SUMMARY (With Working Credit / Debit Toggle) -->
         <div class="card">
             <div class="flex-between" style="margin-bottom:12px;">
                 <h2 style="margin-bottom:0;" id="summaryCardHeading">📊 Two-Column Summary <span style="font-size:12px; color:#888; font-weight:normal;">(रोख आणि बँक ताळेबंद)</span></h2>
@@ -962,18 +964,18 @@
                     <div style="font-size:11px; color:#28a745; font-weight:600; margin-top:3px;">Cash + Bank Fund</div>
                 </div>
 
-                <!-- 2. TOTAL CREDIT (NEW) -->
-                <div class="stat-box credit-box" onclick="filterByCreditOnly()" title="एकूण जमा रक्कम पहा">
+                <!-- 2. TOTAL CREDIT (Clickable Filter) -->
+                <div class="stat-box credit-box" id="boxCredit" onclick="filterByCreditOnly()" title="फक्त जमा नोंदी फिल्टर करा">
                     <div class="label">📈 Total Credit (एकूण जमा)</div>
                     <div class="value" id="statTotalCredit" style="color:#198754;">₹ 0.00</div>
-                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash In + Bank In</div>
+                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash In + Bank In (फिल्टर करा)</div>
                 </div>
 
-                <!-- 3. TOTAL DEBIT (NEW) -->
-                <div class="stat-box debit-box" onclick="filterByDebitOnly()" title="एकूण खर्च रक्कम पहा">
+                <!-- 3. TOTAL DEBIT (Clickable Filter) -->
+                <div class="stat-box debit-box" id="boxDebit" onclick="filterByDebitOnly()" title="फक्त खर्च नोंदी फिल्टर करा">
                     <div class="label">📉 Total Debit (एकूण खर्च)</div>
                     <div class="value" id="statTotalDebit" style="color:#dc3545;">₹ 0.00</div>
-                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash Out + Bank Out</div>
+                    <div style="font-size:11px; color:#666; margin-top:3px;">Cash Out + Bank Out (फिल्टर करा)</div>
                 </div>
 
                 <!-- 4. Cash in Hand -->
@@ -991,7 +993,7 @@
                 </div>
 
                 <!-- 6. Total Transactions -->
-                <div class="stat-box" onclick="resetAllFilters()" title="एकूण नोंदी">
+                <div class="stat-box" onclick="resetAllFilters()" title="सर्व नोंदी पहा">
                     <div class="label">🧾 Total Transactions</div>
                     <div class="value" id="totalEntries">0</div>
                     <div style="font-size:11px; color:#888; margin-top:3px;">Active Records</div>
@@ -999,7 +1001,7 @@
             </div>
         </div>
 
-        <!-- 5. ADD / EDIT TRANSACTION -->
+        <!-- 5. ADD / EDIT TRANSACTION (Enhanced Contra Support) -->
         <div class="card admin-only" id="addEditCard">
             <h2 id="formTitle">➕ Add New Transaction</h2>
             <div class="edit-indicator" id="editIndicator">
@@ -1012,7 +1014,7 @@
                     <input type="date" id="newDate">
                 </div>
                 <div class="field">
-                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(5 Options)</span></label>
+                    <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Options)</span></label>
                     <div class="voucher-input-group">
                         <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
                             <option value="PN">PN (सामान्य देणगी)</option>
@@ -1029,7 +1031,8 @@
                     <select id="newPaymentMode" onchange="handlePaymentModeChange()">
                         <option value="bank">🏦 Bank (Online/UPI/NEFT/Cheque)</option>
                         <option value="cash">💵 Cash (हातातील रोख)</option>
-                        <option value="contra">🔄 Contra (रोख बँकेत जमा / Cash to Bank)</option>
+                        <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
+                        <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
                     </select>
                 </div>
                 <div class="field">
@@ -1047,14 +1050,14 @@
                     <datalist id="donorNamesList"></datalist>
                 </div>
                 <div class="field">
-                    <label>📝 Description <span style="font-weight:400; color:#888;">(optional)</span></label>
+                    <label>📝 Description <span style="font-weight:400; color:#888;">(तपशील)</span></label>
                     <input type="text" id="newDesc" placeholder="खर्च किंवा देणगीचे कारण" style="min-width:180px;">
                 </div>
                 <div class="field">
                     <label>💰 Amount (₹) <span class="required-star">*</span></label>
                     <input type="number" id="newAmount" placeholder="1000" step="0.01">
                 </div>
-                <div class="field">
+                <div class="field" id="typeSelectField">
                     <label>📌 Type <span class="required-star">*</span></label>
                     <select id="newType" onchange="handleTypeChange()">
                         <option value="credit">📈 Receipt / Jama (जमा)</option>
@@ -1068,11 +1071,18 @@
             </div>
         </div>
 
-        <!-- 6. ALL TRANSACTIONS TABLE (With Print Filter Button Next to Reset) -->
+        <!-- 6. ALL TRANSACTIONS TABLE -->
         <div class="card">
             <div class="flex-between">
                 <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
                 <div class="search-controls">
+                    <label>Type:
+                        <select id="filterFlowTypeSelect" onchange="filterTable()">
+                            <option value="all">All Types (सर्व)</option>
+                            <option value="credit">📈 Only Credit (जमा)</option>
+                            <option value="debit">📉 Only Debit (खर्च)</option>
+                        </select>
+                    </label>
                     <label>Voucher:
                         <select id="filterVoucherTypeSelect" onchange="filterTable()">
                             <option value="all">All Vouchers</option>
@@ -1104,7 +1114,6 @@
                     <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
                     <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
                     <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
-                    <!-- NEW: PRINT CURRENT FILTERED TABLE -->
                     <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️ प्रिंट (Print)</button>
                 </div>
             </div>
@@ -1148,8 +1157,9 @@
 </div>
 
 <!-- ============================================================
-     3. POPUP MODALS: WHATSAPP SHARE POPUP
+     3. POPUP MODALS
 ============================================================ -->
+<!-- WHATSAPP SHARE MODAL -->
 <div class="modal-overlay" id="whatsappShareModal">
     <div class="wa-modal-box">
         <div class="wa-modal-header">
@@ -1185,11 +1195,11 @@
     </div>
 </div>
 
-<!-- FORGOT MODAL -->
+<!-- FORGOT PASSWORD MODAL -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
         <h3>🔑 Admin Password Reset</h3>
-        <p style="font-size:13px; color:#666; margin-bottom:12px;">तुमचा नोंदणीकृत ईमेल टाका. पासवर्ड रीसेट करण्याची सुरक्षित लिंक ईमेलवर पाठवली जाईल.</p>
+        <p style="font-size:13px; color:#666; margin-bottom:12px;">नोंदणीकृत ईमेल टाका. पासवर्ड रीसेट करण्याची लिंक ईमेलवर पाठवली जाईल.</p>
         <label style="font-size:12px; font-weight:600; color:#555;">Registered Admin Email:</label>
         <input type="email" id="modalResetEmailInput" placeholder="उदा. shyam.mauli@gmail.com">
         
@@ -1218,7 +1228,7 @@
     let db = null;
     let storage = null;
     let transactionsData = [];
-    let currentFilteredData = []; // Keeps track of currently filtered transactions
+    let currentFilteredData = [];
     let viewersData = [];
     let monthlyContinuousMap = {};
     let currentRole = 'none';
@@ -1235,7 +1245,7 @@
         }
         auth = firebase.auth();
         db = firebase.firestore();
-        try { storage = firebase.storage(); } catch(e) { console.warn("Storage:", e); }
+        try { storage = firebase.storage(); } catch(e) { console.warn("Storage warning:", e); }
     } catch(err) {
         console.error("Firebase init error:", err);
     }
@@ -1264,6 +1274,14 @@
         document.body.className = '';
         document.getElementById('mainAppSection').style.display = 'none';
         document.getElementById('frontPageSection').style.display = 'flex';
+    }
+
+    // SHA-256 for Viewer Auth Security
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
     // ============================================================
@@ -1319,7 +1337,13 @@
         }
 
         try {
-            const snap = await db.collection('viewers').where('username', '==', u).where('password', '==', p).get();
+            const pHash = await sha256(p);
+            // Check both hashed password and legacy plain password for backward compatibility
+            let snap = await db.collection('viewers').where('username', '==', u).where('passwordHash', '==', pHash).get();
+            if (snap.empty) {
+                snap = await db.collection('viewers').where('username', '==', u).where('password', '==', p).get();
+            }
+
             if (!snap.empty) {
                 const viewer = snap.docs[0].data();
                 currentRole = 'viewer';
@@ -1440,10 +1464,10 @@
         list.forEach((v, idx) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${idx + 1}</td>
+                <td style="text-align:center;">${idx + 1}</td>
                 <td><strong>${escapeHTML(v.name || '-')}</strong></td>
                 <td><code>${escapeHTML(v.username || '-')}</code></td>
-                <td><code>••••••••</code></td>
+                <td><span style="color:#28a745; font-weight:600;">🔒 Protected</span></td>
                 <td style="text-align:center;">
                     <button class="action-btn del-btn" onclick="deleteViewer('${v.id}')" title="Delete Viewer">🗑️ Delete</button>
                 </td>
@@ -1464,10 +1488,11 @@
         }
 
         try {
+            const passHash = await sha256(pass);
             await db.collection('viewers').add({
                 name: name || user,
                 username: user,
-                password: pass,
+                passwordHash: passHash,
                 createdAt: new Date().toISOString()
             });
 
@@ -1545,7 +1570,7 @@
             'एक्केचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास', 'पन्नास',
             'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ', 'साठ',
             'एकसष्ठ', 'बासष्ठ', 'त्रेसष्ठ', 'चौसष्ठ', 'पासष्ठ', 'सहासष्ठ', 'सदुसष्ठ', 'अडुसष्ठ', 'एकोणसत्तर', 'सत्तर',
-            'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौर्‍याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी', 'ऐंशी',
+            'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौऱ्याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी', 'ऐंशी',
             'एक्याऐंशी', 'ब्याऐंशी', 'त्र्याऐंशी', 'चौऱ्याऐंशी', 'पंच्याऐंशी', 'शहाऐंशी', 'सत्त्याऐंशी', 'अठ्ठ्याऐंशी', 'एकोणनव्वद', 'नव्वद',
             'एक्याण्णव', 'ब्याण्णव', 'त्र्याण्णव', 'चौऱ्याण्णव', 'पंच्याण्णव', 'शहाण्णव', 'सत्त्याण्णव', 'अठ्ठ्याण्णव', 'नव्व्याण्णव'
         ];
@@ -1673,7 +1698,7 @@
     function inferPaymentMode(item) {
         if (item.paymentMode) return item.paymentMode.toLowerCase();
         const text = `${item.description || ''} ${item.name || ''} ${item.voucher || ''}`.toLowerCase();
-        if (text.includes('contra') || (text.includes('cash') && text.includes('deposit'))) return 'contra';
+        if (text.includes('contra') || (text.includes('cash') && text.includes('deposit'))) return 'contra_c2b';
         if (text.includes('cash') || text.includes('rokh')) return 'cash';
         return 'bank';
     }
@@ -1773,13 +1798,25 @@
 
     function handlePaymentModeChange() {
         const mode = document.getElementById('newPaymentMode').value;
-        if (mode === 'contra') {
-            document.getElementById('newDesc').value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited in Bank)';
+        const descInput = document.getElementById('newDesc');
+        const nameInput = document.getElementById('newName');
+        const typeField = document.getElementById('typeSelectField');
+
+        if (mode === 'contra_c2b') {
+            descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
+            if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
+            typeField.style.opacity = '0.5';
+        } else if (mode === 'contra_b2c') {
+            descInput.value = 'कार्यालयीन खर्चासाठी बँकेतून रोख काढली (Cash Withdrawn from Bank)';
+            if (!nameInput.value) nameInput.value = 'Self (बँक उचल)';
+            typeField.style.opacity = '0.5';
+        } else {
+            typeField.style.opacity = '1';
         }
     }
 
     // ============================================================
-    //  ⚡ TWO-COLUMN ENGINE & CONTINUOUS MONTH MAP BUILDER
+    //  ⚡ TWO-COLUMN ENGINE & MONTH MAP BUILDER
     // ============================================================
     function calculateTwoColumnBalances(data) {
         if (!data || !Array.isArray(data)) return [];
@@ -1807,10 +1844,6 @@
             item.fy = getFinancialYear(item.rawDate);
             item.paymentMode = inferPaymentMode(item);
 
-            if ((item.voucher || '').trim() === 'VN 29' && (!item.description || item.description === 'NaN' || item.description === 'undefined')) {
-                item.description = 'PN 186 व PN 187 ची रोख रक्कम बँकेत जमा केली (Contra)';
-            }
-
             const cr = parseFloat(item.credit) || 0;
             const dr = parseFloat(item.debit) || 0;
 
@@ -1823,10 +1856,17 @@
             } else if (item.paymentMode === 'bank') {
                 bankIn = cr;
                 bankOut = dr;
-            } else if (item.paymentMode === 'contra') {
+            } else if (item.paymentMode === 'contra_c2b' || item.paymentMode === 'contra') {
+                // Cash deposited into bank
                 const amt = cr > 0 ? cr : dr;
                 cashOut = amt;
                 bankIn = amt;
+                item.paymentMode = 'contra_c2b';
+            } else if (item.paymentMode === 'contra_b2c') {
+                // Cash withdrawn from bank
+                const amt = cr > 0 ? cr : dr;
+                cashIn = amt;
+                bankOut = amt;
             }
 
             item.cashIn = cashIn;
@@ -1843,7 +1883,6 @@
         });
 
         buildContinuousMonthlyMap(data);
-
         return data;
     }
 
@@ -2033,13 +2072,13 @@
             tbody.innerHTML = '';
             transactionsData.forEach((item, idx) => {
                 const tr = document.createElement('tr');
-                const mLabel = (item.paymentMode || 'bank').toUpperCase();
+                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
 
                 tr.innerHTML = `
                     <td style="text-align:center;">${idx + 1}</td>
                     <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
                     <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode}">${mLabel}</span></td>
+                    <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
                     <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                     <td>${escapeHTML(item.description || '-')}</td>
                     <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
@@ -2088,13 +2127,13 @@
             } else {
                 mData.items.forEach((item, idx) => {
                     const tr = document.createElement('tr');
-                    const mLabel = (item.paymentMode || 'bank').toUpperCase();
+                    const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
 
                     tr.innerHTML = `
                         <td style="text-align:center;">${idx + 1}</td>
                         <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
                         <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                        <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode}">${mLabel}</span></td>
+                        <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
                         <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                         <td>${escapeHTML(item.description || '-')}</td>
                         <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
@@ -2141,7 +2180,7 @@
             `;
         } else {
             mData.items.forEach((item, index) => {
-                const mLabel = (item.paymentMode || 'bank').toUpperCase();
+                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
                 rowsHtml += `
                 <tr>
                     <td style="text-align:center; width:25px;">${index + 1}</td>
@@ -2169,8 +2208,8 @@
             <title>${mData.label} - Two-Column Cash Book</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
                 .month-page { padding: 4px 0 10px 0; }
                 .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
                 .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
@@ -2265,15 +2304,15 @@
     }
 
     // ============================================================
-    //  RENDER TABLE & STATS (Now with Total Credit & Total Debit)
+    //  RENDER TABLE & STATS (Fixed & Dynamic Balance Handling)
     // ============================================================
-    function renderTable(data) {
+    function renderTable(data, isFiltered) {
         currentFilteredData = data || [];
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
 
         if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:35px; color:#888;">📭 No matching transactions found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:35px; color:#888;">📭 कोणतीही नोंद सापडली नाही.</td></tr>';
             return;
         }
 
@@ -2288,21 +2327,20 @@
                 voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
             }
 
-            const mode = item.paymentMode || 'bank';
+            const isContra = (item.paymentMode || '').startsWith('contra');
             let modeHtml = '<span class="mode-badge mode-bank">🏦 Bank</span>';
-            if (mode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
-            else if (mode === 'contra') modeHtml = '<span class="mode-badge mode-contra">🔄 Contra</span>';
+            if (item.paymentMode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
+            else if (isContra) modeHtml = `<span class="mode-badge mode-contra">${item.paymentMode === 'contra_b2c' ? '🔄 Contra (Bank→Cash)' : '🔄 Contra (Cash→Bank)'}</span>`;
 
             let creditAmountHtml = '-';
             if (item.cashIn > 0 || item.bankIn > 0) {
                 const crAmt = item.cashIn > 0 ? item.cashIn : item.bankIn;
-                const isContra = (mode === 'contra');
                 const waIcon = !isContra ? `<span class="wa-inline-icon" onclick="openWhatsAppModal('${item.id}')" title="Share via WhatsApp">💬</span>` : '';
                 creditAmountHtml = `<span style="color:#28a745; font-weight:600;">${formatIndianNum(crAmt)}</span>${waIcon}`;
             }
 
             let receiptBtns = '';
-            if (mode !== 'contra' && (item.cashIn > 0 || item.bankIn > 0)) {
+            if (!isContra && (item.cashIn > 0 || item.bankIn > 0)) {
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
                     <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
@@ -2310,7 +2348,7 @@
             }
 
             let voucherBtn = '';
-            if (mode !== 'contra' && (item.cashOut > 0 || item.bankOut > 0)) {
+            if (!isContra && (item.cashOut > 0 || item.bankOut > 0)) {
                 voucherBtn = `
                     <button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="खर्च व्हाउचर प्रिंट करा (Payment Voucher)">📑</button>
                 `;
@@ -2366,7 +2404,6 @@
         const bankBalance = totalBankIn - totalBankOut;
         const totalSansthaBal = cashBalance + bankBalance;
 
-        // Populate cards
         document.getElementById('statTotalBal').innerText = formatIndianNum(totalSansthaBal);
         document.getElementById('statTotalCredit').innerText = formatIndianNum(totalCredit);
         document.getElementById('statTotalDebit').innerText = formatIndianNum(totalDebit);
@@ -2394,12 +2431,12 @@
     }
 
     function filterByCreditOnly() {
-        document.getElementById('searchInput').value = '';
+        document.getElementById('filterFlowTypeSelect').value = 'credit';
         filterTable();
     }
 
     function filterByDebitOnly() {
-        document.getElementById('searchInput').value = '';
+        document.getElementById('filterFlowTypeSelect').value = 'debit';
         filterTable();
     }
 
@@ -2410,6 +2447,7 @@
         document.getElementById('filterModeSelect').value = 'all';
         document.getElementById('filterFYSelect').value = 'all';
         document.getElementById('filterVoucherTypeSelect').value = 'all';
+        document.getElementById('filterFlowTypeSelect').value = 'all';
         filterTable();
     }
 
@@ -2420,15 +2458,17 @@
         const modeFilter = document.getElementById('filterModeSelect').value;
         const fyFilter = document.getElementById('filterFYSelect').value;
         const voucherTypeFilter = document.getElementById('filterVoucherTypeSelect').value;
+        const flowTypeFilter = document.getElementById('filterFlowTypeSelect').value;
 
         const banner = document.getElementById('filterBanner');
         const bannerText = document.getElementById('filterBannerText');
         const resetTop = document.getElementById('resetFilterTopBtn');
 
-        let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || (voucherTypeFilter !== 'all') || query || fromDate || toDate;
+        let isFiltered = (modeFilter !== 'all') || (fyFilter !== 'all') || (voucherTypeFilter !== 'all') || (flowTypeFilter !== 'all') || query || fromDate || toDate;
 
         if (isFiltered) {
             let filterDesc = [];
+            if (flowTypeFilter !== 'all') filterDesc.push(`प्रकार: ${flowTypeFilter === 'credit' ? 'जमा (Credit)' : 'खर्च (Debit)'}`);
             if (voucherTypeFilter !== 'all') filterDesc.push(`व्हाउचर: ${voucherTypeFilter}`);
             if (fyFilter !== 'all') filterDesc.push(`आर्थिक वर्ष: FY ${fyFilter}`);
             if (modeFilter !== 'all') filterDesc.push(`Mode: ${modeFilter.toUpperCase()}`);
@@ -2445,8 +2485,14 @@
         }
 
         let filtered = (transactionsData || []).filter(t => {
+            if (flowTypeFilter === 'credit' && !(t.cashIn > 0 || t.bankIn > 0)) return false;
+            if (flowTypeFilter === 'debit' && !(t.cashOut > 0 || t.bankOut > 0)) return false;
+
             if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
-            if (modeFilter !== 'all' && t.paymentMode !== modeFilter) return false;
+            if (modeFilter !== 'all') {
+                if (modeFilter === 'contra' && !t.paymentMode.startsWith('contra')) return false;
+                if (modeFilter !== 'contra' && t.paymentMode !== modeFilter) return false;
+            }
 
             if (voucherTypeFilter !== 'all') {
                 const v = (t.voucher || '').trim();
@@ -2470,17 +2516,17 @@
             return true;
         });
 
-        renderTable(filtered);
+        renderTable(filtered, isFiltered);
         updateStats(transactionsData, filtered, isFiltered);
     }
 
     // ============================================================
-    //  🖨️ PRINT FILTERED TRANSACTIONS (Direct from Table)
+    //  🖨️ PRINT FILTERED TRANSACTIONS
     // ============================================================
     function printFilteredTransactionsTable() {
         const dataToPrint = currentFilteredData || [];
         if (dataToPrint.length === 0) {
-            alert('प्रिंट करण्यासाठी कोणत्याही नोंदी सापडल्या नाहीत.');
+            alert('प्रिंट करण्यासाठी कोणतीही नोंद सापडली नाही.');
             return;
         }
 
@@ -2496,7 +2542,7 @@
             totalBankIn += (item.bankIn || 0);
             totalBankOut += (item.bankOut || 0);
 
-            const mLabel = (item.paymentMode || 'bank').toUpperCase();
+            const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
 
             rowsHtml += `
             <tr>
@@ -2518,7 +2564,6 @@
 
         const totalCredit = totalCashIn + totalBankIn;
         const totalDebit = totalCashOut + totalBankOut;
-        const netDifference = totalCredit - totalDebit;
 
         const printHtml = `
         <!DOCTYPE html>
@@ -2528,8 +2573,8 @@
             <title>Filtered Report - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
                 .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
                 .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
                 .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
@@ -2622,7 +2667,7 @@
     }
 
     // ============================================================
-    //  WHATSAPP POPUP MODAL (LIKE SCREENSHOT 2)
+    //  WHATSAPP POPUP MODAL
     // ============================================================
     let currentWhatsAppText = '';
 
@@ -2675,7 +2720,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  🧾 SINGLE RECEIPT PRINT (WITH AMOUNT IN WORDS)
+    //  🧾 SINGLE RECEIPT PRINT
     // ============================================================
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -2693,7 +2738,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             <title>पावती - ${escapeHTML(cleanReceiptNum)}</title>
             <style>
                 @page { size: A5 landscape; margin: 8mm; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 15px; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 15px; }
                 .receipt-box { border: 2px solid #0d2b44; border-radius: 12px; padding: 20px; position: relative; }
                 .header { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 10px; }
                 .header h1 { margin: 0; font-size: 20px; color: #0d2b44; }
@@ -2754,7 +2800,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  📑 EXPENSE / PAYMENT VOUCHER PRINT (FOR DEBIT)
+    //  📑 PAYMENT VOUCHER PRINT (FOR DEBIT)
     // ============================================================
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -2772,7 +2818,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             <title>खर्च व्हाउचर - ${escapeHTML(voucherNum)}</title>
             <style>
                 @page { size: A5 landscape; margin: 8mm; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 15px; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 15px; }
                 .voucher-box { border: 2px solid #800020; border-radius: 12px; padding: 20px; position: relative; }
                 .header { text-align: center; border-bottom: 2px solid #800020; padding-bottom: 10px; }
                 .header h1 { margin: 0; font-size: 20px; color: #800020; }
@@ -2834,7 +2881,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  📑 FINANCIAL YEAR-WISE PDF GENERATION (1-CLICK FY REPORT)
+    //  📑 FINANCIAL YEAR-WISE PDF GENERATION
     // ============================================================
     function generateSelectedFY_PDF() {
         if (currentRole !== 'admin') return;
@@ -2865,8 +2912,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             <title>${customTitle} - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
                 .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
                 .month-page:last-child { page-break-after: avoid; break-after: avoid; }
                 .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
@@ -2908,7 +2955,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                 </tr>`;
             } else {
                 mData.items.forEach((item, index) => {
-                    const mLabel = (item.paymentMode || 'bank').toUpperCase();
+                    const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
                     rowsHtml += `
                     <tr>
                         <td style="text-align:center; width:25px;">${index + 1}</td>
@@ -3008,7 +3055,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  🖨️ CONTINUOUS ANNUAL / DEBIT PDF GENERATION
+    //  🖨️ ANNUAL / DEBIT PDF GENERATION
     // ============================================================
     function generateTwoColumnPDF(type = 'all') {
         if (currentRole !== 'admin') return;
@@ -3029,8 +3076,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             <title>${reportTitle} - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; }
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
                 .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
                 .month-page:last-child { page-break-after: avoid; break-after: avoid; }
                 .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
@@ -3065,7 +3112,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             let monthTotalDebit = 0;
 
             if (isDebitOnly) {
-                const pureExpenses = (mData.items || []).filter(t => t.paymentMode !== 'contra' && (t.debit > 0 || (t.paymentMode === 'cash' && t.cashOut > 0) || (t.paymentMode === 'bank' && t.bankOut > 0)));
+                const pureExpenses = (mData.items || []).filter(t => !t.paymentMode.startsWith('contra') && (t.debit > 0 || (t.paymentMode === 'cash' && t.cashOut > 0) || (t.paymentMode === 'bank' && t.bankOut > 0)));
 
                 if (pureExpenses.length === 0) {
                     rowsHtml = `
@@ -3078,7 +3125,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                     pureExpenses.forEach((item, index) => {
                         const amt = item.debit > 0 ? item.debit : (item.cashOut > 0 ? item.cashOut : item.bankOut);
                         monthTotalDebit += amt;
-                        const mLabel = (item.paymentMode || 'bank').toUpperCase();
+                        const mLabel = item.paymentMode.toUpperCase();
 
                         rowsHtml += `
                         <tr>
@@ -3153,7 +3200,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                     </tr>`;
                 } else {
                     mData.items.forEach((item, index) => {
-                        const mLabel = (item.paymentMode || 'bank').toUpperCase();
+                        const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
                         rowsHtml += `
                         <tr>
                             <td style="text-align:center; width:25px;">${index + 1}</td>
@@ -3268,7 +3315,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         const name = document.getElementById('newName').value.trim();
         const desc = document.getElementById('newDesc').value.trim();
         const amount = parseFloat(document.getElementById('newAmount').value);
-        const type = document.getElementById('newType').value;
+        let type = document.getElementById('newType').value;
         const submitBtn = document.getElementById('addUpdateBtn');
         const statusText = document.getElementById('fileUploadStatus');
 
@@ -3277,8 +3324,13 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             return;
         }
 
-        // NEGATIVE CASH GUARD
-        if ((modeVal === 'cash' && type === 'debit') || modeVal === 'contra') {
+        // Automatic type setting for contra
+        if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c') {
+            type = 'credit'; // handled directly via engine logic
+        }
+
+        // Negative cash check (for current date cash outflow)
+        if ((modeVal === 'cash' && type === 'debit') || modeVal === 'contra_c2b') {
             let currentAvailableCash = 0;
             transactionsData.forEach(t => {
                 if (editingId && t.id === editingId) return;
@@ -3286,10 +3338,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             });
 
             if (amount > currentAvailableCash) {
-                const confirmed = confirm(`⚠️ सावधान (Negative Cash Warning):\n\nहातातील चालू शिल्लक फक्त ${formatIndianNum(currentAvailableCash)} आहे, परंतु तुम्ही ${formatIndianNum(amount)} चा रोख खर्च / बँक डिपॉझिट टाकत आहात.\n\nऑडिटच्या नियमानुसार कॅश उणे (Negative) असू शकत नाही. तरीही ही नोंद पुढे चालू ठेवायची आहे का?`);
-                if (!confirmed) {
-                    return;
-                }
+                const confirmed = confirm(`⚠️ सावधान (Negative Cash Warning):\n\nहातातील चालू शिल्लक फक्त ${formatIndianNum(currentAvailableCash)} आहे, परंतु तुम्ही ${formatIndianNum(amount)} चा रोख खर्च / बँक भरणा टाकत आहात.\n\nऑडिटच्या नियमानुसार कॅश उणे (Negative) असू शकत नाही. तरीही ही नोंद पुढे चालू ठेवायची आहे का?`);
+                if (!confirmed) return;
             }
         }
 
@@ -3383,6 +3433,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         
         document.getElementById('newVoucher').value = v;
         document.getElementById('newPaymentMode').value = item.paymentMode || 'bank';
+        handlePaymentModeChange();
+
         document.getElementById('newDocUrlInput').value = item.docUrl || '';
         document.getElementById('newDocFile').value = '';
         
@@ -3415,6 +3467,8 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         document.getElementById('newName').value = '';
         document.getElementById('newDesc').value = '';
         document.getElementById('newAmount').value = '';
+        document.getElementById('newPaymentMode').value = 'bank';
+        handlePaymentModeChange();
         handleVoucherTypeChange();
     }
 
@@ -3431,15 +3485,22 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
         }
     }
 
+    // Fixed: Chunk deletion for 500 limit safety
     async function clearAllData() {
         if (currentRole !== 'admin') return;
         if (!confirm('⚠️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
         
         try {
             const snapshot = await db.collection('transactions').get();
-            const batch = db.batch();
-            snapshot.docs.forEach((doc) => batch.delete(doc.ref));
-            await batch.commit();
+            const docs = snapshot.docs;
+            const chunkSize = 400; // Safe below 500 limit
+
+            for (let i = 0; i < docs.length; i += chunkSize) {
+                const batch = db.batch();
+                docs.slice(i, i + chunkSize).forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+            }
+
             cancelEdit();
             showToast('🗑️ All cloud data cleared!');
         } catch(err) {
@@ -3448,7 +3509,7 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
     }
 
     // ============================================================
-    //  CSV & BACKUP
+    //  CSV & BACKUP (Chunk-based restore for scale)
     // ============================================================
     function downloadTemplate() {
         if (currentRole !== 'admin') return;
@@ -3541,12 +3602,15 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
             }
 
             try {
-                const batch = db.batch();
-                toAdd.forEach(item => {
-                    const newDoc = db.collection('transactions').doc();
-                    batch.set(newDoc, item);
-                });
-                await batch.commit();
+                const chunkSize = 400;
+                for (let i = 0; i < toAdd.length; i += chunkSize) {
+                    const batch = db.batch();
+                    toAdd.slice(i, i + chunkSize).forEach(item => {
+                        const newDoc = db.collection('transactions').doc();
+                        batch.set(newDoc, item);
+                    });
+                    await batch.commit();
+                }
                 showToast(`✅ ${toAdd.length} नोंदी क्लाउडवर इम्पोर्ट झाल्या!`);
             } catch(err) {
                 alert('Import error: ' + err.message);
@@ -3582,22 +3646,25 @@ ${modeText}${descText}💰 *स्वीकारलेली रक्कम:* 
                 }
                 if (!confirm(`क्लाउडवर ${data.length} नोंदी रिस्टोअर करायच्या आहेत का?`)) return;
 
-                const batch = db.batch();
-                data.forEach(item => {
-                    const newDoc = db.collection('transactions').doc();
-                    batch.set(newDoc, {
-                        rawDate: item.rawDate || parseToIsoDate(item.date),
-                        date: item.date || formatDateToDisplay(item.rawDate),
-                        voucher: item.voucher || '',
-                        paymentMode: item.paymentMode || 'bank',
-                        docUrl: item.docUrl || '',
-                        name: item.name || '',
-                        description: item.description || '',
-                        credit: item.credit || 0,
-                        debit: item.debit || 0
+                const chunkSize = 400; // Batch limit protection
+                for (let i = 0; i < data.length; i += chunkSize) {
+                    const batch = db.batch();
+                    data.slice(i, i + chunkSize).forEach(item => {
+                        const newDoc = db.collection('transactions').doc();
+                        batch.set(newDoc, {
+                            rawDate: item.rawDate || parseToIsoDate(item.date),
+                            date: item.date || formatDateToDisplay(item.rawDate),
+                            voucher: item.voucher || '',
+                            paymentMode: item.paymentMode || 'bank',
+                            docUrl: item.docUrl || '',
+                            name: item.name || '',
+                            description: item.description || '',
+                            credit: item.credit || 0,
+                            debit: item.debit || 0
+                        });
                     });
-                });
-                await batch.commit();
+                    await batch.commit();
+                }
                 showToast(`✅ Restored ${data.length} entries successfully!`);
             } catch(err) {
                 alert('Restore error: ' + err.message);
