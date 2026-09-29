@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swami Gopal Tirtha Multipurpose Institution - Two-Column Cash Book</title>
+    <title>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था - Two-Column Cash Book</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -776,8 +776,8 @@
             <div class="header-left-brand">
                 <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/65x65/ffc107/0d2b44?text=LOGO'">
                 <div class="header-titles">
-                    <h2>Swami Gopal Tirtha Multipurpose Institution</h2>
-                    <p>Sriram Nagar Bhadravati | Two-Column Cash Book</p>
+                    <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
+                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
                     <span class="reg">📜 Registration No.: F-0016068(CDP)</span>
                 </div>
             </div>
@@ -2410,7 +2410,7 @@
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>${customTitle} - Swami Gopal Tirth Sanstha</title>
+            <title>${customTitle} - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
@@ -2616,7 +2616,7 @@
     }
 
     // ============================================================
-    //  BULK RECEIPTS & VOUCHERS PRINT (NEW FEATURE)
+    //  BULK RECEIPTS & VOUCHERS PRINT
     // ============================================================
     function generateBulkReceiptsPDF() {
         if (currentRole !== 'admin') return;
@@ -2645,7 +2645,7 @@
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>सर्व पावती व व्हाउचर एकत्रित प्रिंट - Swami Gopal Tirth</title>
+            <title>सर्व पावती व व्हाउचर एकत्रित प्रिंट - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
             <style>
                 @page { size: A5 landscape; margin: 4mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
@@ -2687,7 +2687,6 @@
             const voucherNum = item.voucher || '-';
 
             if (isCredit && !isContra) {
-                // पावती (Receipt)
                 let receiptTitleText = 'देणगी पावती (Donation Receipt)';
                 if (/^A\/VSN/i.test(voucherNum)) {
                     receiptTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
@@ -2738,7 +2737,6 @@
                     </div>
                 </div>`;
             } else {
-                // खर्च किंवा कॉन्ट्रा व्हाउचर (Voucher)
                 let voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
                 if (isContra || /contra/i.test(voucherNum) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
                     voucherTitleText = 'Cash to Bank / Contra Transfer (बँक व रोख अंतर्गत हस्तांतरण)';
@@ -2997,7 +2995,7 @@
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>सर्व व्यवहार नोंदवही - Swami Gopal Tirth Multipurpose Institution</title>
+            <title>सर्व व्यवहार नोंदवही - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
@@ -3884,7 +3882,7 @@
         if (/^A\/VSN/i.test(voucherStr)) {
             waTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
         } else if (/^PN/i.test(voucherStr)) {
-            waTitleText = 'अधिकृत देणगी पावती (Donation Receipt)';
+            waTitleText = 'देणगी पावती (Donation Receipt)';
         }
 
         currentWhatsAppText = 
