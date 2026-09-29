@@ -45,7 +45,6 @@
             max-width: 520px;
             width: 100%;
             overflow: hidden;
-            text-align: center;
             animation: fadeIn 0.4s ease-in-out;
         }
         .front-banner-img {
@@ -1059,6 +1058,38 @@
                     </div>
                 </div>
 
+                <!-- 📁 BANK ACCOUNT STATEMENTS SEARCH & VIEWER SECTION (ADDED IN TAB 3) -->
+                <div class="card mt-4 p-3 shadow-sm" style="background: #fdfdfd; border-radius: 8px; margin-top: 20px; border: 1.5px dashed #2a7de1;">
+                    <h5 style="color: #0d2b44; font-weight: bold; font-size: 1.1rem; margin-bottom: 6px;">📁 Bank Account Statements Search (बँक स्टेटमेंट सर्च)</h5>
+                    <p class="text-muted" style="font-size: 12.5px; color: #555; margin-bottom: 12px;">Google Drive वरील 2023 पासूनच्या सर्व बँक स्टेटमेंट PDF फाईल्स इथे सर्च करून पाहू शकता.</p>
+                    
+                    <div class="row align-items-center mb-3" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                        <div style="flex: 1; min-width: 240px;">
+                            <input type="text" id="statementSearch" class="form-control" placeholder="महिना किंवा वर्ष टाइप करा (उदा. September 2026, 2023)..." onkeyup="filterStatements()" style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-sm" onclick="loadStatements()" style="padding: 8px 14px;">🔄 Refresh / Load PDFs</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+                        <table style="font-size: 13px; min-width: 100%;">
+                            <thead class="table-dark" style="background: #0d2b44; color: white;">
+                                <tr>
+                                    <th style="padding: 8px; text-align: left;">महिना / वर्ष (Folder)</th>
+                                    <th style="padding: 8px; text-align: left;">फाइलचे नाव (Statement Name)</th>
+                                    <th style="padding: 8px; text-align: center; width: 120px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="statementsTableBody">
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted" style="text-align: center; padding: 20px; color: #777;">Statements लोड करण्यासाठी "Refresh / Load PDFs" बटनवर क्लिक करा.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div id="monthlyViewerBox" class="monthly-viewer-box">
                     <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 10px; margin-bottom: 12px;">
                         <div>
@@ -1353,6 +1384,59 @@
     let monthlyContinuousMap = {};
     let currentRole = 'none';
     let currentWhatsAppText = '';
+
+    // ============================================================
+    //  BANK STATEMENTS API INTEGRATION (NEW ADDED FUNCTIONS)
+    // ============================================================
+    const WEB_APP_URL = "YAA_THIKANI_TUMCHI_GOOGLE_APPS_SCRIPT_CHI_URL_TAKA";
+    let allStatementsData = [];
+
+    function loadStatements() {
+        const tbody = document.getElementById("statementsTableBody");
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center" style="text-align:center; padding:20px;">Loading statements from Google Drive...</td></tr>`;
+
+        fetch(WEB_APP_URL)
+            .then(response => response.json())
+            .then(data => {
+                allStatementsData = data;
+                displayStatements(allStatementsData);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger" style="text-align:center; padding:20px; color:#dc3545;">Data load honyat adchan aali. Kripya URL tapse.</td></tr>`;
+            });
+    }
+
+    function displayStatements(statements) {
+        const tbody = document.getElementById("statementsTableBody");
+        tbody.innerHTML = "";
+
+        if (!statements || statements.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted" style="text-align:center; padding:20px; color:#777;">Kontehi statements sapadle nahit.</td></tr>`;
+            return;
+        }
+
+        statements.forEach(item => {
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="padding: 8px;"><strong>${escapeHTML(item.monthFolder)}</strong></td>
+                <td style="padding: 8px;">${escapeHTML(item.name)}</td>
+                <td style="padding: 8px; text-align: center;">
+                    <a href="${escapeHTML(item.url)}" target="_blank" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️ View PDF</a>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterStatements() {
+        let query = (document.getElementById("statementSearch").value || "").toLowerCase().trim();
+        let filtered = allStatementsData.filter(item => 
+            item.name.toLowerCase().includes(query) || 
+            item.monthFolder.toLowerCase().includes(query)
+        );
+        displayStatements(filtered);
+    }
 
     const monthNamesMarathi = [
         "जानेवारी (January)", "फेब्रुवारी (February)", "मार्च (March)", "एप्रिल (April)",
