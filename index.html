@@ -559,6 +559,7 @@
             cursor: pointer;
             vertical-align: middle;
         }
+        .wa-inline-icon:hover { transform: scale(1.15); }
 
         .search-controls {
             display: flex;
@@ -640,7 +641,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.65);
-            z-index: 1000;
+            z-index: 10000;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(3px);
@@ -921,7 +922,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: ALL RECORDS -->
+        <!-- TAB 2: ALL RECORDS (BULLETPROOF ACTIONS & WHATSAPP) -->
         <div id="tabPanelRecords" class="tab-panel-section">
             <div class="card">
                 <div class="flex-between">
@@ -1006,7 +1007,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: CASH BOOK (LEDGER & OPTION 1 UNIFIED TOOLBAR) -->
+        <!-- TAB 3: CASH BOOK (LEDGER & UNIFIED TOOLBAR) -->
         <div id="tabPanelLedger" class="tab-panel-section">
             <div class="card" style="border: 1.5px solid #2a7de1;">
                 <div>
@@ -1014,7 +1015,6 @@
                     <p style="font-size:12px; color:#666;">विशिष्ट महिना स्क्रीनवर पाहण्यासाठी किंवा संपूर्ण अहवाल डाऊनलोड करण्यासाठी खालील टूलबार वापरा.</p>
                 </div>
 
-                <!-- OPTION 1: UNIFIED TOOLBAR WITH DIVIDER -->
                 <div class="unified-ledger-toolbar">
                     <div class="toolbar-group">
                         <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
@@ -1444,9 +1444,6 @@
         }
     }
 
-    // ============================================================
-    //  PASSWORD MANAGEMENT
-    // ============================================================
     function openChangePasswordModal() {
         document.getElementById('oldAdminPasswordInput').value = '';
         document.getElementById('newAdminPasswordInput').value = '';
@@ -1643,6 +1640,59 @@
         if (other !== '') lastThree = ',' + lastThree;
         let formatted = other.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
         return (isNegative ? '- ' : '') + '₹ ' + formatted + '.' + decPart;
+    }
+
+    function numberToMarathiWords(n) {
+        n = parseFloat(n);
+        if (isNaN(n) || n === 0) return 'शून्य रुपये फक्त';
+
+        const ones = ['', 'एक', 'दोन', 'तीन', 'चार', 'पाच', 'सहा', 'सात', 'आठ', 'नऊ', 'दहा',
+            'अकरा', 'बारा', 'तेरा', 'चौदा', 'पंधरा', 'सोळा', 'सतरा', 'अठरा', 'एकोणीस', 'वीस',
+            'एकवीस', 'बावीस', 'तेवीस', 'चोवीस', 'पंचवीस', 'सव्वीस', 'सत्तावीस', 'अठ्ठावीस', 'एकोणतीस', 'तीस',
+            'एकतीस', 'बत्तीस', 'तेहतीस', 'चौतीस', 'पस्तीस', 'छत्तीस', 'सदतीस', 'अडतीस', 'एकोणचाळीस', 'चाळीस',
+            'एक्केचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास', 'पन्नास',
+            'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ', 'साठ',
+            'एकसष्ठ', 'बासष्ठ', 'त्रेसष्ठ', 'चौसष्ठ', 'पासष्ठ', 'सहासष्ठ', 'सदुसष्ठ', 'अडुसष्ठ', 'एकोणसत्तर', 'सत्तर',
+            'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौऱ्याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी', 'ऐंशी',
+            'एक्याऐंशी', 'ब्याऐंशी', 'त्र्याऐंशी', 'चौऱ्याऐंशी', 'पंच्याऐंशी', 'शहाऐंशी', 'सत्त्याऐंशी', 'अठ्ठ्याऐंशी', 'एकोणनव्वद', 'नव्वद',
+            'एक्याण्णव', 'ब्याण्णव', 'त्र्याण्णव', 'चौऱ्याण्णव', 'पंच्याण्णव', 'शहाण्णव', 'सत्त्याण्णव', 'अठ्ठ्याण्णव', 'नव्व्याण्णव'
+        ];
+
+        function convertBelowThousand(num) {
+            let str = '';
+            if (num >= 100) {
+                let h = Math.floor(num / 100);
+                str += (h === 1 ? 'एकशे ' : ones[h] + ' शे ');
+                num %= 100;
+            }
+            if (num > 0) {
+                str += ones[num] + ' ';
+            }
+            return str.trim();
+        }
+
+        let intPart = Math.floor(n);
+        let decPart = Math.round((n - intPart) * 100);
+
+        let crore = Math.floor(intPart / 10000000);
+        intPart %= 10000000;
+        let lakh = Math.floor(intPart / 100000);
+        intPart %= 100000;
+        let thousand = Math.floor(intPart / 1000);
+        intPart %= 1000;
+        let remainder = intPart;
+
+        let res = '';
+        if (crore > 0) res += convertBelowThousand(crore) + ' कोटी ';
+        if (lakh > 0) res += convertBelowThousand(lakh) + ' लाख ';
+        if (thousand > 0) res += convertBelowThousand(thousand) + ' हजार ';
+        if (remainder > 0) res += convertBelowThousand(remainder) + ' ';
+
+        res = res.trim() + ' रुपये';
+        if (decPart > 0) {
+            res += ' आणि ' + convertBelowThousand(decPart) + ' पैसे';
+        }
+        return res.trim() + ' फक्त';
     }
 
     function formatDateToDisplay(isoDateStr) {
@@ -1846,765 +1896,8 @@
     }
 
     // ============================================================
-    //  TWO-COLUMN ENGINE & MONTH MAP
+    //  RENDER TABLE (WITH SAFE INDEX TRIGGERS FOR ACTIONS)
     // ============================================================
-    function calculateTwoColumnBalances(data) {
-        if (!data || !Array.isArray(data)) return [];
-        data.sort((a, b) => {
-            const dateA = a.rawDate || parseToIsoDate(a.date);
-            const dateB = b.rawDate || parseToIsoDate(b.date);
-            if (dateA !== dateB) return dateA.localeCompare(dateB);
-
-            const vA = (a.voucher || '').trim();
-            const vB = (b.voucher || '').trim();
-            if (vA && vB) {
-                return vA.localeCompare(vB, undefined, { numeric: true, sensitivity: 'base' });
-            }
-            return (a.id || '').localeCompare(b.id || '');
-        });
-
-        let runningCashBal = 0;
-        let runningBankBal = 0;
-
-        data.forEach(item => {
-            item.rawDate = item.rawDate || parseToIsoDate(item.date);
-            item.date = item.date || formatDateToDisplay(item.rawDate);
-            item.fy = item.fy || getFinancialYear(item.rawDate);
-            item.paymentMode = inferPaymentMode(item);
-
-            const cr = parseIndianNum(item.credit);
-            const dr = parseIndianNum(item.debit);
-
-            let cashIn = 0, cashOut = 0;
-            let bankIn = 0, bankOut = 0;
-
-            if (item.paymentMode === 'cash') {
-                cashIn = cr;
-                cashOut = dr;
-            } else if (item.paymentMode === 'bank') {
-                bankIn = cr;
-                bankOut = dr;
-            } else if (item.paymentMode === 'contra_c2b' || item.paymentMode === 'contra') {
-                const amt = cr > 0 ? cr : dr;
-                cashOut = amt;
-                bankIn = amt;
-                item.paymentMode = 'contra_c2b';
-            } else if (item.paymentMode === 'contra_b2c') {
-                const amt = cr > 0 ? cr : dr;
-                cashIn = amt;
-                bankOut = amt;
-            }
-
-            item.cashIn = cashIn;
-            item.cashOut = cashOut;
-            item.bankIn = bankIn;
-            item.bankOut = bankOut;
-
-            runningCashBal += (cashIn - cashOut);
-            runningBankBal += (bankIn - bankOut);
-
-            item.cashBal = runningCashBal;
-            item.bankBal = runningBankBal;
-            item.totalBal = runningCashBal + runningBankBal;
-        });
-
-        buildContinuousMonthlyMap(data);
-        return data;
-    }
-
-    function buildContinuousMonthlyMap(sortedData) {
-        monthlyContinuousMap = {};
-        if (!sortedData || sortedData.length === 0) return;
-
-        const firstDateStr = sortedData[0].rawDate;
-        const lastDateStr = sortedData[sortedData.length - 1].rawDate;
-
-        const [startYear, startMonth] = firstDateStr.split('-').map(Number);
-        const [endYear, endMonth] = lastDateStr.split('-').map(Number);
-
-        const rawGroups = {};
-        sortedData.forEach(item => {
-            const key = item.rawDate.slice(0, 7);
-            if (!rawGroups[key]) rawGroups[key] = [];
-            rawGroups[key].push(item);
-        });
-
-        let curY = startYear;
-        let curM = startMonth;
-        let carryCash = 0;
-        let carryBank = 0;
-
-        const dropdown = document.getElementById('screenMonthSelect');
-        const selectedPrevValue = dropdown ? dropdown.value : '';
-        if (dropdown) dropdown.innerHTML = '';
-        let latestMonthKey = '';
-
-        if (dropdown) {
-            const allOpt = document.createElement('option');
-            allOpt.value = 'all';
-            allOpt.textContent = '🌟 सर्व महिने (All Months / संपूर्ण)';
-            dropdown.appendChild(allOpt);
-        }
-
-        while (curY < endYear || (curY === endYear && curM <= endMonth)) {
-            const mKey = `${curY}-${String(curM).padStart(2, '0')}`;
-            latestMonthKey = mKey;
-            const mLabel = `${monthNamesMarathi[curM - 1]} ${curY}`;
-
-            const openCash = carryCash;
-            const openBank = carryBank;
-            const items = rawGroups[mKey] || [];
-
-            let mCashIn = 0, mCashOut = 0;
-            let mBankIn = 0, mBankOut = 0;
-
-            items.forEach(it => {
-                mCashIn += it.cashIn;
-                mCashOut += it.cashOut;
-                mBankIn += it.bankIn;
-                mBankOut += it.bankOut;
-                carryCash = it.cashBal;
-                carryBank = it.bankBal;
-            });
-
-            const closeCash = openCash + mCashIn - mCashOut;
-            const closeBank = openBank + mBankIn - mBankOut;
-
-            monthlyContinuousMap[mKey] = {
-                key: mKey,
-                label: mLabel,
-                items: items,
-                openCash: openCash,
-                openBank: openBank,
-                openTotal: openCash + openBank,
-                cashIn: mCashIn,
-                cashOut: mCashOut,
-                bankIn: mBankIn,
-                bankOut: mBankOut,
-                closeCash: closeCash,
-                closeBank: closeBank,
-                closeTotal: closeCash + closeBank,
-                isNil: (items.length === 0)
-            };
-
-            if (dropdown) {
-                const opt = document.createElement('option');
-                opt.value = mKey;
-                opt.textContent = `${mLabel} ${items.length === 0 ? '(NIL)' : `(${items.length} नोंदी)`}`;
-                dropdown.appendChild(opt);
-            }
-
-            curM++;
-            if (curM > 12) {
-                curM = 1;
-                curY++;
-            }
-        }
-
-        if (dropdown) {
-            if (selectedPrevValue && (selectedPrevValue === 'all' || monthlyContinuousMap[selectedPrevValue])) {
-                dropdown.value = selectedPrevValue;
-            } else if (latestMonthKey) {
-                dropdown.value = latestMonthKey;
-            }
-        }
-    }
-
-    function initRealtimeSync() {
-        const badge = document.getElementById('dbStatusBadge');
-        if (db) {
-            db.collection('transactions').onSnapshot((snapshot) => {
-                badge.innerHTML = '🟢 Cloud Live (Synced)';
-                badge.style.background = '#28a745';
-
-                let list = [];
-                snapshot.forEach(doc => {
-                    list.push({ id: doc.id, ...doc.data() });
-                });
-                transactionsData = calculateTwoColumnBalances(list);
-                updateDonorNamesDatalist();
-
-                const currentVoucherInput = document.getElementById('newVoucher');
-                if (!currentVoucherInput.value) {
-                    handleVoucherTypeChange();
-                }
-
-                filterTable();
-            }, (error) => {
-                console.error("Firestore listen error: ", error);
-                badge.innerHTML = '⚠️ Cloud Error';
-                badge.style.background = '#dc3545';
-            });
-        }
-    }
-
-    function checkBackupReminder() {
-        if (currentRole !== 'admin') return;
-        const lastBackupTime = localStorage.getItem('sgtb_last_backup_time');
-        const now = Date.now();
-        const thirtyDays = 30 * 24 * 60 * 60 * 1000;
-
-        if (!lastBackupTime || (now - parseInt(lastBackupTime, 10)) > thirtyDays) {
-            const bar = document.getElementById('backupReminderBar');
-            if (bar) bar.style.display = 'flex';
-        }
-    }
-
-    function dismissBackupReminder() {
-        localStorage.setItem('sgtb_last_backup_time', Date.now().toString());
-        const bar = document.getElementById('backupReminderBar');
-        if (bar) bar.style.display = 'none';
-    }
-
-    // ============================================================
-    //  ROBUST & RELIABLE MONTH-WISE SCREEN VIEWER (FIXED)
-    // ============================================================
-    function viewSelectedMonthOnScreen() {
-        const selectElem = document.getElementById('screenMonthSelect');
-        const selectedVal = selectElem ? selectElem.value : 'all';
-        const box = document.getElementById('monthlyViewerBox');
-        const title = document.getElementById('mViewerTitle');
-        const sub = document.getElementById('mViewerSub');
-        const tbody = document.getElementById('mViewerTableBody');
-        const closeBtn = document.getElementById('closeMonthlyViewBtn');
-
-        if (!transactionsData || transactionsData.length === 0) {
-            alert('कोणताही डेटा उपलब्ध नाही.');
-            return;
-        }
-
-        // Ensure calculations are up-to-date
-        if (Object.keys(monthlyContinuousMap).length === 0) {
-            calculateTwoColumnBalances(transactionsData);
-        }
-
-        if (selectedVal === 'all') {
-            title.innerHTML = `📅 संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)`;
-            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | सर्व महिन्यांचा अखंड ताळेबंद`;
-
-            let grandCashIn = 0, grandCashOut = 0;
-            let grandBankIn = 0, grandBankOut = 0;
-
-            transactionsData.forEach(t => {
-                grandCashIn += (t.cashIn || 0);
-                grandCashOut += (t.cashOut || 0);
-                grandBankIn += (t.bankIn || 0);
-                grandBankOut += (t.bankOut || 0);
-            });
-
-            const finalCash = grandCashIn - grandCashOut;
-            const finalBank = grandBankIn - grandBankOut;
-
-            document.getElementById('mViewOpenCash').textContent = '₹ 0.00';
-            document.getElementById('mViewOpenBank').textContent = '₹ 0.00';
-            document.getElementById('mViewOpenTotal').textContent = '₹ 0.00';
-
-            document.getElementById('mViewSumCashIn').textContent = formatIndianNum(grandCashIn);
-            document.getElementById('mViewSumCashOut').textContent = formatIndianNum(grandCashOut);
-            document.getElementById('mViewSumBankIn').textContent = formatIndianNum(grandBankIn);
-            document.getElementById('mViewSumBankOut').textContent = formatIndianNum(grandBankOut);
-
-            document.getElementById('mViewCloseCash').textContent = formatIndianNum(finalCash);
-            document.getElementById('mViewCloseBank').textContent = formatIndianNum(finalBank);
-            document.getElementById('mViewCloseTotal').textContent = formatIndianNum(finalCash + finalBank);
-
-            tbody.innerHTML = '';
-            transactionsData.forEach((item, idx) => {
-                const tr = document.createElement('tr');
-                const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
-
-                tr.innerHTML = `
-                    <td style="text-align:center;">${idx + 1}</td>
-                    <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
-                    <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode && item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                    <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                    <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                    <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                    <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                    <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-        } else {
-            const mData = monthlyContinuousMap[selectedVal];
-            if (!mData) {
-                alert('या महिन्याची माहिती उपलब्ध नाही.');
-                return;
-            }
-
-            title.innerHTML = `📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '<span style="color:#dc3545;">(NIL - व्यवहार नाही)</span>' : ''}`;
-            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | नोंदवही पान`;
-
-            document.getElementById('mViewOpenCash').textContent = formatIndianNum(mData.openCash);
-            document.getElementById('mViewOpenBank').textContent = formatIndianNum(mData.openBank);
-            document.getElementById('mViewOpenTotal').textContent = formatIndianNum(mData.openTotal);
-
-            document.getElementById('mViewSumCashIn').textContent = formatIndianNum(mData.cashIn);
-            document.getElementById('mViewSumCashOut').textContent = formatIndianNum(mData.cashOut);
-            document.getElementById('mViewSumBankIn').textContent = formatIndianNum(mData.bankIn);
-            document.getElementById('mViewSumBankOut').textContent = formatIndianNum(mData.bankOut);
-
-            document.getElementById('mViewCloseCash').textContent = formatIndianNum(mData.closeCash);
-            document.getElementById('mViewCloseBank').textContent = formatIndianNum(mData.closeBank);
-            document.getElementById('mViewCloseTotal').textContent = formatIndianNum(mData.closeTotal);
-
-            tbody.innerHTML = '';
-
-            if (mData.isNil || mData.items.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                        </td>
-                    </tr>
-                `;
-            } else {
-                mData.items.forEach((item, idx) => {
-                    const tr = document.createElement('tr');
-                    const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
-
-                    tr.innerHTML = `
-                        <td style="text-align:center;">${idx + 1}</td>
-                        <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
-                        <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                        <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode && item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
-                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                        <td>${escapeHTML(item.description || '-')}</td>
-                        <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                        <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                        <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                        <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                        <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                        <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-        }
-
-        // Open viewer safely
-        box.style.display = 'block';
-        if (closeBtn) closeBtn.style.display = 'inline-block';
-        setTimeout(() => {
-            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 50);
-    }
-
-    function closeMonthlyViewer() {
-        const box = document.getElementById('monthlyViewerBox');
-        const closeBtn = document.getElementById('closeMonthlyViewBtn');
-        if (box) box.style.display = 'none';
-        if (closeBtn) closeBtn.style.display = 'none';
-    }
-
-    // ============================================================
-    //  SMART UNIFIED PDF GENERATION (READS PERIOD DROPDOWN)
-    // ============================================================
-    function generateTwoColumnPDF(type = 'all') {
-        if (currentRole !== 'admin') return;
-        
-        const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
-        const allKeys = Object.keys(monthlyContinuousMap).sort();
-
-        if (allKeys.length === 0) {
-            alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
-            return;
-        }
-
-        let targetMonthKeys = [];
-        let periodHeading = '';
-
-        if (selectedPeriod === 'all') {
-            targetMonthKeys = allKeys;
-            periodHeading = 'सर्व अखंड नोंदी (सुरुवातीपासून आजपर्यंत)';
-        } else {
-            targetMonthKeys = allKeys.filter(mKey => {
-                const [y, m] = mKey.split('-').map(Number);
-                const itemFY = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
-                return itemFY === selectedPeriod;
-            });
-            periodHeading = `आर्थिक वर्ष FY ${selectedPeriod}`;
-        }
-
-        if (targetMonthKeys.length === 0) {
-            alert(`निवडलेल्या कालावधीसाठी (${selectedPeriod}) कोणत्याही नोंदी उपलब्ध नाहीत.`);
-            return;
-        }
-
-        const isDebitOnly = (type === 'debit');
-        const customTitle = isDebitOnly 
-            ? `📉 निव्वळ खर्च नोंदवही (${periodHeading})` 
-            : `📒 टू-कॉलम कॅश बुक (${periodHeading})`;
-
-        generateCustomMonthsPDF(targetMonthKeys, customTitle, isDebitOnly);
-    }
-
-    function generateCustomMonthsPDF(monthKeys, customTitle, isDebitOnly) {
-        let printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>${customTitle} - Swami Gopal Tirth Sanstha</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
-                .month-page:last-child { page-break-after: avoid; break-after: avoid; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-sub { background-color: #d9480f !important; }
-                th.bank-sub { background-color: #0b5ed7 !important; }
-                tr { page-break-inside: avoid; }
-                .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-        `;
-
-        monthKeys.forEach((mKey) => {
-            const mData = monthlyContinuousMap[mKey];
-            let rowsHtml = '';
-            let monthTotalDebit = 0;
-
-            if (isDebitOnly) {
-                const pureExpenses = (mData.items || []).filter(t => !t.paymentMode.startsWith('contra') && (t.debit > 0 || (t.paymentMode === 'cash' && t.cashOut > 0) || (t.paymentMode === 'bank' && t.bankOut > 0)));
-
-                if (pureExpenses.length === 0) {
-                    rowsHtml = `
-                    <tr>
-                        <td colspan="7" style="text-align:center; padding:25px; color:#666; font-size:11px; font-weight:bold; background:#fafafa;">
-                            ℹ️ या महिन्यात कोणताही खर्च झालेला नाही (NIL Expenses).
-                        </td>
-                    </tr>`;
-                } else {
-                    pureExpenses.forEach((item, index) => {
-                        const amt = item.debit > 0 ? item.debit : (item.cashOut > 0 ? item.cashOut : item.bankOut);
-                        monthTotalDebit += amt;
-                        const mLabel = item.paymentMode.toUpperCase();
-
-                        rowsHtml += `
-                        <tr>
-                            <td style="text-align:center; width:30px;">${index + 1}</td>
-                            <td style="white-space:nowrap; width:75px;">${escapeHTML(item.date)}</td>
-                            <td style="width:90px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                            <td style="width:65px; text-align:center; font-size:10px;">${mLabel}</td>
-                            <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                            <td>${escapeHTML(item.description || '-')}</td>
-                            <td class="text-right" style="width:110px; color:#dc3545; font-weight:700;">${formatIndianNum(amt)}</td>
-                        </tr>`;
-                    });
-                }
-
-                printHtml += `
-                <div class="month-page">
-                    <div class="org-title">
-                        <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                        <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
-                        <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                    </div>
-                    <div class="month-bar">
-                        <span>📅 महिना: <strong>${mData.label}</strong></span>
-                        <span>📉 चालू महिन्यातील एकूण खर्च नोंदी: <strong>${pureExpenses.length}</strong></span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width:30px;">#</th>
-                                <th style="width:75px;">📅 दिनांक</th>
-                                <th style="width:90px;">🔢 व्हाउचर क्र.</th>
-                                <th style="width:65px;">💳 प्रकार</th>
-                                <th>🧑‍💼 कोणास दिले</th>
-                                <th>📝 खर्चाचा तपशील</th>
-                                <th class="text-right" style="width:110px;">📉 खर्च (Debit ₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rowsHtml}</tbody>
-                    </table>
-                    <div class="bottom-section">
-                        <table class="summary-table">
-                            <tr>
-                                <td style="text-align:right; font-size:11px;">
-                                    महिना (${mData.label}) एकूण खर्च: 
-                                    <strong style="color:#dc3545; font-size:13px; margin-left:10px;">${formatIndianNum(monthTotalDebit)}</strong>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="signatures">
-                            <div class="sig-box">तयार करणार (Accountant)</div>
-                            <div class="sig-box">सचिव (Secretary)</div>
-                            <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                        </div>
-                    </div>
-                </div>`;
-            } else {
-                if (mData.isNil || mData.items.length === 0) {
-                    rowsHtml = `
-                    <tr>
-                        <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:11px; font-weight:bold; background:#fafafa;">
-                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                        </td>
-                    </tr>`;
-                } else {
-                    mData.items.forEach((item, index) => {
-                        const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-                        rowsHtml += `
-                        <tr>
-                            <td style="text-align:center; width:25px;">${index + 1}</td>
-                            <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                            <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                            <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
-                            <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                            <td>${escapeHTML(item.description || '-')}</td>
-                            <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                            <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                            <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                            <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                            <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                            <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                        </tr>`;
-                    });
-                }
-
-                printHtml += `
-                <div class="month-page">
-                    <div class="org-title">
-                        <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                        <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
-                        <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                    </div>
-                    <div class="month-bar">
-                        <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
-                        <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th rowspan="2" style="width:25px;">#</th>
-                                <th rowspan="2" style="width:65px;">दिनांक</th>
-                                <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
-                                <th rowspan="2" style="width:55px;">मोड</th>
-                                <th rowspan="2">नाव / तपशील</th>
-                                <th rowspan="2">खर्च / देणगी कारण</th>
-                                <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
-                                <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
-                                <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                            </tr>
-                            <tr>
-                                <th class="cash-sub">In (जमा)</th>
-                                <th class="cash-sub">Out (खर्च)</th>
-                                <th class="bank-sub">In (जमा)</th>
-                                <th class="bank-sub">Out (खर्च)</th>
-                                <th>Cash Bal</th>
-                                <th>Bank Bal</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rowsHtml}</tbody>
-                    </table>
-                    <div class="bottom-section">
-                        <table class="summary-table">
-                            <tr>
-                                <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
-                                <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
-                                <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
-                                <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
-                        </tr>
-                        <tr style="background:#eef4fb;">
-                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
-                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
-                        </tr>
-                        <tr style="background:#fff3cd; text-align:center;">
-                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
-                        </tr>
-                    </table>
-                    <div class="signatures">
-                        <div class="sig-box">तयार करणार (Accountant)</div>
-                        <div class="sig-box">सचिव (Secretary)</div>
-                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                    </div>
-                </div>
-            </div>`;
-            }
-        });
-
-        printHtml += `<script>window.onload = function() { window.print(); };<\/script></body></html>`;
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-            return;
-        }
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
-    }
-
-    function printCurrentScreenMonth() {
-        const selectedVal = document.getElementById('screenMonthSelect').value;
-        if (!transactionsData || transactionsData.length === 0) {
-            alert('प्रिंट करण्यासाठी कोणताही डेटा नाही.');
-            return;
-        }
-
-        if (selectedVal === 'all') {
-            generateTwoColumnPDF('all');
-        } else {
-            const mData = monthlyContinuousMap[selectedVal];
-            if (mData) {
-                printSingleMonthDocument(mData);
-            } else {
-                alert('निवडलेल्या महिन्याचा डेटा उपलब्ध नाही.');
-            }
-        }
-    }
-
-    function printSingleMonthDocument(mData) {
-        let rowsHtml = '';
-        if (mData.isNil || mData.items.length === 0) {
-            rowsHtml = `
-            <tr>
-                <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:12px; font-weight:bold; background:#fafafa;">
-                    ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                </td>
-            </tr>`;
-        } else {
-            mData.items.forEach((item, index) => {
-                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-                rowsHtml += `
-                <tr>
-                    <td style="text-align:center; width:25px;">${index + 1}</td>
-                    <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                    <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                    <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                    <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                    <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                </tr>`;
-            });
-        }
-
-        const printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>${mData.label} - Two-Column Cash Book</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { padding: 4px 0 10px 0; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-sub { background-color: #d9480f !important; }
-                th.bank-sub { background-color: #0b5ed7 !important; }
-                .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-            <div class="month-page">
-                <div class="org-title">
-                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
-                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                </div>
-                <div class="month-bar">
-                    <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
-                    <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width:25px;">#</th>
-                            <th rowspan="2" style="width:65px;">दिनांक</th>
-                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
-                            <th rowspan="2" style="width:55px;">मोड</th>
-                            <th rowspan="2">नाव / तपशील</th>
-                            <th rowspan="2">खर्च / देणगी कारण</th>
-                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
-                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
-                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                        </tr>
-                        <tr>
-                            <th class="cash-sub">In (जमा)</th>
-                            <th class="cash-sub">Out (खर्च)</th>
-                            <th class="bank-sub">In (जमा)</th>
-                            <th class="bank-sub">Out (खर्च)</th>
-                            <th>Cash Bal</th>
-                            <th>Bank Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-                <div class="bottom-section">
-                    <table class="summary-table">
-                        <tr>
-                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
-                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
-                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
-                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
-                        </tr>
-                        <tr style="background:#eef4fb;">
-                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
-                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
-                        </tr>
-                        <tr style="background:#fff3cd; text-align:center;">
-                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
-                        </tr>
-                    </table>
-                    <div class="signatures">
-                        <div class="sig-box">तयार करणार (Accountant)</div>
-                        <div class="sig-box">सचिव (Secretary)</div>
-                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                    </div>
-                </div>
-            </div>
-            <script>window.onload = function() { window.print(); };<\/script>
-        </body>
-        </html>`;
-
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-            return;
-        }
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
-    }
-
     function renderTable(data, isFiltered) {
         currentFilteredData = data || [];
         const tbody = document.getElementById('tableBody');
@@ -2634,22 +1927,22 @@
             let creditAmountHtml = '-';
             if (item.cashIn > 0 || item.bankIn > 0) {
                 const crAmt = item.cashIn > 0 ? item.cashIn : item.bankIn;
-                const waIcon = !isContra ? `<span class="wa-inline-icon" onclick="openWhatsAppModal('${item.id}')" title="Share via WhatsApp">💬</span>` : '';
+                const waIcon = !isContra ? `<span class="wa-inline-icon" data-idx="${index}" onclick="triggerWhatsAppByIndex(${index})" title="WhatsApp वर पाठवा">💬</span>` : '';
                 creditAmountHtml = `<span style="color:#28a745; font-weight:600;">${formatIndianNum(crAmt)}</span>${waIcon}`;
             }
 
             let receiptBtns = '';
             if (!isContra && (item.cashIn > 0 || item.bankIn > 0)) {
                 receiptBtns = `
-                    <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
-                    <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
+                    <button class="action-btn" onclick="triggerReceiptByIndex(${index})" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
+                    <button class="action-btn wa-btn" onclick="triggerWhatsAppByIndex(${index})" title="WhatsApp वर पाठवा">🟢</button>
                 `;
             }
 
             let voucherBtn = '';
             if (!isContra && (item.cashOut > 0 || item.bankOut > 0)) {
                 voucherBtn = `
-                    <button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="खर्च व्हाउचर प्रिंट करा">📑</button>
+                    <button class="action-btn voucher-btn" onclick="triggerVoucherByIndex(${index})" title="खर्च व्हाउचर प्रिंट करा">📑</button>
                 `;
             }
 
@@ -2673,12 +1966,45 @@
                 <td style="text-align:center; white-space:nowrap;" class="admin-item">
                     ${receiptBtns}
                     ${voucherBtn}
-                    <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
-                    <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
+                    <button class="action-btn edit-btn" onclick="triggerEditByIndex(${index})" title="Edit">✏️</button>
+                    <button class="action-btn del-btn" onclick="triggerDeleteByIndex(${index})" title="Delete">✖</button>
                 </td>
             `;
             tbody.appendChild(row);
         });
+    }
+
+    // ============================================================
+    //  INDEX-BASED SAFE ACTION DISPATCHERS
+    // ============================================================
+    function triggerWhatsAppByIndex(idx) {
+        const item = currentFilteredData[idx];
+        if (!item) return;
+        openWhatsAppModal(item.id);
+    }
+
+    function triggerReceiptByIndex(idx) {
+        const item = currentFilteredData[idx];
+        if (!item) return;
+        printSingleReceipt(item.id);
+    }
+
+    function triggerVoucherByIndex(idx) {
+        const item = currentFilteredData[idx];
+        if (!item) return;
+        printPaymentVoucher(item.id);
+    }
+
+    function triggerEditByIndex(idx) {
+        const item = currentFilteredData[idx];
+        if (!item) return;
+        editEntry(item.id);
+    }
+
+    function triggerDeleteByIndex(idx) {
+        const item = currentFilteredData[idx];
+        if (!item) return;
+        deleteEntry(item.id);
     }
 
     function updateStats(allData, filteredData, isFiltered) {
@@ -3147,9 +2473,68 @@
         event.target.value = '';
     }
 
-    function printSingleReceipt(id) {
+    // ============================================================
+    //  WHATSAPP POPUP & SCRIPT
+    // ============================================================
+    let currentWhatsAppText = '';
+
+    function openWhatsAppModal(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
+
+        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
+        const amountWords = numberToMarathiWords(receiptAmount);
+        const voucherText = cleanReceiptNum !== '-' ? `📜 *पावती क्र:* ${cleanReceiptNum}\n` : '';
+        const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
+        const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
+
+        currentWhatsAppText = 
+`🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
+श्रीराम नगर भद्रावती (Reg. No. F-0016068)
+----------------------------------------
+📜 *देणगी पावती (Donation Receipt)*
+----------------------------------------
+${voucherText}📅 *दिनांक:* ${item.date}
+🧑‍💼 *दात्याचे नाव:* ${item.name || '-'}
+${modeText}${descText}💰 *स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
+✍️ *अक्षरी:* ${amountWords}
+----------------------------------------
+आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
+
+        document.getElementById('waShareMessagePreview').value = currentWhatsAppText;
+        document.getElementById('whatsappShareModal').style.display = 'flex';
+    }
+
+    function closeWhatsAppModal() {
+        document.getElementById('whatsappShareModal').style.display = 'none';
+    }
+
+    function sendWhatsAppFromModal() {
+        const textToSend = document.getElementById('waShareMessagePreview').value;
+        const encoded = encodeURIComponent(textToSend);
+        window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+        closeWhatsAppModal();
+    }
+
+    function copyWhatsAppMessageFromModal() {
+        const textToCopy = document.getElementById('waShareMessagePreview').value;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast('📋 मेसेज कॉपी झाला!');
+        }).catch(err => {
+            alert('कॉपी करताना त्रुटी आली: ' + err.message);
+        });
+    }
+
+    // ============================================================
+    //  RECEIPT & PAYMENT VOUCHER PRINT ENGINES
+    // ============================================================
+    function printSingleReceipt(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) {
+            alert('पावती सापडली नाही.');
+            return;
+        }
 
         const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
         const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
@@ -3246,7 +2631,10 @@
 
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
-        if (!item) return;
+        if (!item) {
+            alert('व्हाउचर सापडले नाही.');
+            return;
+        }
 
         const voucherNum = item.voucher || '-';
         const expenseAmount = (item.cashOut > 0) ? item.cashOut : item.bankOut;
@@ -3341,52 +2729,140 @@
         printWin.document.close();
     }
 
-    function openWhatsAppModal(id) {
-        const item = (transactionsData || []).find(t => t.id === id);
-        if (!item) return;
+    function printFilteredTransactionsTable() {
+        const dataToPrint = currentFilteredData || [];
+        if (dataToPrint.length === 0) {
+            alert('प्रिंट करण्यासाठी कोणतीही नोंद सापडली नाही.');
+            return;
+        }
 
-        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
-        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
-        const amountWords = numberToMarathiWords(receiptAmount);
-        const voucherText = cleanReceiptNum !== '-' ? `📜 *पावती क्र:* ${cleanReceiptNum}\n` : '';
-        const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
-        const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
+        const bannerText = document.getElementById('filterBannerText').innerText || 'सर्व व्यवहार';
+        let totalCashIn = 0, totalCashOut = 0;
+        let totalBankIn = 0, totalBankOut = 0;
+        let rowsHtml = '';
 
-        currentWhatsAppText = 
-`🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
-श्रीराम नगर भद्रावती (Reg. No. F-0016068)
-----------------------------------------
-📜 *देणगी पावती (Donation Receipt)*
-----------------------------------------
-${voucherText}📅 *दिनांक:* ${item.date}
-🧑‍💼 *दात्याचे नाव:* ${item.name || '-'}
-${modeText}${descText}💰 *स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
-✍️ *अक्षरी:* ${amountWords}
-----------------------------------------
-आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
+        dataToPrint.forEach((item, index) => {
+            totalCashIn += (item.cashIn || 0);
+            totalCashOut += (item.cashOut || 0);
+            totalBankIn += (item.bankIn || 0);
+            totalBankOut += (item.bankOut || 0);
 
-        document.getElementById('waShareMessagePreview').value = currentWhatsAppText;
-        document.getElementById('whatsappShareModal').style.display = 'flex';
-    }
+            const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
 
-    function closeWhatsAppModal() {
-        document.getElementById('whatsappShareModal').style.display = 'none';
-    }
-
-    function sendWhatsAppFromModal() {
-        const textToSend = document.getElementById('waShareMessagePreview').value;
-        const encoded = encodeURIComponent(textToSend);
-        window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
-        closeWhatsAppModal();
-    }
-
-    function copyWhatsAppMessageFromModal() {
-        const textToCopy = document.getElementById('waShareMessagePreview').value;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            showToast('📋 मेसेज कॉपी झाला!');
-        }).catch(err => {
-            alert('कॉपी करताना त्रुटी आली: ' + err.message);
+            rowsHtml += `
+            <tr>
+                <td style="text-align:center; width:25px;">${index + 1}</td>
+                <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
+                <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
+                <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                <td>${escapeHTML(item.description || '-')}</td>
+                <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+            </tr>`;
         });
+
+        const totalCredit = totalCashIn + totalBankIn;
+        const totalDebit = totalCashOut + totalBankOut;
+
+        const printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Filtered Report - Swami Gopal Tirth Sanstha</title>
+            <style>
+                @page { size: A4 landscape; margin: 8mm; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
+                .filter-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
+                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
+                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
+                th.cash-sub { background-color: #d9480f !important; }
+                th.bank-sub { background-color: #0b5ed7 !important; }
+                tr { page-break-inside: avoid; }
+                .text-right { text-align: right; }
+                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
+                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
+                .summary-table td { padding: 5px 8px; font-weight: 600; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
+            </style>
+        </head>
+        <body>
+            <div class="org-title">
+                <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                <p>श्रीराम नगर भद्रावती | Two-Column Cash Book (फिल्टर अहवाल)</p>
+                <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
+            </div>
+            <div class="filter-bar">
+                <span>📋 ${escapeHTML(bannerText)}</span>
+                <span>एकूण नोंदी: <strong>${dataToPrint.length}</strong></span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width:25px;">#</th>
+                        <th rowspan="2" style="width:65px;">दिनांक</th>
+                        <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
+                        <th rowspan="2" style="width:55px;">मोड</th>
+                        <th rowspan="2">नाव / तपशील</th>
+                        <th rowspan="2">खर्च / देणगी कारण</th>
+                        <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
+                        <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
+                        <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
+                    </tr>
+                    <tr>
+                        <th class="cash-sub">In (जमा)</th>
+                        <th class="cash-sub">Out (खर्च)</th>
+                        <th class="bank-sub">In (जमा)</th>
+                        <th class="bank-sub">Out (खर्च)</th>
+                        <th>Cash Bal</th>
+                        <th>Bank Bal</th>
+                    </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+            </table>
+            <div class="bottom-section">
+                <table class="summary-table">
+                    <tr>
+                        <td>एकूण रोख जमा: <strong style="color:#28a745;">${formatIndianNum(totalCashIn)}</strong></td>
+                        <td>एकूण रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(totalCashOut)}</strong></td>
+                        <td>एकूण बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(totalBankIn)}</strong></td>
+                        <td>एकूण बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(totalBankOut)}</strong></td>
+                    </tr>
+                    <tr style="background:#f4fbf7;">
+                        <td colspan="2">📈 एकूण जमा: <strong>${formatIndianNum(totalCredit)}</strong></td>
+                        <td colspan="2">📉 एकूण खर्च: <strong>${formatIndianNum(totalDebit)}</strong></td>
+                    </tr>
+                </table>
+                <div class="signatures">
+                    <div class="sig-box">तयार करणार (Accountant)</div>
+                    <div class="sig-box">सचिव (Secretary)</div>
+                    <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); };<\/script>
+        </body>
+        </html>`;
+
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
+            return;
+        }
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
     }
 
     function downloadFile(content, filename, mimeType) {
