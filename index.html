@@ -3465,7 +3465,6 @@
         const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
         const amountWords = numberToMarathiWords(receiptAmount);
 
-        // डायनॅमिक शीर्षक (Title) ठरवणे
         let receiptTitleText = 'देणगी पावती (Donation Receipt)';
         const voucherStr = (item.voucher || '').trim();
         if (/^A\/VSN/i.test(voucherStr)) {
@@ -3664,7 +3663,7 @@
     }
 
     // ============================================================
-    //  WHATSAPP AUTOMATION & SHARE
+    //  WHATSAPP AUTOMATION & SHARE (DYNAMIC TITLE UPDATED)
     // ============================================================
     function openWhatsAppModal(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -3677,11 +3676,20 @@
         const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
         const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
 
+        // डायनॅमिक शीर्षक (WhatsApp मेसेजसाठी)
+        let waTitleText = 'अधिकृत देणगी पावती (Donation Receipt)';
+        const voucherStr = (item.voucher || '').trim();
+        if (/^A\/VSN/i.test(voucherStr)) {
+            waTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
+        } else if (/^PN/i.test(voucherStr)) {
+            waTitleText = 'अधिकृत देणगी पावती (Donation Receipt)';
+        }
+
         currentWhatsAppText = 
 `🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
 श्रीराम नगर भद्रावती (Reg. No. F-0016068)
 ----------------------------------------
-📜 *अधिकृत पावती / देणगी पावती*
+📜 *${waTitleText}*
 ----------------------------------------
 ${voucherText}📅 *दिनांक:* ${item.date}
 🧑‍💼 *नाव:* ${item.name || '-'}
