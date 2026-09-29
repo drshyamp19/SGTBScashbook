@@ -2934,9 +2934,9 @@
             }
 
             let voucherBtn = '';
-            if (!isContra && (item.cashOut > 0 || item.bankOut > 0)) {
+            if (item.cashOut > 0 || item.bankOut > 0 || isContra) {
                 voucherBtn = `
-                    <button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="खर्च व्हाउचर प्रिंट करा">📑</button>
+                    <button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="व्हाउचर प्रिंट करा">📑</button>
                 `;
             }
 
@@ -3563,22 +3563,37 @@
     }
 
     // ============================================================
-    //  PRINT PAYMENT VOUCHER (EXPENSE) - 1 PAGE OPTIMIZED
+    //  PRINT PAYMENT VOUCHER / CONTRA / IBT (1 PAGE OPTIMIZED & DYNAMIC TITLES)
     // ============================================================
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
 
         const voucherNum = item.voucher || '-';
-        const expenseAmount = (item.cashOut > 0) ? item.cashOut : item.bankOut;
+        const expenseAmount = (item.cashOut > 0) ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.credit > 0 ? item.credit : item.debit));
         const amountWords = numberToMarathiWords(expenseAmount);
+
+        // डायनॅमिक शीर्षक (Voucher Title) ठरवणे
+        let voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
+        const voucherStr = (item.voucher || '').trim();
+        const modeStr = (item.paymentMode || '').trim();
+
+        if (modeStr.startsWith('contra') || /contra/i.test(voucherStr) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
+            voucherTitleText = 'Cash to Bank / Contra Transfer (बँक व रोख अंतर्गत हस्तांतरण)';
+        } else if (/VN\s*.*IBT/i.test(voucherStr) || /IBT/i.test(voucherStr) || /बँक चार्जेस/i.test(item.description)) {
+            voucherTitleText = 'Internal Banking Transaction (बँक अंतर्गत व्यवहार)';
+        } else if (/^VN/i.test(voucherStr)) {
+            voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
+        } else {
+            voucherTitleText = 'व्यवहार व्हाउचर (Transaction Voucher)';
+        }
 
         const voucherHtml = `
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>खर्च व्हाउचर - ${escapeHTML(voucherNum)}</title>
+            <title>व्हाउचर - ${escapeHTML(voucherNum)}</title>
             <style>
                 @page { size: A5 landscape; margin: 4mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
@@ -3609,24 +3624,24 @@
                     <p>श्रीराम नगर भद्रावती</p>
                     <span class="reg-tag">📜 Reg. No.: F-0016068(CDP)</span>
                 </div>
-                <div class="voucher-title">खर्च व्हाउचर (Payment / Debit Voucher)</div>
+                <div class="voucher-title">${escapeHTML(voucherTitleText)}</div>
                 <table class="details-table">
                     <tr>
                         <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(voucherNum)}</td>
                         <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><strong>कोणास दिले:</strong> ${escapeHTML(item.name || '-')}</td>
+                        <td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><strong>खर्चाचा तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
+                        <td colspan="2"><strong>कारڻ / तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
                     </tr>
                     <tr>
                         <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding-top:4px;">
-                            <strong>अदा केलेली रक्कम:</strong> 
+                            <strong>रक्कम:</strong> 
                             <span class="amount-highlight">${formatIndianNum(expenseAmount)}</span>
                             <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
                         </td>
@@ -3635,7 +3650,7 @@
                 <div class="bottom-auth-section">
                     <div class="sig-box">
                         <div style="height:15px;"></div>
-                        रक्कम घेणाऱ्याची सही
+                        स्वाक्षरी / सही
                     </div>
                     <div class="official-stamp">
                         <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
@@ -3676,7 +3691,6 @@
         const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
         const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
 
-        // डायनॅमिक शीर्षक (WhatsApp मेसेजसाठी)
         let waTitleText = 'अधिकृत देणगी पावती (Donation Receipt)';
         const voucherStr = (item.voucher || '').trim();
         if (/^A\/VSN/i.test(voucherStr)) {
