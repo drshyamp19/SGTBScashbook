@@ -405,15 +405,13 @@
         .btn-warning:hover { background: #e0a800; }
         .btn-secondary { background: #6c757d; }
         .btn-secondary:hover { background: #5a6268; }
-        .btn-pdf { background: #e63946; color: white; }
-        .btn-pdf:hover { background: #c1121f; }
-        .btn-pdf-debit { background: #6f42c1; color: white; }
-        .btn-pdf-debit:hover { background: #5a32a3; }
-        .btn-pdf-fy { background: #0b5ed7; color: white; }
-        .btn-pdf-fy:hover { background: #084298; }
+        .btn-pdf { background: #0b5ed7; color: white; }
+        .btn-pdf:hover { background: #084298; }
+        .btn-pdf-debit { background: #dc3545; color: white; }
+        .btn-pdf-debit:hover { background: #b02a37; }
         .btn-print-filter { background: #17a2b8; color: white; }
         .btn-print-filter:hover { background: #138496; }
-        .btn-sm { padding: 5px 12px; font-size: 12px; margin-top: 0; margin-right: 4px; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; margin-top: 0; margin-right: 4px; }
 
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -977,7 +975,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: CASH BOOK (LEDGER & SPECIFIC FY SELECTION BAR) -->
+        <!-- TAB 3: CASH BOOK (LEDGER & INTEGRATED DUAL-ACTION DROPDOWN) -->
         <div id="tabPanelLedger" class="tab-panel-section">
             <div class="card" style="border: 1.5px solid #2a7de1;">
                 <div class="flex-between">
@@ -992,23 +990,21 @@
                     </div>
                 </div>
 
-                <!-- PDF & EXPORT CONTROLS WITH FY DROPDOWN -->
-                <div class="admin-item" style="gap:8px; margin-top:14px; padding-top:12px; border-top:1px dashed #cbd5e1; flex-wrap:wrap; align-items:center;">
-                    <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📄 संपूर्ण वार्षिक PDF</button>
-                    
-                    <!-- Financial Year Specific Selector -->
-                    <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
-                        <label for="pdfFYSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">FY निवडा:</label>
-                        <select id="pdfFYSelect" style="padding:5px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
-                            <option value="2023-24">FY 2023-24</option>
-                            <option value="2024-25">FY 2024-25</option>
-                            <option value="2025-26">FY 2025-26</option>
-                            <option value="2026-27" selected>FY 2026-27</option>
+                <!-- SMART UNIFIED FY/PERIOD DROPDOWN WITH 2 DIRECT ACTION BUTTONS -->
+                <div class="admin-item" style="gap:10px; margin-top:14px; padding-top:12px; border-top:1px dashed #cbd5e1; flex-wrap:wrap; align-items:center;">
+                    <div style="display:inline-flex; align-items:center; gap:8px; background:#eef4fb; padding:5px 12px; border-radius:8px; border:1.5px solid #bfdbfe;">
+                        <label for="pdfPeriodSelect" style="font-size:13px; font-weight:700; color:#1e3a8a;">📅 कालावधी / FY निवडा:</label>
+                        <select id="pdfPeriodSelect" style="padding:6px 10px; border:1.5px solid #2a7de1; border-radius:6px; font-size:13px; font-weight:700; background:#fff; color:#0d2b44;">
+                            <option value="all">🌟 सर्व नोंदी (सुरुवातीपासून आजपर्यंत)</option>
+                            <option value="2023-24">📅 FY 2023-24</option>
+                            <option value="2024-25">📅 FY 2024-25</option>
+                            <option value="2025-26">📅 FY 2025-26</option>
+                            <option value="2026-27" selected>📅 FY 2026-27</option>
                         </select>
-                        <button class="btn btn-pdf-fy btn-sm" style="margin:0;" onclick="generateSelectedFY_PDF()">📑 निवडलेल्या FY ची PDF</button>
                     </div>
 
-                    <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च PDF</button>
+                    <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📑 टू-कॉलम कॅश बुक PDF</button>
+                    <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च (Debit) PDF</button>
                 </div>
 
                 <div id="monthlyViewerBox" class="monthly-viewer-box">
@@ -1150,10 +1146,7 @@
     </div>
 </div>
 
-<!-- ==========================================
-     POPUP MODALS
-=========================================== -->
-<!-- VIEWER PASSWORD CHANGE MODAL -->
+<!-- MODALS -->
 <div class="modal-overlay" id="viewerPasswordModal">
     <div class="modal-box">
         <h3>🔑 Change Viewer Password</h3>
@@ -1168,7 +1161,6 @@
     </div>
 </div>
 
-<!-- CHANGE ADMIN PASSWORD MODAL -->
 <div class="modal-overlay" id="changePasswordModal">
     <div class="modal-box">
         <h3>🔑 Change Admin Password</h3>
@@ -1186,7 +1178,6 @@
     </div>
 </div>
 
-<!-- WHATSAPP SHARE MODAL -->
 <div class="modal-overlay" id="whatsappShareModal">
     <div class="wa-modal-box">
         <div class="flex-between" style="margin-bottom:14px;">
@@ -1201,7 +1192,6 @@
     </div>
 </div>
 
-<!-- FORGOT MODAL -->
 <div class="modal-overlay" id="forgotModal">
     <div class="modal-box">
         <h3>🔑 Admin Password Reset</h3>
@@ -2086,184 +2076,54 @@
     }
 
     // ============================================================
-    //  PRINT & PDF ENGINE (FIXED TO READ SELECTED FY)
+    //  SMART UNIFIED PDF GENERATION (READS FROM DUAL-ACTION DROPDOWN)
     // ============================================================
-    function generateSelectedFY_PDF() {
+    function generateTwoColumnPDF(type = 'all') {
         if (currentRole !== 'admin') return;
         
-        // Read directly from the newly added Dropdown
-        const targetFY = document.getElementById('pdfFYSelect').value || '2026-27';
-
+        const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
         const allKeys = Object.keys(monthlyContinuousMap).sort();
-        const fyMonthKeys = allKeys.filter(mKey => {
-            const [y, m] = mKey.split('-').map(Number);
-            const itemFY = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
-            return itemFY === targetFY;
-        });
 
-        if (fyMonthKeys.length === 0) {
-            alert(`आर्थिक वर्ष FY ${targetFY} साठी कोणत्याही नोंदी उपलब्ध नाहीत.`);
+        if (allKeys.length === 0) {
+            alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
             return;
         }
 
-        generateCustomMonthsPDF(fyMonthKeys, `आर्थिक वर्ष FY ${targetFY} टू-कॉलम कॅश बुक`);
+        let targetMonthKeys = [];
+        let periodHeading = '';
+
+        if (selectedPeriod === 'all') {
+            targetMonthKeys = allKeys;
+            periodHeading = 'सर्व अखंड नोंदी (सुरुवातीपासून आजपर्यंत)';
+        } else {
+            targetMonthKeys = allKeys.filter(mKey => {
+                const [y, m] = mKey.split('-').map(Number);
+                const itemFY = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
+                return itemFY === selectedPeriod;
+            });
+            periodHeading = `आर्थिक वर्ष FY ${selectedPeriod}`;
+        }
+
+        if (targetMonthKeys.length === 0) {
+            alert(`निवडलेल्या कालावधीसाठी (${selectedPeriod}) कोणत्याही नोंदी उपलब्ध नाहीत.`);
+            return;
+        }
+
+        const isDebitOnly = (type === 'debit');
+        const customTitle = isDebitOnly 
+            ? `📉 निव्वळ खर्च नोंदवही (${periodHeading})` 
+            : `📒 टू-कॉलम कॅश बुक (${periodHeading})`;
+
+        generateCustomMonthsPDF(targetMonthKeys, customTitle, isDebitOnly);
     }
 
-    function generateCustomMonthsPDF(monthKeys, customTitle) {
+    function generateCustomMonthsPDF(monthKeys, customTitle, isDebitOnly) {
         let printHtml = `
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
             <title>${customTitle} - Swami Gopal Tirth Sanstha</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
-                .month-page:last-child { page-break-after: avoid; break-after: avoid; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-sub { background-color: #d9480f !important; }
-                th.bank-sub { background-color: #0b5ed7 !important; }
-                tr { page-break-inside: avoid; }
-                .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-        `;
-
-        monthKeys.forEach((mKey) => {
-            const mData = monthlyContinuousMap[mKey];
-            let rowsHtml = '';
-
-            if (mData.isNil || mData.items.length === 0) {
-                rowsHtml = `
-                <tr>
-                    <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:11px; font-weight:bold; background:#fafafa;">
-                        ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                    </td>
-                </tr>`;
-            } else {
-                mData.items.forEach((item, index) => {
-                    const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-                    rowsHtml += `
-                    <tr>
-                        <td style="text-align:center; width:25px;">${index + 1}</td>
-                        <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                        <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                        <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
-                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                        <td>${escapeHTML(item.description || '-')}</td>
-                        <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                        <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                        <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                        <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                        <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                        <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                    </tr>`;
-                });
-            }
-
-            printHtml += `
-            <div class="month-page">
-                <div class="org-title">
-                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
-                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                </div>
-                <div class="month-bar">
-                    <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
-                    <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width:25px;">#</th>
-                            <th rowspan="2" style="width:65px;">दिनांक</th>
-                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
-                            <th rowspan="2" style="width:55px;">मोड</th>
-                            <th rowspan="2">नाव / तपशील</th>
-                            <th rowspan="2">खर्च / देणगी कारण</th>
-                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
-                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
-                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                        </tr>
-                        <tr>
-                            <th class="cash-sub">In (जमा)</th>
-                            <th class="cash-sub">Out (खर्च)</th>
-                            <th class="bank-sub">In (जमा)</th>
-                            <th class="bank-sub">Out (खर्च)</th>
-                            <th>Cash Bal</th>
-                            <th>Bank Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-                <div class="bottom-section">
-                    <table class="summary-table">
-                        <tr>
-                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
-                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
-                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
-                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
-                        </tr>
-                        <tr style="background:#eef4fb;">
-                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
-                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
-                        </tr>
-                        <tr style="background:#fff3cd; text-align:center;">
-                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
-                        </tr>
-                    </table>
-                    <div class="signatures">
-                        <div class="sig-box">तयार करणार (Accountant)</div>
-                        <div class="sig-box">सचिव (Secretary)</div>
-                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                    </div>
-                </div>
-            </div>`;
-        });
-
-        printHtml += `<script>window.onload = function() { window.print(); };<\/script></body></html>`;
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-            return;
-        }
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
-    }
-
-    function generateTwoColumnPDF(type = 'all') {
-        if (currentRole !== 'admin') return;
-        const monthKeys = Object.keys(monthlyContinuousMap).sort();
-        if (monthKeys.length === 0) {
-            alert('PDF तयार करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
-            return;
-        }
-
-        const isDebitOnly = (type === 'debit');
-        const reportTitle = isDebitOnly ? '📉 मासिक खर्च नोंदवही (Monthly Expense Register)' : '📒 टू-कॉलम मासिक कॅश बुक (Two-Column Cash Book)';
-
-        let printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>${reportTitle} - Swami Gopal Tirth Sanstha</title>
             <style>
                 @page { size: A4 landscape; margin: 8mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
@@ -2330,7 +2190,7 @@
                 <div class="month-page">
                     <div class="org-title">
                         <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                        <p>श्रीराम नगर भद्रावती | ${reportTitle}</p>
+                        <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
                         <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                     </div>
                     <div class="month-bar">
@@ -2400,7 +2260,7 @@
                 <div class="month-page">
                     <div class="org-title">
                         <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                        <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
+                        <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
                         <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                     </div>
                     <div class="month-bar">
@@ -2458,6 +2318,156 @@
         });
 
         printHtml += `<script>window.onload = function() { window.print(); };<\/script></body></html>`;
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
+            return;
+        }
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
+    }
+
+    function printCurrentScreenMonth() {
+        const selectedVal = document.getElementById('screenMonthSelect').value;
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('प्रिंट करण्यासाठी कोणताही डेटा नाही.');
+            return;
+        }
+
+        if (selectedVal === 'all') {
+            generateTwoColumnPDF('all');
+        } else {
+            const mData = monthlyContinuousMap[selectedVal];
+            if (mData) {
+                printSingleMonthDocument(mData);
+            } else {
+                alert('निवडलेल्या महिन्याचा डेटा उपलब्ध नाही.');
+            }
+        }
+    }
+
+    function printSingleMonthDocument(mData) {
+        let rowsHtml = '';
+        if (mData.isNil || mData.items.length === 0) {
+            rowsHtml = `
+            <tr>
+                <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:12px; font-weight:bold; background:#fafafa;">
+                    ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
+                </td>
+            </tr>`;
+        } else {
+            mData.items.forEach((item, index) => {
+                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
+                rowsHtml += `
+                <tr>
+                    <td style="text-align:center; width:25px;">${index + 1}</td>
+                    <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
+                    <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                    <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
+                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                    <td>${escapeHTML(item.description || '-')}</td>
+                    <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                    <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                    <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                    <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                    <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                    <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+                </tr>`;
+            });
+        }
+
+        const printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>${mData.label} - Two-Column Cash Book</title>
+            <style>
+                @page { size: A4 landscape; margin: 8mm; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
+                .month-page { padding: 4px 0 10px 0; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
+                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
+                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
+                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
+                th.cash-sub { background-color: #d9480f !important; }
+                th.bank-sub { background-color: #0b5ed7 !important; }
+                .text-right { text-align: right; }
+                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
+                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
+                .summary-table td { padding: 5px 8px; font-weight: 600; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
+            </style>
+        </head>
+        <body>
+            <div class="month-page">
+                <div class="org-title">
+                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
+                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
+                </div>
+                <div class="month-bar">
+                    <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
+                    <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width:25px;">#</th>
+                            <th rowspan="2" style="width:65px;">दिनांक</th>
+                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
+                            <th rowspan="2" style="width:55px;">मोड</th>
+                            <th rowspan="2">नाव / तपशील</th>
+                            <th rowspan="2">खर्च / देणगी कारण</th>
+                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
+                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
+                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
+                        </tr>
+                        <tr>
+                            <th class="cash-sub">In (जमा)</th>
+                            <th class="cash-sub">Out (खर्च)</th>
+                            <th class="bank-sub">In (जमा)</th>
+                            <th class="bank-sub">Out (खर्च)</th>
+                            <th>Cash Bal</th>
+                            <th>Bank Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+                <div class="bottom-section">
+                    <table class="summary-table">
+                        <tr>
+                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
+                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
+                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
+                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
+                        </tr>
+                        <tr style="background:#eef4fb;">
+                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
+                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
+                        </tr>
+                        <tr style="background:#fff3cd; text-align:center;">
+                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
+                        </tr>
+                    </table>
+                    <div class="signatures">
+                        <div class="sig-box">तयार करणार (Accountant)</div>
+                        <div class="sig-box">सचिव (Secretary)</div>
+                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+                    </div>
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); };<\/script>
+        </body>
+        </html>`;
+
         const printWin = window.open('', '_blank');
         if (!printWin) {
             alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
@@ -3008,6 +3018,248 @@
         };
         reader.readAsText(file);
         event.target.value = '';
+    }
+
+    function printSingleReceipt(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) return;
+
+        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
+        const amountWords = numberToMarathiWords(receiptAmount);
+
+        const receiptHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>पावती - ${escapeHTML(cleanReceiptNum)}</title>
+            <style>
+                @page { size: A5 landscape; margin: 8mm; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 15px; }
+                .receipt-box { border: 2.5px solid #0d2b44; border-radius: 12px; padding: 20px; position: relative; background: #fff; }
+                .header { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 10px; }
+                .header h1 { margin: 0; font-size: 20px; color: #0d2b44; font-weight: 800; }
+                .header p { margin: 3px 0; font-size: 13px; color: #555; }
+                .reg-tag { display: inline-block; background: #fff3cd; color: #856404; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; }
+                .receipt-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; color: #0d2b44; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13.5px; }
+                .details-table td { padding: 8px 6px; }
+                .amount-highlight { font-size: 18px; font-weight: bold; color: #0d2b44; background: #eef4fb; padding: 6px 14px; border-radius: 6px; border: 1px dashed #2a7de1; display: inline-block; }
+                .words-text { font-size: 13px; font-weight: bold; color: #084298; margin-top: 4px; }
+                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 15px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 140px; font-size: 12px; font-weight: bold; padding-top: 4px; }
+                .official-stamp {
+                    width: 105px; height: 105px; border: 3px dashed #0b5ed7; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; color: #084298; font-size: 9px; font-weight: 700; transform: rotate(-7deg); opacity: 0.9;
+                }
+                .official-stamp .stamp-sub { font-size: 8px; color: #0d2b44; border-top: 1px solid #0b5ed7; border-bottom: 1px solid #0b5ed7; padding: 1px 0; margin: 2px 0; }
+                .official-stamp .stamp-verified { font-size: 9px; color: #198754; font-weight: 800; }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-box">
+                <div class="header">
+                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <p>श्रीराम नगर भद्रावती</p>
+                    <span class="reg-tag">📜 Reg. No.: F-0016068(CDP)</span>
+                </div>
+                <div class="receipt-title">देणगी / पावती (Donation Receipt)</div>
+                <table class="details-table">
+                    <tr>
+                        <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(cleanReceiptNum)}</td>
+                        <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top:8px;">
+                            <strong>स्वीकारलेली रक्कम:</strong> 
+                            <span class="amount-highlight">${formatIndianNum(receiptAmount)}</span>
+                            <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="bottom-auth-section">
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        दात्याची स्वाक्षरी
+                    </div>
+                    <div class="official-stamp">
+                        <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                        <span class="stamp-sub">भद्रावती F-0016068</span>
+                        <span class="stamp-verified">✓ अधिकृत पावती</span>
+                    </div>
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        स्वीकारणारा / खजिनदार
+                    </div>
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); };<\/script>
+        </body>
+        </html>`;
+
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
+            return;
+        }
+        printWin.document.open();
+        printWin.document.write(receiptHtml);
+        printWin.document.close();
+    }
+
+    function printPaymentVoucher(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) return;
+
+        const voucherNum = item.voucher || '-';
+        const expenseAmount = (item.cashOut > 0) ? item.cashOut : item.bankOut;
+        const amountWords = numberToMarathiWords(expenseAmount);
+
+        const voucherHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>खर्च व्हाउचर - ${escapeHTML(voucherNum)}</title>
+            <style>
+                @page { size: A5 landscape; margin: 8mm; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 15px; }
+                .voucher-box { border: 2.5px solid #800020; border-radius: 12px; padding: 20px; position: relative; background:#fff; }
+                .header { text-align: center; border-bottom: 2px solid #800020; padding-bottom: 10px; }
+                .header h1 { margin: 0; font-size: 20px; color: #800020; font-weight: 800; }
+                .header p { margin: 3px 0; font-size: 13px; color: #555; }
+                .reg-tag { display: inline-block; background: #fdf2e9; color: #a04000; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; border: 1px solid #f5cba7; }
+                .voucher-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; color: #800020; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13.5px; }
+                .details-table td { padding: 8px 6px; }
+                .amount-highlight { font-size: 18px; font-weight: bold; color: #800020; background: #fbf2f4; padding: 6px 14px; border-radius: 6px; border: 1px dashed #c0392b; display: inline-block; }
+                .words-text { font-size: 13px; font-weight: bold; color: #721c24; margin-top: 4px; }
+                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 15px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 130px; font-size: 11.5px; font-weight: bold; padding-top: 4px; }
+                .official-stamp {
+                    width: 100px; height: 100px; border: 3px dashed #800020; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; color: #800020; font-size: 9px; font-weight: 700; transform: rotate(-6deg); opacity: 0.9;
+                }
+                .official-stamp .stamp-sub { font-size: 8px; border-top: 1px solid #800020; border-bottom: 1px solid #800020; padding: 1px 0; margin: 2px 0; }
+                .official-stamp .stamp-verified { font-size: 9px; color: #800020; font-weight: 800; }
+            </style>
+        </head>
+        <body>
+            <div class="voucher-box">
+                <div class="header">
+                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <p>श्रीराम नगर भद्रावती</p>
+                    <span class="reg-tag">📜 Reg. No.: F-0016068(CDP)</span>
+                </div>
+                <div class="voucher-title">खर्च व्हाउचर (Payment / Debit Voucher)</div>
+                <table class="details-table">
+                    <tr>
+                        <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(voucherNum)}</td>
+                        <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>कोणास दिले:</strong> ${escapeHTML(item.name || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>खर्चाचा तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top:8px;">
+                            <strong>अदा केलेली रक्कम:</strong> 
+                            <span class="amount-highlight">${formatIndianNum(expenseAmount)}</span>
+                            <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="bottom-auth-section">
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        रक्कम घेणाऱ्याची सही
+                    </div>
+                    <div class="official-stamp">
+                        <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                        <span class="stamp-sub">भद्रावती F-0016068</span>
+                        <span class="stamp-verified">✓ पास / अदा</span>
+                    </div>
+                    <div class="sig-box">
+                        <div style="height:25px;"></div>
+                        सचिव / अध्यक्ष
+                    </div>
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); };<\/script>
+        </body>
+        </html>`;
+
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
+            return;
+        }
+        printWin.document.open();
+        printWin.document.write(voucherHtml);
+        printWin.document.close();
+    }
+
+    function openWhatsAppModal(id) {
+        const item = (transactionsData || []).find(t => t.id === id);
+        if (!item) return;
+
+        const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
+        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
+        const amountWords = numberToMarathiWords(receiptAmount);
+        const voucherText = cleanReceiptNum !== '-' ? `📜 *पावती क्र:* ${cleanReceiptNum}\n` : '';
+        const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
+        const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
+
+        currentWhatsAppText = 
+`🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
+श्रीराम नगर भद्रावती (Reg. No. F-0016068)
+----------------------------------------
+📜 *देणगी पावती (Donation Receipt)*
+----------------------------------------
+${voucherText}📅 *दिनांक:* ${item.date}
+🧑‍💼 *दात्याचे नाव:* ${item.name || '-'}
+${modeText}${descText}💰 *स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
+✍️ *अक्षरी:* ${amountWords}
+----------------------------------------
+आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
+
+        document.getElementById('waShareMessagePreview').value = currentWhatsAppText;
+        document.getElementById('whatsappShareModal').style.display = 'flex';
+    }
+
+    function closeWhatsAppModal() {
+        document.getElementById('whatsappShareModal').style.display = 'none';
+    }
+
+    function sendWhatsAppFromModal() {
+        const textToSend = document.getElementById('waShareMessagePreview').value;
+        const encoded = encodeURIComponent(textToSend);
+        window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+        closeWhatsAppModal();
+    }
+
+    function copyWhatsAppMessageFromModal() {
+        const textToCopy = document.getElementById('waShareMessagePreview').value;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast('📋 मेसेज कॉपी झाला!');
+        }).catch(err => {
+            alert('कॉपी करताना त्रुटी आली: ' + err.message);
+        });
     }
 
     function downloadFile(content, filename, mimeType) {
