@@ -416,7 +416,7 @@
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
-        /* UNIFIED TOOLBAR (OPTION 1 STYLE) */
+        /* UNIFIED TOOLBAR */
         .unified-ledger-toolbar {
             background: #f8fafc;
             border: 1.5px solid #e2e8f0;
@@ -1016,7 +1016,6 @@
 
                 <!-- OPTION 1: UNIFIED TOOLBAR WITH DIVIDER -->
                 <div class="unified-ledger-toolbar">
-                    <!-- डावा विभाग: स्क्रीनवर महिना पाहणे -->
                     <div class="toolbar-group">
                         <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
                         <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12.5px; background:#fff; max-width:260px;"></select>
@@ -1026,7 +1025,6 @@
 
                     <div class="toolbar-divider admin-item"></div>
 
-                    <!-- उजवा विभाग: PDF अहवाल डाऊनलोड करणे (Admin Only) -->
                     <div class="toolbar-group admin-item">
                         <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
                             <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
@@ -1647,59 +1645,6 @@
         return (isNegative ? '- ' : '') + '₹ ' + formatted + '.' + decPart;
     }
 
-    function numberToMarathiWords(n) {
-        n = parseFloat(n);
-        if (isNaN(n) || n === 0) return 'शून्य रुपये फक्त';
-
-        const ones = ['', 'एक', 'दोन', 'तीन', 'चार', 'पाच', 'सहा', 'सात', 'आठ', 'नऊ', 'दहा',
-            'अकरा', 'बारा', 'तेरा', 'चौदा', 'पंधरा', 'सोळा', 'सतरा', 'अठरा', 'एकोणीस', 'वीस',
-            'एकवीस', 'बावीस', 'तेवीस', 'चोवीस', 'पंचवीस', 'सव्वीस', 'सत्तावीस', 'अठ्ठावीस', 'एकोणतीस', 'तीस',
-            'एकतीस', 'बत्तीस', 'तेहतीस', 'चौतीस', 'पस्तीस', 'छत्तीस', 'सदतीस', 'अडतीस', 'एकोणचाळीस', 'चाळीस',
-            'एक्केचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास', 'पन्नास',
-            'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ', 'साठ',
-            'एकसष्ठ', 'बासष्ठ', 'त्रेसष्ठ', 'चौसष्ठ', 'पासष्ठ', 'सहासष्ठ', 'सदुसष्ठ', 'अडुसष्ठ', 'एकोणसत्तर', 'सत्तर',
-            'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौऱ्याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी', 'ऐंशी',
-            'एक्याऐंशी', 'ब्याऐंशी', 'त्र्याऐंशी', 'चौऱ्याऐंशी', 'पंच्याऐंशी', 'शहाऐंशी', 'सत्त्याऐंशी', 'अठ्ठ्याऐंशी', 'एकोणनव्वद', 'नव्वद',
-            'एक्याण्णव', 'ब्याण्णव', 'त्र्याण्णव', 'चौऱ्याण्णव', 'पंच्याण्णव', 'शहाण्णव', 'सत्त्याण्णव', 'अठ्ठ्याण्णव', 'नव्व्याण्णव'
-        ];
-
-        function convertBelowThousand(num) {
-            let str = '';
-            if (num >= 100) {
-                let h = Math.floor(num / 100);
-                str += (h === 1 ? 'एकशे ' : ones[h] + ' शे ');
-                num %= 100;
-            }
-            if (num > 0) {
-                str += ones[num] + ' ';
-            }
-            return str.trim();
-        }
-
-        let intPart = Math.floor(n);
-        let decPart = Math.round((n - intPart) * 100);
-
-        let crore = Math.floor(intPart / 10000000);
-        intPart %= 10000000;
-        let lakh = Math.floor(intPart / 100000);
-        intPart %= 100000;
-        let thousand = Math.floor(intPart / 1000);
-        intPart %= 1000;
-        let remainder = intPart;
-
-        let res = '';
-        if (crore > 0) res += convertBelowThousand(crore) + ' कोटी ';
-        if (lakh > 0) res += convertBelowThousand(lakh) + ' लाख ';
-        if (thousand > 0) res += convertBelowThousand(thousand) + ' हजार ';
-        if (remainder > 0) res += convertBelowThousand(remainder) + ' ';
-
-        res = res.trim() + ' रुपये';
-        if (decPart > 0) {
-            res += ' आणि ' + convertBelowThousand(decPart) + ' पैसे';
-        }
-        return res.trim() + ' फक्त';
-    }
-
     function formatDateToDisplay(isoDateStr) {
         if (!isoDateStr) return '';
         const parts = String(isoDateStr).split('-');
@@ -2057,7 +2002,7 @@
         }
 
         if (dropdown) {
-            if (selectedPrevValue && monthlyContinuousMap[selectedPrevValue]) {
+            if (selectedPrevValue && (selectedPrevValue === 'all' || monthlyContinuousMap[selectedPrevValue])) {
                 dropdown.value = selectedPrevValue;
             } else if (latestMonthKey) {
                 dropdown.value = latestMonthKey;
@@ -2109,6 +2054,152 @@
         localStorage.setItem('sgtb_last_backup_time', Date.now().toString());
         const bar = document.getElementById('backupReminderBar');
         if (bar) bar.style.display = 'none';
+    }
+
+    // ============================================================
+    //  ROBUST & RELIABLE MONTH-WISE SCREEN VIEWER (FIXED)
+    // ============================================================
+    function viewSelectedMonthOnScreen() {
+        const selectElem = document.getElementById('screenMonthSelect');
+        const selectedVal = selectElem ? selectElem.value : 'all';
+        const box = document.getElementById('monthlyViewerBox');
+        const title = document.getElementById('mViewerTitle');
+        const sub = document.getElementById('mViewerSub');
+        const tbody = document.getElementById('mViewerTableBody');
+        const closeBtn = document.getElementById('closeMonthlyViewBtn');
+
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('कोणताही डेटा उपलब्ध नाही.');
+            return;
+        }
+
+        // Ensure calculations are up-to-date
+        if (Object.keys(monthlyContinuousMap).length === 0) {
+            calculateTwoColumnBalances(transactionsData);
+        }
+
+        if (selectedVal === 'all') {
+            title.innerHTML = `📅 संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)`;
+            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | सर्व महिन्यांचा अखंड ताळेबंद`;
+
+            let grandCashIn = 0, grandCashOut = 0;
+            let grandBankIn = 0, grandBankOut = 0;
+
+            transactionsData.forEach(t => {
+                grandCashIn += (t.cashIn || 0);
+                grandCashOut += (t.cashOut || 0);
+                grandBankIn += (t.bankIn || 0);
+                grandBankOut += (t.bankOut || 0);
+            });
+
+            const finalCash = grandCashIn - grandCashOut;
+            const finalBank = grandBankIn - grandBankOut;
+
+            document.getElementById('mViewOpenCash').textContent = '₹ 0.00';
+            document.getElementById('mViewOpenBank').textContent = '₹ 0.00';
+            document.getElementById('mViewOpenTotal').textContent = '₹ 0.00';
+
+            document.getElementById('mViewSumCashIn').textContent = formatIndianNum(grandCashIn);
+            document.getElementById('mViewSumCashOut').textContent = formatIndianNum(grandCashOut);
+            document.getElementById('mViewSumBankIn').textContent = formatIndianNum(grandBankIn);
+            document.getElementById('mViewSumBankOut').textContent = formatIndianNum(grandBankOut);
+
+            document.getElementById('mViewCloseCash').textContent = formatIndianNum(finalCash);
+            document.getElementById('mViewCloseBank').textContent = formatIndianNum(finalBank);
+            document.getElementById('mViewCloseTotal').textContent = formatIndianNum(finalCash + finalBank);
+
+            tbody.innerHTML = '';
+            transactionsData.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
+
+                tr.innerHTML = `
+                    <td style="text-align:center;">${idx + 1}</td>
+                    <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
+                    <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                    <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode && item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
+                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                    <td>${escapeHTML(item.description || '-')}</td>
+                    <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                    <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                    <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                    <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                    <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                    <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+        } else {
+            const mData = monthlyContinuousMap[selectedVal];
+            if (!mData) {
+                alert('या महिन्याची माहिती उपलब्ध नाही.');
+                return;
+            }
+
+            title.innerHTML = `📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '<span style="color:#dc3545;">(NIL - व्यवहार नाही)</span>' : ''}`;
+            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | नोंदवही पान`;
+
+            document.getElementById('mViewOpenCash').textContent = formatIndianNum(mData.openCash);
+            document.getElementById('mViewOpenBank').textContent = formatIndianNum(mData.openBank);
+            document.getElementById('mViewOpenTotal').textContent = formatIndianNum(mData.openTotal);
+
+            document.getElementById('mViewSumCashIn').textContent = formatIndianNum(mData.cashIn);
+            document.getElementById('mViewSumCashOut').textContent = formatIndianNum(mData.cashOut);
+            document.getElementById('mViewSumBankIn').textContent = formatIndianNum(mData.bankIn);
+            document.getElementById('mViewSumBankOut').textContent = formatIndianNum(mData.bankOut);
+
+            document.getElementById('mViewCloseCash').textContent = formatIndianNum(mData.closeCash);
+            document.getElementById('mViewCloseBank').textContent = formatIndianNum(mData.closeBank);
+            document.getElementById('mViewCloseTotal').textContent = formatIndianNum(mData.closeTotal);
+
+            tbody.innerHTML = '';
+
+            if (mData.isNil || mData.items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
+                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
+                        </td>
+                    </tr>
+                `;
+            } else {
+                mData.items.forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
+
+                    tr.innerHTML = `
+                        <td style="text-align:center;">${idx + 1}</td>
+                        <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
+                        <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                        <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode && item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
+                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                        <td>${escapeHTML(item.description || '-')}</td>
+                        <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                        <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                        <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                        <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                        <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                        <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        // Open viewer safely
+        box.style.display = 'block';
+        if (closeBtn) closeBtn.style.display = 'inline-block';
+        setTimeout(() => {
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
+    }
+
+    function closeMonthlyViewer() {
+        const box = document.getElementById('monthlyViewerBox');
+        const closeBtn = document.getElementById('closeMonthlyViewBtn');
+        if (box) box.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'none';
     }
 
     // ============================================================
@@ -2296,7 +2387,7 @@
                 <div class="month-page">
                     <div class="org-title">
                         <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                        <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
+                        <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
                         <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                     </div>
                     <div class="month-bar">
