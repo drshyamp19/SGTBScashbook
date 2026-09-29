@@ -860,7 +860,7 @@
 
         <div id="toast" class="toast">✅ Success!</div>
 
-        <!-- TAB 1: ADD ENTRY -->
+        <!-- TAB 1: ADD ENTRY (UPDATED WITH STAR, SUGGESTIONS & AUTO-FOCUS) -->
         <div id="tabPanelAdd" class="tab-panel-section admin-item-block active">
             <div class="card" id="addCard">
                 <h2>➕ Add New Transaction</h2>
@@ -870,7 +870,7 @@
                         <input type="date" id="newDate">
                     </div>
                     <div class="field">
-                        <label>🔢 Voucher / Pavti No. <span style="font-weight:400; color:#888;">(Options)</span></label>
+                        <label>🔢 Voucher / Pavti No. <span class="required-star">*</span></label>
                         <div class="voucher-input-group">
                             <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
                                 <option value="PN">PN (General Donation)</option>
@@ -907,7 +907,18 @@
                     </div>
                     <div class="field">
                         <label>📝 Description <span style="font-weight:400; color:#888;">(Details)</span></label>
-                        <input type="text" id="newDesc" placeholder="Reason for expense or donation" style="min-width:180px;">
+                        <input type="text" id="newDesc" list="descSuggestionsList" placeholder="Reason for expense or donation" style="min-width:180px;" autocomplete="off">
+                        <datalist id="descSuggestionsList">
+                            <option value="सामान्य देणगी">
+                            <option value="मासिक वर्गणी">
+                            <option value="पूजा साहित्य खर्च">
+                            <option value="लाईट बिल (Electricity Bill)">
+                            <option value="ध्वनीक्षेपक / मंडप भाडे">
+                            <option value="स्टेशनरी व प्रिंटींग खर्च">
+                            <option value="प्रवास खर्च">
+                            <option value="बँक चार्जेस व कमिशन">
+                            <option value="कार्यालयीन मानधन">
+                        </datalist>
                     </div>
                     <div class="field">
                         <label>💰 Amount (₹) <span class="required-star">*</span></label>
@@ -1182,9 +1193,7 @@
     </div>
 </div>
 
-<!-- ============================================================
-     EDIT TRANSACTION POPUP MODAL (OPTION 1)
-============================================================ -->
+<!-- EDIT TRANSACTION POPUP MODAL -->
 <div class="modal-overlay" id="editModalOverlay">
     <div class="modal-box modal-lg">
         <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 8px; margin-bottom: 14px;">
@@ -1872,6 +1881,28 @@
         datalist.innerHTML = uniqueNames.map(name => `<option value="${escapeHTML(name)}">`).join('');
     }
 
+    function updateDescriptionDatalist() {
+        const datalist = document.getElementById('descSuggestionsList');
+        if (!datalist) return;
+        const uniqueDescs = [...new Set(transactionsData.map(t => (t.description || '').trim()).filter(Boolean))].sort();
+        
+        let defaultOptions = `
+            <option value="सामान्य देणगी">
+            <option value="मासिक वर्गणी">
+            <option value="पूजा साहित्य खर्च">
+            <option value="लाईट बिल (Electricity Bill)">
+            <option value="ध्वनीक्षेपक / मंडप भाडे">
+            <option value="स्टेशनरी व प्रिंटींग खर्च">
+            <option value="प्रवास खर्च">
+            <option value="बँक चार्जेस व कमिशन">
+            <option value="कार्यालयीन मानधन">
+        `;
+        uniqueDescs.forEach(desc => {
+            defaultOptions += `<option value="${escapeHTML(desc)}">`;
+        });
+        datalist.innerHTML = defaultOptions;
+    }
+
     function getNextVoucherString(selectedType) {
         const pad = (num, size = 2) => String(num).padStart(size, '0');
 
@@ -2152,6 +2183,7 @@
                 });
                 transactionsData = calculateTwoColumnBalances(list);
                 updateDonorNamesDatalist();
+                updateDescriptionDatalist();
 
                 const currentVoucherInput = document.getElementById('newVoucher');
                 if (!currentVoucherInput.value) {
@@ -3052,7 +3084,7 @@
     }
 
     // ============================================================
-    //  TAB 1: SUBMIT NEW TRANSACTION
+    //  TAB 1: SUBMIT NEW TRANSACTION (WITH SMART RESET & AUTO-FOCUS)
     // ============================================================
     async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
@@ -3068,8 +3100,8 @@
         const submitBtn = document.getElementById('addBtn');
         const statusText = document.getElementById('fileUploadStatus');
 
-        if (!dateVal || !name || isNaN(amount) || amount <= 0) {
-            alert('कृपया दिनांक, नाव आणि रक्कम ही सर्व माहिती भरा.');
+        if (!dateVal || !voucher || !name || isNaN(amount) || amount <= 0) {
+            alert('कृपया दिनांक, व्हाउचर क्र., नाव आणि रक्कम ही सर्व माहिती भरा.');
             return;
         }
 
@@ -3119,6 +3151,7 @@
                 showToast('✅ Transaction added successfully!');
             }
 
+            // Reset form fields except Date and Voucher (Voucher auto-increments via sync)
             document.getElementById('newDocFile').value = '';
             document.getElementById('newDocUrlInput').value = '';
             document.getElementById('newName').value = '';
@@ -3126,7 +3159,12 @@
             document.getElementById('newAmount').value = '';
             statusText.textContent = '';
 
+            // Update next consecutive voucher number
             handleVoucherTypeChange();
+
+            // FAST ENTRY: Auto-focus back to Name field
+            document.getElementById('newName').focus();
+
             switchAppTab('tabPanelRecords');
         } catch(err) {
             alert('Error: ' + err.message);
@@ -3138,7 +3176,7 @@
     }
 
     // ============================================================
-    //  OPTION 1: EDIT TRANSACTION IN POPUP MODAL
+    //  EDIT TRANSACTION IN POPUP MODAL
     // ============================================================
     function openEditModal(id) {
         if (currentRole !== 'admin') return;
