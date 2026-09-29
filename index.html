@@ -416,6 +416,37 @@
         .flex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
+        /* UNIFIED TOOLBAR (OPTION 1 STYLE) */
+        .unified-ledger-toolbar {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .toolbar-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .toolbar-divider {
+            width: 1.5px;
+            height: 32px;
+            background: #cbd5e1;
+            margin: 0 4px;
+        }
+        @media (max-width: 992px) {
+            .toolbar-divider { display: none; }
+            .unified-ledger-toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-group { justify-content: flex-start; }
+        }
+
         .add-entry-form {
             display: flex;
             flex-wrap: wrap;
@@ -975,36 +1006,41 @@
             </div>
         </div>
 
-        <!-- TAB 3: CASH BOOK (LEDGER & INTEGRATED DUAL-ACTION DROPDOWN) -->
+        <!-- TAB 3: CASH BOOK (LEDGER & OPTION 1 UNIFIED TOOLBAR) -->
         <div id="tabPanelLedger" class="tab-panel-section">
             <div class="card" style="border: 1.5px solid #2a7de1;">
-                <div class="flex-between">
-                    <div>
-                        <h2 style="margin-bottom:4px;">👁️ Month-wise Screen Ledger Viewer</h2>
-                        <p style="font-size:12px; color:#666;">विशिष्ट महिना किंवा संपूर्ण अखंड नोंदी स्क्रीनवर पाहण्यासाठी वापरा.</p>
-                    </div>
-                    <div class="flex-row">
-                        <select id="screenMonthSelect" style="padding:8px 12px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:13px;"></select>
-                        <button class="btn btn-success" onclick="viewSelectedMonthOnScreen()">👁️ महिना पहा</button>
-                        <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
-                    </div>
+                <div>
+                    <h2 style="margin-bottom:4px;">👁️ Month-wise Screen Ledger Viewer</h2>
+                    <p style="font-size:12px; color:#666;">विशिष्ट महिना स्क्रीनवर पाहण्यासाठी किंवा संपूर्ण अहवाल डाऊनलोड करण्यासाठी खालील टूलबार वापरा.</p>
                 </div>
 
-                <!-- SMART UNIFIED FY/PERIOD DROPDOWN WITH 2 DIRECT ACTION BUTTONS -->
-                <div class="admin-item" style="gap:10px; margin-top:14px; padding-top:12px; border-top:1px dashed #cbd5e1; flex-wrap:wrap; align-items:center;">
-                    <div style="display:inline-flex; align-items:center; gap:8px; background:#eef4fb; padding:5px 12px; border-radius:8px; border:1.5px solid #bfdbfe;">
-                        <label for="pdfPeriodSelect" style="font-size:13px; font-weight:700; color:#1e3a8a;">📅 कालावधी / FY निवडा:</label>
-                        <select id="pdfPeriodSelect" style="padding:6px 10px; border:1.5px solid #2a7de1; border-radius:6px; font-size:13px; font-weight:700; background:#fff; color:#0d2b44;">
-                            <option value="all">🌟 सर्व नोंदी (सुरुवातीपासून आजपर्यंत)</option>
-                            <option value="2023-24">📅 FY 2023-24</option>
-                            <option value="2024-25">📅 FY 2024-25</option>
-                            <option value="2025-26">📅 FY 2025-26</option>
-                            <option value="2026-27" selected>📅 FY 2026-27</option>
-                        </select>
+                <!-- OPTION 1: UNIFIED TOOLBAR WITH DIVIDER -->
+                <div class="unified-ledger-toolbar">
+                    <!-- डावा विभाग: स्क्रीनवर महिना पाहणे -->
+                    <div class="toolbar-group">
+                        <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
+                        <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12.5px; background:#fff; max-width:260px;"></select>
+                        <button class="btn btn-success btn-sm" onclick="viewSelectedMonthOnScreen()">👁️ उघडा</button>
+                        <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
                     </div>
 
-                    <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📑 टू-कॉलम कॅश बुक PDF</button>
-                    <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च (Debit) PDF</button>
+                    <div class="toolbar-divider admin-item"></div>
+
+                    <!-- उजवा विभाग: PDF अहवाल डाऊनलोड करणे (Admin Only) -->
+                    <div class="toolbar-group admin-item">
+                        <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
+                            <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
+                            <select id="pdfPeriodSelect" style="padding:4px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
+                                <option value="all">🌟 सर्व नोंदी (सुरुवातीपासून)</option>
+                                <option value="2023-24">📅 FY 2023-24</option>
+                                <option value="2024-25">📅 FY 2024-25</option>
+                                <option value="2025-26">📅 FY 2025-26</option>
+                                <option value="2026-27" selected>📅 FY 2026-27</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📑 कॅश बुक PDF</button>
+                        <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च PDF</button>
+                    </div>
                 </div>
 
                 <div id="monthlyViewerBox" class="monthly-viewer-box">
@@ -1961,7 +1997,7 @@
         if (dropdown) {
             const allOpt = document.createElement('option');
             allOpt.value = 'all';
-            allOpt.textContent = '🌟 All Months / संपूर्ण नोंदी';
+            allOpt.textContent = '🌟 सर्व महिने (All Months / संपूर्ण)';
             dropdown.appendChild(allOpt);
         }
 
@@ -2076,7 +2112,7 @@
     }
 
     // ============================================================
-    //  SMART UNIFIED PDF GENERATION (READS FROM DUAL-ACTION DROPDOWN)
+    //  SMART UNIFIED PDF GENERATION (READS PERIOD DROPDOWN)
     // ============================================================
     function generateTwoColumnPDF(type = 'all') {
         if (currentRole !== 'admin') return;
@@ -2260,7 +2296,7 @@
                 <div class="month-page">
                     <div class="org-title">
                         <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                        <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
+                        <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
                         <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                     </div>
                     <div class="month-bar">
