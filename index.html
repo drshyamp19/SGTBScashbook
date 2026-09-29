@@ -539,26 +539,27 @@
             padding: 3px 5px;
             border-radius: 4px;
             transition: 0.15s;
-        }
-        .action-btn.edit-btn { color: #2a7de1; }
-        .action-btn.del-btn { color: #dc3545; }
-        .action-btn.wa-btn { color: #25D366; }
-        .action-btn.voucher-btn { color: #6f42c1; }
-
-        .wa-inline-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #25D366;
-            color: white;
-            font-size: 12px;
-            margin-left: 5px;
-            cursor: pointer;
             vertical-align: middle;
         }
+        .action-btn.edit-btn { color: #2a7de1; }
+        .action-btn.del-btn { color: #dc3545; }
+        .action-btn.wa-btn {
+            color: #25D366;
+            padding: 2px 4px;
+        }
+        .action-btn.wa-btn svg {
+            width: 17px;
+            height: 17px;
+            fill: #25D366;
+            transition: transform 0.15s ease;
+        }
+        .action-btn.wa-btn:hover svg {
+            transform: scale(1.15);
+        }
+        .action-btn.voucher-btn { color: #6f42c1; }
 
         .search-controls {
             display: flex;
@@ -1215,7 +1216,10 @@
 <div class="modal-overlay" id="whatsappShareModal">
     <div class="wa-modal-box">
         <div class="flex-between" style="margin-bottom:14px;">
-            <h3 style="color:#0d2b44; display:flex; align-items:center; gap:6px;">💬 Share via WhatsApp</h3>
+            <h3 style="color:#0d2b44; display:flex; align-items:center; gap:6px;">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                Share via WhatsApp
+            </h3>
             <button onclick="closeWhatsAppModal()" style="background:none; border:none; font-size:18px; cursor:pointer;">✖</button>
         </div>
         <div style="margin-bottom:10px;">
@@ -1224,7 +1228,10 @@
         </div>
         <textarea id="waShareMessagePreview" class="wa-message-textarea" spellcheck="false"></textarea>
         <div class="flex-row" style="gap:10px;">
-            <button class="btn btn-success" style="flex:1; justify-content:center;" onclick="sendWhatsAppFromModal()">🟢 Send to WhatsApp</button>
+            <button class="btn btn-success" style="flex:1; justify-content:center;" onclick="sendWhatsAppFromModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="white" style="margin-right:4px;"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                Send to WhatsApp
+            </button>
             <button class="btn btn-secondary" style="flex:1; justify-content:center;" onclick="copyWhatsAppMessageFromModal()">📋 Copy Message</button>
         </div>
     </div>
@@ -1275,7 +1282,7 @@
     ];
 
     // ============================================================
-    //  MARATHI NUMBER TO WORDS UTILITY (NEWLY ADDED & ROBUST)
+    //  MARATHI NUMBER TO WORDS UTILITY
     // ============================================================
     function numberToMarathiWords(amount) {
         let num = Math.round(Number(amount) || 0);
@@ -2659,7 +2666,7 @@
     }
 
     // ============================================================
-    //  ALL TRANSACTIONS: PRINT FILTERED TABLE (NEWLY IMPLEMENTED)
+    //  ALL TRANSACTIONS: PRINT FILTERED TABLE
     // ============================================================
     function printFilteredTransactionsTable() {
         const dataToPrint = currentFilteredData && currentFilteredData.length > 0 ? currentFilteredData : transactionsData;
@@ -2817,18 +2824,13 @@
             if (item.paymentMode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
             else if (isContra) modeHtml = `<span class="mode-badge mode-contra">${item.paymentMode === 'contra_b2c' ? '🔄 Contra (Bank→Cash)' : '🔄 Contra (Cash→Bank)'}</span>`;
 
-            let creditAmountHtml = '-';
-            if (item.cashIn > 0 || item.bankIn > 0) {
-                const crAmt = item.cashIn > 0 ? item.cashIn : item.bankIn;
-                const waIcon = !isContra ? `<span class="wa-inline-icon" onclick="openWhatsAppModal('${item.id}')" title="Share via WhatsApp">💬</span>` : '';
-                creditAmountHtml = `<span style="color:#28a745; font-weight:600;">${formatIndianNum(crAmt)}</span>${waIcon}`;
-            }
-
             let receiptBtns = '';
             if (!isContra && (item.cashIn > 0 || item.bankIn > 0)) {
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
-                    <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">🟢</button>
+                    <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">
+                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                    </button>
                 `;
             }
 
@@ -2847,10 +2849,10 @@
                 <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                 <td>${escapeHTML(item.description || '-')}</td>
                 
-                <td style="text-align:right; white-space:nowrap;">${item.cashIn > 0 ? creditAmountHtml : '-'}</td>
+                <td style="text-align:right; white-space:nowrap; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
                 <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
                 
-                <td style="text-align:right; white-space:nowrap;">${item.bankIn > 0 ? creditAmountHtml : '-'}</td>
+                <td style="text-align:right; white-space:nowrap; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
                 <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
                 
                 <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
@@ -3534,7 +3536,7 @@
     }
 
     // ============================================================
-    //  WHATSAPP AUTOMATION & SHARE (FIXED & FULLY WORKING)
+    //  WHATSAPP AUTOMATION & SHARE (FULL WORKING)
     // ============================================================
     function openWhatsAppModal(id) {
         const item = (transactionsData || []).find(t => t.id === id);
