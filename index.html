@@ -1058,57 +1058,16 @@
                     </div>
                 </div>
 
-                <!-- 📁 MANUAL BANK ACCOUNT STATEMENTS MANAGEMENT & VIEWER -->
+                <!-- 📁 BANK ACCOUNT STATEMENTS VIEWER & DROPDOWN FILTER SECTION -->
                 <div class="card mt-4 p-3 shadow-sm" style="background: #fdfdfd; border-radius: 8px; margin-top: 20px; border: 1.5px dashed #2a7de1;">
                     <h5 style="color: #0d2b44; font-weight: bold; font-size: 1.1rem; margin-bottom: 6px;">📁 Bank Account Statements (बँक स्टेटमेंट फायली)</h5>
-                    <p class="text-muted" style="font-size: 12.5px; color: #555; margin-bottom: 6px;">गुगल ड्राईव्हवरील बँक स्टेटमेंट फाईल्सच्या लिंक्स येथे सेव्ह करा व पहा.</p>
+                    <p class="text-muted" style="font-size: 12.5px; color: #555; margin-bottom: 6px;">Google Drive वरील 2023 पासूनच्या बँक स्टेटमेंट PDF फाईल्स पाहण्यासाठी महिना आणि वर्ष निवडा.</p>
                     <p style="font-size: 12px; color: #d9480f; font-weight: 700; margin-bottom: 12px;">🔑 PDF Password: <code style="background: #fff3cd; padding: 2px 6px; border-radius: 4px; border: 1px solid #ffeeba;">swam1905</code></p>
                     
-                    <!-- ADMIN ADD STATEMENT FORM (Visible only to Admin) -->
-                    <div class="admin-item-block card p-3 mb-3" style="background: #f8fafc; border: 1px solid #cbd5e1; display:none;">
-                        <h6 style="color: #0d2b44; font-weight: bold; margin-bottom: 8px;">➕ नवीन स्टेटमेंट लिंक जोडा (Add Statement Link)</h6>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
-                            <div style="flex: 1; min-width: 140px;">
-                                <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">वर्ष (Year):</label>
-                                <select id="adminStmtYear" style="width: 100%; padding: 7px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background:#fff;">
-                                    <option value="2026">2026</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2024">2024</option>
-                                    <option value="2023">2023</option>
-                                </select>
-                            </div>
-                            <div style="flex: 1; min-width: 140px;">
-                                <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">महिना (Month):</label>
-                                <select id="adminStmtMonth" style="width: 100%; padding: 7px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background:#fff;">
-                                    <option value="January">January</option>
-                                    <option value="February">February</option>
-                                    <option value="March">March</option>
-                                    <option value="April">April</option>
-                                    <option value="May">May</option>
-                                    <option value="June">June</option>
-                                    <option value="July">July</option>
-                                    <option value="August">August</option>
-                                    <option value="September">September</option>
-                                    <option value="October">October</option>
-                                    <option value="November">November</option>
-                                    <option value="December">December</option>
-                                </select>
-                            </div>
-                            <div style="flex: 2; min-width: 220px;">
-                                <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">गुगल ड्राईव्ह थेट लिंक (Google Drive URL):</label>
-                                <input type="url" id="adminStmtUrl" placeholder="https://drive.google.com/file/d/..." style="width: 100%; padding: 7px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background:#fff;">
-                            </div>
-                            <div>
-                                <button class="btn btn-success btn-sm" onclick="saveStatementLink()" style="padding: 8px 14px;">💾 लिंक सेव्ह करा</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FILTER & VIEW SECTION -->
                     <div class="row align-items-center mb-3" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
                         <div style="flex: 1; min-width: 180px;">
-                            <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 वर्ष फिल्टर (Filter Year):</label>
-                            <select id="statementYearSelect" class="form-control" onchange="filterStatementsTable()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
+                            <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 वर्ष (Year):</label>
+                            <select id="statementYearSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
                                 <option value="all">सर्व वर्षे (All Years)</option>
                                 <option value="2026">2026</option>
                                 <option value="2025">2025</option>
@@ -1118,8 +1077,8 @@
                         </div>
                         
                         <div style="flex: 1; min-width: 180px;">
-                            <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 महिना फिल्टर (Filter Month):</label>
-                            <select id="statementMonthSelect" class="form-control" onchange="filterStatementsTable()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
+                            <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 महिना (Month):</label>
+                            <select id="statementMonthSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
                                 <option value="all">सर्व महिने (All Months)</option>
                                 <option value="January">January</option>
                                 <option value="February">February</option>
@@ -1135,20 +1094,24 @@
                                 <option value="December">December</option>
                             </select>
                         </div>
+
+                        <div style="display: flex; align-items: flex-end;">
+                            <button class="btn btn-primary btn-sm" onclick="loadStatements()" style="padding: 9px 14px; margin-top: 17px;">🔄 Refresh / Load PDFs</button>
+                        </div>
                     </div>
 
                     <div class="table-responsive" style="max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
                         <table style="font-size: 13px; min-width: 100%;">
                             <thead class="table-dark" style="background: #0d2b44; color: white;">
                                 <tr>
-                                    <th style="padding: 8px; text-align: left;">महिना / वर्ष (Month / Year)</th>
-                                    <th style="padding: 8px; text-align: left;">पासवर्ड (PDF Password)</th>
-                                    <th style="padding: 8px; text-align: center; width: 140px;">Action</th>
+                                    <th style="padding: 8px; text-align: left;">महिना / वर्ष (Folder)</th>
+                                    <th style="padding: 8px; text-align: left;">फाइलचे नाव (Statement Name)</th>
+                                    <th style="padding: 8px; text-align: center; width: 120px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="statementsTableBody">
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted" style="text-align: center; padding: 20px; color: #777;">Statements लोड होत आहेत...</td>
+                                    <td colspan="3" class="text-center text-muted" style="text-align: center; padding: 20px; color: #777;">Statements लोड करण्यासाठी "Refresh / Load PDFs" बटनवर क्लिक करा.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1396,6 +1359,18 @@
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
                 Share via WhatsApp
             </h3>
+            <button onclick="closeWhatsAppModal()" style="background:none; border:none; font-size:18px; cursor:pointer;">✖</button>
+        </div>
+        <div style="margin-bottom:10px;">
+            <label style="font-size:12px; font-weight:600; color:#475569; display:block; margin-bottom:4px;">दात्याचा WhatsApp नंबर (ऐच्छिक):</label>
+            <input type="text" id="waRecipientPhone" placeholder="उदा. 9876543210" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:6px; font-size:13px;">
+        </div>
+        <textarea id="waShareMessagePreview" class="wa-message-textarea" spellcheck="false"></textarea>
+        <div class="flex-row" style="gap:10px;">
+            <button class="btn btn-success" style="flex:1; justify-content:center;" onclick="sendWhatsAppFromModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="white" style="margin-right:4px;"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                Send to WhatsApp
+            </button>
             <button class="btn btn-secondary" style="flex:1; justify-content:center;" onclick="copyWhatsAppMessageFromModal()">📋 Copy Message</button>
         </div>
     </div>
@@ -1434,10 +1409,121 @@
     let transactionsData = [];
     let currentFilteredData = [];
     let viewersData = [];
-    let statementsData = [];
     let monthlyContinuousMap = {};
     let currentRole = 'none';
     let currentWhatsAppText = '';
+
+    // ============================================================
+    //  BANK STATEMENTS API INTEGRATION (WITH MONTH & YEAR DROPDOWN)
+    // ============================================================
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUpejHaNoq1UWU0rSfvU_KopQaX-rvgpIZpSphaek0RTMLr_NcoaWmLU7Z_MFkCQouQA/exec";
+    let allStatementsData = [];
+
+    function loadStatements() {
+        const tbody = document.getElementById("statementsTableBody");
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center" style="text-align:center; padding:20px;">Loading statements from Google Drive...</td></tr>`;
+
+        fetch(WEB_APP_URL)
+            .then(response => response.json())
+            .then(data => {
+                allStatementsData = data;
+                displayStatements(allStatementsData);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger" style="text-align:center; padding:20px; color:#dc3545;">Data load honyat adchan aali. Kripya URL tapse.</td></tr>`;
+            });
+    }
+
+    function displayStatements(statements) {
+        const tbody = document.getElementById("statementsTableBody");
+        tbody.innerHTML = "";
+
+        if (!statements || statements.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted" style="text-align:center; padding:20px; color:#777;">Kontehi statements sapadle nahit.</td></tr>`;
+            return;
+        }
+
+        statements.forEach(item => {
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="padding: 8px;"><strong>${escapeHTML(item.monthFolder)}</strong></td>
+                <td style="padding: 8px;">${escapeHTML(item.name)}</td>
+                <td style="padding: 8px; text-align: center;">
+                    <a href="${escapeHTML(item.url)}" target="_blank" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️ View PDF</a>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterStatementsByDropdown() {
+        let selectedYear = document.getElementById("statementYearSelect").value;
+        let selectedMonth = document.getElementById("statementMonthSelect").value;
+
+        let filtered = allStatementsData.filter(item => {
+            let folder = item.monthFolder || ""; // उदा. "September 2026"
+            let matchYear = (selectedYear === "all" || folder.includes(selectedYear));
+            let matchMonth = (selectedMonth === "all" || folder.toLowerCase().includes(selectedMonth.toLowerCase()));
+            return matchYear && matchMonth;
+        });
+
+        displayStatements(filtered);
+    }
+
+    const monthNamesMarathi = [
+        "जानेवारी (January)", "फेब्रुवारी (February)", "मार्च (March)", "एप्रिल (April)",
+        "मे (May)", "जून (June)", "जुलै (July)", "ऑगस्ट (August)",
+        "सप्टेंबर (September)", "ऑक्टोबर (October)", "नोव्हेंबर (November)", "डिसेंबर (December)"
+    ];
+
+    // ============================================================
+    //  MARATHI NUMBER TO WORDS UTILITY
+    // ============================================================
+    function numberToMarathiWords(amount) {
+        let num = Math.round(Number(amount) || 0);
+        if (num === 0) return 'शून्य रुपये फक्त';
+
+        const units = ['', 'एक', 'दोन', 'तीन', 'चार', 'पाच', 'सहा', 'सात', 'आठ', 'नऊ',
+            'दहा', 'अकरा', 'बारा', 'तेरा', 'चौदा', 'पंधरा', 'सोळा', 'सतरा', 'अठरा', 'एकोणीस',
+            'वीस', 'एकवीस', 'बावीस', 'तेवीस', 'चोवीस', 'पंचवीस', 'सव्वीस', 'सत्तावीस', 'अठ्ठावीस', 'एकोणतीस',
+            'तीस', 'एकतीस', 'बत्तीस', 'तेहेतीस', 'चौतीस', 'पस्तीस', 'छत्तीस', 'सदतीस', 'अडतीस', 'एकेचाळीस',
+            'चाळीस', 'एक्केचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास',
+            'पन्नास', 'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ',
+            'साठ', 'एकसष्ट', 'पासष्ट', 'त्रेसष्ट', 'चौसष्ट', 'पासष्ट', 'सहासष्ट', 'सदुसष्ट', 'अडुसष्ट', 'एकोणसत्तर',
+            'सत्तर', 'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौर्‍याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी',
+            'ऐंशी', 'एक्क्याऐंशी', 'ब्याऐंशी', 'त्र्याऐंशी', 'चौऱ्याऐंशी', 'पंच्याऐंशी', 'शहाऐंशी', 'सत्त्याऐंशी', 'अठ्ठ्याऐंशी', 'एकोणनव्वद',
+            'नव्वद', 'एक्याण्णव', 'ब्याण्णव', 'त्र्याण्णव', 'चौऱ्याण्णव', 'पंच्याण्णव', 'शहाण्णव', 'सत्त्याण्णव', 'अठ्ठ्याण्णव', 'नव्व्याण्णव'
+        ];
+
+        function convertTwoDigits(n) {
+            return units[n] || '';
+        }
+
+        let words = '';
+
+        if (Math.floor(num / 10000000) > 0) {
+            words += convertTwoDigits(Math.floor(num / 10000000)) + ' कोटी ';
+            num %= 10000000;
+        }
+        if (Math.floor(num / 100000) > 0) {
+            words += convertTwoDigits(Math.floor(num / 100000)) + ' लाख ';
+            num %= 100000;
+        }
+        if (Math.floor(num / 1000) > 0) {
+            words += convertTwoDigits(Math.floor(num / 1000)) + ' हजार ';
+            num %= 1000;
+        }
+        if (Math.floor(num / 100) > 0) {
+            words += convertTwoDigits(Math.floor(num / 100)) + ' शे ';
+            num %= 100;
+        }
+        if (num > 0) {
+            words += convertTwoDigits(num) + ' ';
+        }
+
+        return words.trim() + ' रुपये फक्त';
+    }
 
     try {
         if (!firebase.apps.length) {
@@ -1461,7 +1547,6 @@
                 document.getElementById('frontPageSection').style.display = 'none';
                 document.getElementById('mainAppSection').style.display = 'block';
                 initRealtimeSync();
-                initStatementsSync();
                 initViewersSync();
                 checkBackupReminder();
                 switchAppTab('tabPanelAdd');
@@ -1571,7 +1656,6 @@
                 document.getElementById('mainAppSection').style.display = 'block';
                 showToast(`👋 Welcome ${viewer.name || viewer.username}!`);
                 initRealtimeSync();
-                initStatementsSync();
                 switchAppTab('tabPanelRecords');
             } else {
                 alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
@@ -1614,95 +1698,6 @@
         } catch(err) {
             alert('त्रुटी: ' + err.message);
         }
-    }
-
-    // ============================================================
-    //  MANUAL BANK STATEMENTS FIREBASE SYNC & MANAGEMENT
-    // ============================================================
-    function initStatementsSync() {
-        if (db) {
-            db.collection('bankStatements').orderBy('year', 'desc').orderBy('month', 'desc').onSnapshot(snapshot => {
-                let list = [];
-                snapshot.forEach(doc => {
-                    list.push({ id: doc.id, ...doc.data() });
-                });
-                statementsData = list;
-                filterStatementsTable();
-            }, err => console.error("Statements sync error:", err));
-        }
-    }
-
-    async function saveStatementLink() {
-        if (currentRole !== 'admin') return;
-        const year = document.getElementById('adminStmtYear').value;
-        const month = document.getElementById('adminStmtMonth').value;
-        const url = document.getElementById('adminStmtUrl').value.trim();
-
-        if (!url) {
-            alert('कृपया गुगल ड्राईव्हची थेट लिंक (URL) टाка.');
-            return;
-        }
-
-        try {
-            await db.collection('bankStatements').add({
-                year: year,
-                month: month,
-                url: url,
-                createdAt: new Date().toISOString()
-            });
-            document.getElementById('adminStmtUrl').value = '';
-            showToast('✅ बँक स्टेटमेंट लिंक यशस्वीरीत्या सेव्ह झाली!');
-        } catch(e) {
-            alert('त्रुटी: ' + e.message);
-        }
-    }
-
-    async function deleteStatementLink(id) {
-        if (currentRole !== 'admin') return;
-        if (!confirm('ही स्टेटमेंट लिंक डिलीट करायची आहे का?')) return;
-        try {
-            await db.collection('bankStatements').doc(id).delete();
-            showToast('🗑️ स्टेटमेंट लिंक डिलीट झाली.');
-        } catch(e) {
-            alert('त्रुटी: ' + e.message);
-        }
-    }
-
-    function filterStatementsTable() {
-        const selYear = document.getElementById('statementYearSelect').value;
-        const selMonth = document.getElementById('statementMonthSelect').value;
-
-        let filtered = statementsData.filter(item => {
-            let matchY = (selYear === 'all' || item.year === selYear);
-            let matchM = (selMonth === 'all' || item.month === selMonth);
-            return matchY && matchM;
-        });
-
-        const tbody = document.getElementById('statementsTableBody');
-        tbody.innerHTML = '';
-
-        if (!filtered || filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 20px; color: #777;">कोणतीही स्टेटमेंट फाईल सापडली नाही.</td></tr>`;
-            return;
-        }
-
-        filtered.forEach(item => {
-            const tr = document.createElement('tr');
-            let deleteBtn = '';
-            if (currentRole === 'admin') {
-                deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteStatementLink('${item.id}')" style="padding: 3px 8px; font-size: 11px; margin-left: 4px;">🗑️ Delete</button>`;
-            }
-
-            tr.innerHTML = `
-                <td style="padding: 8px;"><strong>${escapeHTML(item.month)} ${escapeHTML(item.year)}</strong></td>
-                <td style="padding: 8px;"><code style="background:#fff3cd; padding:2px 6px; border-radius:4px; border:1px solid #ffeeba;">swam1905</code></td>
-                <td style="padding: 8px; text-align: center;">
-                    <a href="${escapeHTML(item.url)}" target="_blank" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️ View PDF</a>
-                    ${deleteBtn}
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
     }
 
     // ============================================================
