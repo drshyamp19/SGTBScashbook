@@ -860,7 +860,7 @@
 
         <div id="toast" class="toast">✅ Success!</div>
 
-        <!-- TAB 1: ADD ENTRY (UPDATED WITH STAR, SUGGESTIONS & AUTO-FOCUS) -->
+        <!-- TAB 1: ADD ENTRY -->
         <div id="tabPanelAdd" class="tab-panel-section admin-item-block active">
             <div class="card" id="addCard">
                 <h2>➕ Add New Transaction</h2>
@@ -1031,7 +1031,7 @@
                     <p style="font-size:12px; color:#666;">विशिष्ट महिना स्क्रीनवर पाहण्यासाठी किंवा संपूर्ण अहवाल डाऊनलोड करण्यासाठी खालील टूलबार वापरा.</p>
                 </div>
 
-                <!-- UNIFIED TOOLBAR WITH DIVIDER -->
+                <!-- UNIFIED TOOLBAR (ADMIN & VIEWER VISIBLE OPTIONS) -->
                 <div class="unified-ledger-toolbar">
                     <div class="toolbar-group">
                         <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
@@ -1040,9 +1040,9 @@
                         <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
                     </div>
 
-                    <div class="toolbar-divider admin-item"></div>
+                    <div class="toolbar-divider"></div>
 
-                    <div class="toolbar-group admin-item">
+                    <div class="toolbar-group">
                         <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
                             <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
                             <select id="pdfPeriodSelect" style="padding:4px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
@@ -2366,8 +2366,6 @@
     //  SMART UNIFIED PDF GENERATION
     // ============================================================
     function generateTwoColumnPDF(type = 'all') {
-        if (currentRole !== 'admin') return;
-        
         const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
         const allKeys = Object.keys(monthlyContinuousMap).sort();
 
@@ -2619,7 +2617,6 @@
     //  BULK RECEIPTS & VOUCHERS PRINT
     // ============================================================
     function generateBulkReceiptsPDF() {
-        if (currentRole !== 'admin') return;
         const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
         const allKeys = Object.keys(monthlyContinuousMap).sort();
 
@@ -3882,7 +3879,7 @@
         if (/^A\/VSN/i.test(voucherStr)) {
             waTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
         } else if (/^PN/i.test(voucherStr)) {
-            waTitleText = 'देणगी पावती (Donation Receipt)';
+            waTitleText = 'अधिकृत देणगी पावती (Donation Receipt)';
         }
 
         currentWhatsAppText = 
