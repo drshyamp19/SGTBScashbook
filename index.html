@@ -758,7 +758,7 @@
             </div>
         </div>
 
-        <!-- SUMMARY CARDS -->
+        <!-- TWO-COLUMN SUMMARY TOP CARD -->
         <div class="card-summary-top">
             <div class="flex-between" style="margin-bottom:12px;">
                 <h2>📊 Two-Column Summary <span style="font-size:12px; color:#64748b; font-weight:normal;">(Cash and Bank Balance Sheet)</span></h2>
@@ -977,7 +977,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: CASH BOOK (LEDGER & PDF BUTTONS FIXED) -->
+        <!-- TAB 3: CASH BOOK (LEDGER & SPECIFIC FY SELECTION BAR) -->
         <div id="tabPanelLedger" class="tab-panel-section">
             <div class="card" style="border: 1.5px solid #2a7de1;">
                 <div class="flex-between">
@@ -992,10 +992,22 @@
                     </div>
                 </div>
 
-                <!-- Functional PDF Buttons -->
-                <div class="admin-item" style="gap:6px; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                <!-- PDF & EXPORT CONTROLS WITH FY DROPDOWN -->
+                <div class="admin-item" style="gap:8px; margin-top:14px; padding-top:12px; border-top:1px dashed #cbd5e1; flex-wrap:wrap; align-items:center;">
                     <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📄 संपूर्ण वार्षिक PDF</button>
-                    <button class="btn btn-pdf-fy btn-sm" onclick="generateSelectedFY_PDF()">📑 निवडलेल्या FY ची PDF</button>
+                    
+                    <!-- Financial Year Specific Selector -->
+                    <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
+                        <label for="pdfFYSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">FY निवडा:</label>
+                        <select id="pdfFYSelect" style="padding:5px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
+                            <option value="2023-24">FY 2023-24</option>
+                            <option value="2024-25">FY 2024-25</option>
+                            <option value="2025-26">FY 2025-26</option>
+                            <option value="2026-27" selected>FY 2026-27</option>
+                        </select>
+                        <button class="btn btn-pdf-fy btn-sm" style="margin:0;" onclick="generateSelectedFY_PDF()">📑 निवडलेल्या FY ची PDF</button>
+                    </div>
+
                     <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च PDF</button>
                 </div>
 
@@ -1058,7 +1070,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: MANAGEMENT (WITH PASSWORD CONTROLS) -->
+        <!-- TAB 4: MANAGEMENT -->
         <div id="tabPanelMgmt" class="tab-panel-section admin-item-block">
             <!-- 1. Admin Security -->
             <div class="card">
@@ -1096,7 +1108,7 @@
                 </div>
             </div>
 
-            <!-- 4. Viewer Management (With Individual Password Option) -->
+            <!-- 4. Viewer Management -->
             <div class="card">
                 <h2>👥 Viewer Management <span class="badge" style="background:#e2e8f0; color:#475569; font-size:11px; padding:2px 8px; border-radius:12px;">Admin</span></h2>
                 <div class="add-entry-form" style="margin-bottom:15px;">
@@ -1156,7 +1168,7 @@
     </div>
 </div>
 
-<!-- CHANGE ADMIN PASSWORD MODAL (WITH OLD PASSWORD) -->
+<!-- CHANGE ADMIN PASSWORD MODAL -->
 <div class="modal-overlay" id="changePasswordModal">
     <div class="modal-box">
         <h3>🔑 Change Admin Password</h3>
@@ -1409,7 +1421,7 @@
     }
 
     // ============================================================
-    //  PASSWORD MANAGEMENT (ADMIN WITH OLD PASS & VIEWER PASSWORD)
+    //  PASSWORD MANAGEMENT
     // ============================================================
     function openChangePasswordModal() {
         document.getElementById('oldAdminPasswordInput').value = '';
@@ -1444,11 +1456,8 @@
         if (!user) return;
 
         try {
-            // Re-authenticate with old password first
             const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldP);
             await user.reauthenticateWithCredential(cred);
-
-            // Now update to new password
             await user.updatePassword(newP);
             closeChangePasswordModal();
             showToast('✅ Admin पासवर्ड यशस्वीरीत्या बदलला गेला!');
@@ -2077,294 +2086,13 @@
     }
 
     // ============================================================
-    //  MONTH SCREEN VIEWER & PRINT FIXES
+    //  PRINT & PDF ENGINE (FIXED TO READ SELECTED FY)
     // ============================================================
-    function viewSelectedMonthOnScreen() {
-        const selectedVal = document.getElementById('screenMonthSelect').value;
-        const box = document.getElementById('monthlyViewerBox');
-        const title = document.getElementById('mViewerTitle');
-        const sub = document.getElementById('mViewerSub');
-        const tbody = document.getElementById('mViewerTableBody');
-        const closeBtn = document.getElementById('closeMonthlyViewBtn');
-
-        if (!transactionsData || transactionsData.length === 0) {
-            alert('कोणताही डेटा उपलब्ध नाही.');
-            return;
-        }
-
-        if (selectedVal === 'all') {
-            title.innerHTML = `📅 संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)`;
-            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | सर्व महिन्यांचा अखंड ताळेबंद`;
-
-            let grandCashIn = 0, grandCashOut = 0;
-            let grandBankIn = 0, grandBankOut = 0;
-
-            transactionsData.forEach(t => {
-                grandCashIn += (t.cashIn || 0);
-                grandCashOut += (t.cashOut || 0);
-                grandBankIn += (t.bankIn || 0);
-                grandBankOut += (t.bankOut || 0);
-            });
-
-            const finalCash = grandCashIn - grandCashOut;
-            const finalBank = grandBankIn - grandBankOut;
-
-            document.getElementById('mViewOpenCash').textContent = '₹ 0.00';
-            document.getElementById('mViewOpenBank').textContent = '₹ 0.00';
-            document.getElementById('mViewOpenTotal').textContent = '₹ 0.00';
-
-            document.getElementById('mViewSumCashIn').textContent = formatIndianNum(grandCashIn);
-            document.getElementById('mViewSumCashOut').textContent = formatIndianNum(grandCashOut);
-            document.getElementById('mViewSumBankIn').textContent = formatIndianNum(grandBankIn);
-            document.getElementById('mViewSumBankOut').textContent = formatIndianNum(grandBankOut);
-
-            document.getElementById('mViewCloseCash').textContent = formatIndianNum(finalCash);
-            document.getElementById('mViewCloseBank').textContent = formatIndianNum(finalBank);
-            document.getElementById('mViewCloseTotal').textContent = formatIndianNum(finalCash + finalBank);
-
-            tbody.innerHTML = '';
-            transactionsData.forEach((item, idx) => {
-                const tr = document.createElement('tr');
-                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-
-                tr.innerHTML = `
-                    <td style="text-align:center;">${idx + 1}</td>
-                    <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
-                    <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                    <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                    <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                    <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                    <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                    <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-        } else {
-            const mData = monthlyContinuousMap[selectedVal];
-            if (!mData) {
-                alert('या महिन्याची माहिती उपलब्ध नाही.');
-                return;
-            }
-
-            title.innerHTML = `📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '<span style="color:#dc3545;">(NIL - व्यवहार नाही)</span>' : ''}`;
-            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | नोंदवही पान`;
-
-            document.getElementById('mViewOpenCash').textContent = formatIndianNum(mData.openCash);
-            document.getElementById('mViewOpenBank').textContent = formatIndianNum(mData.openBank);
-            document.getElementById('mViewOpenTotal').textContent = formatIndianNum(mData.openTotal);
-
-            document.getElementById('mViewSumCashIn').textContent = formatIndianNum(mData.cashIn);
-            document.getElementById('mViewSumCashOut').textContent = formatIndianNum(mData.cashOut);
-            document.getElementById('mViewSumBankIn').textContent = formatIndianNum(mData.bankIn);
-            document.getElementById('mViewSumBankOut').textContent = formatIndianNum(mData.bankOut);
-
-            document.getElementById('mViewCloseCash').textContent = formatIndianNum(mData.closeCash);
-            document.getElementById('mViewCloseBank').textContent = formatIndianNum(mData.closeBank);
-            document.getElementById('mViewCloseTotal').textContent = formatIndianNum(mData.closeTotal);
-
-            tbody.innerHTML = '';
-
-            if (mData.isNil || mData.items.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                        </td>
-                    </tr>
-                `;
-            } else {
-                mData.items.forEach((item, idx) => {
-                    const tr = document.createElement('tr');
-                    const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-
-                    tr.innerHTML = `
-                        <td style="text-align:center;">${idx + 1}</td>
-                        <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
-                        <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                        <td style="text-align:center;"><span class="mode-badge mode-${item.paymentMode.startsWith('contra') ? 'contra' : item.paymentMode}">${mLabel}</span></td>
-                        <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                        <td>${escapeHTML(item.description || '-')}</td>
-                        <td style="text-align:right; color:#28a745; font-weight:600;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                        <td style="text-align:right; color:#dc3545; font-weight:600;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                        <td style="text-align:right; color:#0b5ed7; font-weight:600;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                        <td style="text-align:right; color:#d63384; font-weight:600;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                        <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                        <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-        }
-
-        box.style.display = 'block';
-        closeBtn.style.display = 'inline-block';
-        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function closeMonthlyViewer() {
-        document.getElementById('monthlyViewerBox').style.display = 'none';
-        document.getElementById('closeMonthlyViewBtn').style.display = 'none';
-    }
-
-    function printCurrentScreenMonth() {
-        const selectedVal = document.getElementById('screenMonthSelect').value;
-        if (!transactionsData || transactionsData.length === 0) {
-            alert('प्रिंट करण्यासाठी कोणताही डेटा नाही.');
-            return;
-        }
-
-        if (selectedVal === 'all') {
-            generateTwoColumnPDF('all');
-        } else {
-            const mData = monthlyContinuousMap[selectedVal];
-            if (mData) {
-                printSingleMonthDocument(mData);
-            } else {
-                alert('निवडलेल्या महिन्याचा डेटा उपलब्ध नाही.');
-            }
-        }
-    }
-
-    function printSingleMonthDocument(mData) {
-        let rowsHtml = '';
-        if (mData.isNil || mData.items.length === 0) {
-            rowsHtml = `
-            <tr>
-                <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:12px; font-weight:bold; background:#fafafa;">
-                    ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                </td>
-            </tr>`;
-        } else {
-            mData.items.forEach((item, index) => {
-                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-                rowsHtml += `
-                <tr>
-                    <td style="text-align:center; width:25px;">${index + 1}</td>
-                    <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                    <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                    <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                    <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                    <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                </tr>`;
-            });
-        }
-
-        const printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>${mData.label} - Two-Column Cash Book</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { padding: 4px 0 10px 0; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-sub { background-color: #d9480f !important; }
-                th.bank-sub { background-color: #0b5ed7 !important; }
-                .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-            <div class="month-page">
-                <div class="org-title">
-                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
-                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                </div>
-                <div class="month-bar">
-                    <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
-                    <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width:25px;">#</th>
-                            <th rowspan="2" style="width:65px;">दिनांक</th>
-                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
-                            <th rowspan="2" style="width:55px;">मोड</th>
-                            <th rowspan="2">नाव / तपशील</th>
-                            <th rowspan="2">खर्च / देणगी कारण</th>
-                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
-                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
-                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                        </tr>
-                        <tr>
-                            <th class="cash-sub">In (जमा)</th>
-                            <th class="cash-sub">Out (खर्च)</th>
-                            <th class="bank-sub">In (जमा)</th>
-                            <th class="bank-sub">Out (खर्च)</th>
-                            <th>Cash Bal</th>
-                            <th>Bank Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-                <div class="bottom-section">
-                    <table class="summary-table">
-                        <tr>
-                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
-                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
-                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
-                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
-                        </tr>
-                        <tr style="background:#eef4fb;">
-                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
-                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
-                        </tr>
-                        <tr style="background:#fff3cd; text-align:center;">
-                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
-                        </tr>
-                    </table>
-                    <div class="signatures">
-                        <div class="sig-box">तयार करणार (Accountant)</div>
-                        <div class="sig-box">सचिव (Secretary)</div>
-                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                    </div>
-                </div>
-            </div>
-            <script>window.onload = function() { window.print(); };<\/script>
-        </body>
-        </html>`;
-
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-            return;
-        }
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
-    }
-
     function generateSelectedFY_PDF() {
         if (currentRole !== 'admin') return;
-        const fySelect = document.getElementById('filterFYSelect').value;
-        const targetFY = (fySelect !== 'all') ? fySelect : '2026-27';
+        
+        // Read directly from the newly added Dropdown
+        const targetFY = document.getElementById('pdfFYSelect').value || '2026-27';
 
         const allKeys = Object.keys(monthlyContinuousMap).sort();
         const fyMonthKeys = allKeys.filter(mKey => {
@@ -3236,9 +2964,6 @@
         showToast('💾 Backup downloaded!');
     }
 
-    // ============================================================
-    //  RESTORE EXACT MATCH WITH RESTORE VALIDATION
-    // ============================================================
     function restoreData(event) {
         if (currentRole !== 'admin') return;
         const file = event.target.files[0];
