@@ -2599,8 +2599,7 @@
                             <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
                         </div>
                     </div>
-                </div>
-            </div>`;
+                </div>`;
             }
         });
 
@@ -3151,7 +3150,6 @@
                 showToast('✅ Transaction added successfully!');
             }
 
-            // Reset form fields except Date and Voucher (Voucher auto-increments via sync)
             document.getElementById('newDocFile').value = '';
             document.getElementById('newDocUrlInput').value = '';
             document.getElementById('newName').value = '';
@@ -3159,10 +3157,7 @@
             document.getElementById('newAmount').value = '';
             statusText.textContent = '';
 
-            // Update next consecutive voucher number
             handleVoucherTypeChange();
-
-            // FAST ENTRY: Auto-focus back to Name field
             document.getElementById('newName').focus();
 
             switchAppTab('tabPanelRecords');
@@ -3460,7 +3455,7 @@
     }
 
     // ============================================================
-    //  PRINT SINGLE RECEIPT (DONATION)
+    //  PRINT SINGLE RECEIPT (DONATION / MEMBERSHIP) - 1 PAGE OPTIMIZED
     // ============================================================
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -3470,6 +3465,15 @@
         const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
         const amountWords = numberToMarathiWords(receiptAmount);
 
+        // डायनॅमिक शीर्षक (Title) ठरवणे
+        let receiptTitleText = 'देणगी पावती (Donation Receipt)';
+        const voucherStr = (item.voucher || '').trim();
+        if (/^A\/VSN/i.test(voucherStr)) {
+            receiptTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
+        } else if (/^PN/i.test(voucherStr)) {
+            receiptTitleText = 'देणगी पावती (Donation Receipt)';
+        }
+
         const receiptHtml = `
         <!DOCTYPE html>
         <html>
@@ -3477,26 +3481,26 @@
             <meta charset="UTF-8">
             <title>पावती - ${escapeHTML(cleanReceiptNum)}</title>
             <style>
-                @page { size: A5 landscape; margin: 8mm; }
+                @page { size: A5 landscape; margin: 4mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 15px; }
-                .receipt-box { border: 2.5px solid #0d2b44; border-radius: 12px; padding: 20px; position: relative; background: #fff; }
-                .header { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 10px; }
-                .header h1 { margin: 0; font-size: 20px; color: #0d2b44; font-weight: 800; }
-                .header p { margin: 3px 0; font-size: 13px; color: #555; }
-                .reg-tag { display: inline-block; background: #fff3cd; color: #856404; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; }
-                .receipt-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; color: #0d2b44; }
-                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13.5px; }
-                .details-table td { padding: 8px 6px; }
-                .amount-highlight { font-size: 18px; font-weight: bold; color: #0d2b44; background: #eef4fb; padding: 6px 14px; border-radius: 6px; border: 1px dashed #2a7de1; display: inline-block; }
-                .words-text { font-size: 13px; font-weight: bold; color: #084298; margin-top: 4px; }
-                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 15px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 140px; font-size: 12px; font-weight: bold; padding-top: 4px; }
+                body { color: #111; margin: 0; padding: 4px; }
+                .receipt-box { border: 2px solid #0d2b44; border-radius: 8px; padding: 10px 14px; position: relative; background: #fff; max-height: 130mm; overflow: hidden; }
+                .header { text-align: center; border-bottom: 1.5px solid #0d2b44; padding-bottom: 4px; }
+                .header h1 { margin: 0; font-size: 16px; color: #0d2b44; font-weight: 800; }
+                .header p { margin: 1px 0; font-size: 11px; color: #555; }
+                .reg-tag { display: inline-block; background: #fff3cd; color: #856404; padding: 1px 8px; border-radius: 10px; font-weight: bold; font-size: 9.5px; margin-top: 2px; }
+                .receipt-title { text-align: center; font-size: 13px; font-weight: bold; margin: 6px 0; text-decoration: underline; color: #0d2b44; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 12px; }
+                .details-table td { padding: 4px 4px; }
+                .amount-highlight { font-size: 15px; font-weight: bold; color: #0d2b44; background: #eef4fb; padding: 3px 10px; border-radius: 4px; border: 1px dashed #2a7de1; display: inline-block; }
+                .words-text { font-size: 11px; font-weight: bold; color: #084298; margin-top: 2px; }
+                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding: 0 5px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 120px; font-size: 10.5px; font-weight: bold; padding-top: 2px; }
                 .official-stamp {
-                    width: 105px; height: 105px; border: 3px dashed #0b5ed7; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; color: #084298; font-size: 9px; font-weight: 700; transform: rotate(-7deg); opacity: 0.9;
+                    width: 75px; height: 75px; border: 2.5px dashed #0b5ed7; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4px; color: #084298; font-size: 7.5px; font-weight: 700; transform: rotate(-7deg); opacity: 0.9;
                 }
-                .official-stamp .stamp-sub { font-size: 8px; color: #0d2b44; border-top: 1px solid #0b5ed7; border-bottom: 1px solid #0b5ed7; padding: 1px 0; margin: 2px 0; }
-                .official-stamp .stamp-verified { font-size: 9px; color: #198754; font-weight: 800; }
+                .official-stamp .stamp-sub { font-size: 7px; color: #0d2b44; border-top: 1px solid #0b5ed7; border-bottom: 1px solid #0b5ed7; padding: 0.5px 0; margin: 1px 0; }
+                .official-stamp .stamp-verified { font-size: 7.5px; color: #198754; font-weight: 800; }
             </style>
         </head>
         <body>
@@ -3506,7 +3510,7 @@
                     <p>श्रीराम नगर भद्रावती</p>
                     <span class="reg-tag">📜 Reg. No.: F-0016068(CDP)</span>
                 </div>
-                <div class="receipt-title">देणगी / पावती (Donation Receipt)</div>
+                <div class="receipt-title">${escapeHTML(receiptTitleText)}</div>
                 <table class="details-table">
                     <tr>
                         <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(cleanReceiptNum)}</td>
@@ -3522,7 +3526,7 @@
                         <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="padding-top:8px;">
+                        <td colspan="2" style="padding-top:4px;">
                             <strong>स्वीकारलेली रक्कम:</strong> 
                             <span class="amount-highlight">${formatIndianNum(receiptAmount)}</span>
                             <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
@@ -3531,7 +3535,7 @@
                 </table>
                 <div class="bottom-auth-section">
                     <div class="sig-box">
-                        <div style="height:25px;"></div>
+                        <div style="height:15px;"></div>
                         दात्याची स्वाक्षरी
                     </div>
                     <div class="official-stamp">
@@ -3540,7 +3544,7 @@
                         <span class="stamp-verified">✓ अधिकृत पावती</span>
                     </div>
                     <div class="sig-box">
-                        <div style="height:25px;"></div>
+                        <div style="height:15px;"></div>
                         स्वीकारणारा / खजिनदार
                     </div>
                 </div>
@@ -3560,7 +3564,7 @@
     }
 
     // ============================================================
-    //  PRINT PAYMENT VOUCHER (EXPENSE)
+    //  PRINT PAYMENT VOUCHER (EXPENSE) - 1 PAGE OPTIMIZED
     // ============================================================
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -3577,26 +3581,26 @@
             <meta charset="UTF-8">
             <title>खर्च व्हाउचर - ${escapeHTML(voucherNum)}</title>
             <style>
-                @page { size: A5 landscape; margin: 8mm; }
+                @page { size: A5 landscape; margin: 4mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 15px; }
-                .voucher-box { border: 2.5px solid #800020; border-radius: 12px; padding: 20px; position: relative; background:#fff; }
-                .header { text-align: center; border-bottom: 2px solid #800020; padding-bottom: 10px; }
-                .header h1 { margin: 0; font-size: 20px; color: #800020; font-weight: 800; }
-                .header p { margin: 3px 0; font-size: 13px; color: #555; }
-                .reg-tag { display: inline-block; background: #fdf2e9; color: #a04000; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; margin-top: 4px; border: 1px solid #f5cba7; }
-                .voucher-title { text-align: center; font-size: 16px; font-weight: bold; margin: 12px 0; text-decoration: underline; color: #800020; }
-                .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13.5px; }
-                .details-table td { padding: 8px 6px; }
-                .amount-highlight { font-size: 18px; font-weight: bold; color: #800020; background: #fbf2f4; padding: 6px 14px; border-radius: 6px; border: 1px dashed #c0392b; display: inline-block; }
-                .words-text { font-size: 13px; font-weight: bold; color: #721c24; margin-top: 4px; }
-                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 15px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 130px; font-size: 11.5px; font-weight: bold; padding-top: 4px; }
+                body { color: #111; margin: 0; padding: 4px; }
+                .voucher-box { border: 2px solid #800020; border-radius: 8px; padding: 10px 14px; position: relative; background:#fff; max-height: 130mm; overflow: hidden; }
+                .header { text-align: center; border-bottom: 1.5px solid #800020; padding-bottom: 4px; }
+                .header h1 { margin: 0; font-size: 16px; color: #800020; font-weight: 800; }
+                .header p { margin: 1px 0; font-size: 11px; color: #555; }
+                .reg-tag { display: inline-block; background: #fdf2e9; color: #a04000; padding: 1px 8px; border-radius: 10px; font-weight: bold; font-size: 9.5px; margin-top: 2px; border: 1px solid #f5cba7; }
+                .voucher-title { text-align: center; font-size: 13px; font-weight: bold; margin: 6px 0; text-decoration: underline; color: #800020; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 12px; }
+                .details-table td { padding: 4px 4px; }
+                .amount-highlight { font-size: 15px; font-weight: bold; color: #800020; background: #fbf2f4; padding: 3px 10px; border-radius: 4px; border: 1px dashed #c0392b; display: inline-block; }
+                .words-text { font-size: 11px; font-weight: bold; color: #721c24; margin-top: 2px; }
+                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding: 0 5px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 120px; font-size: 10.5px; font-weight: bold; padding-top: 2px; }
                 .official-stamp {
-                    width: 100px; height: 100px; border: 3px dashed #800020; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; color: #800020; font-size: 9px; font-weight: 700; transform: rotate(-6deg); opacity: 0.9;
+                    width: 75px; height: 75px; border: 2.5px dashed #800020; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4px; color: #800020; font-size: 7.5px; font-weight: 700; transform: rotate(-6deg); opacity: 0.9;
                 }
-                .official-stamp .stamp-sub { font-size: 8px; border-top: 1px solid #800020; border-bottom: 1px solid #800020; padding: 1px 0; margin: 2px 0; }
-                .official-stamp .stamp-verified { font-size: 9px; color: #800020; font-weight: 800; }
+                .official-stamp .stamp-sub { font-size: 7px; border-top: 1px solid #800020; border-bottom: 1px solid #800020; padding: 0.5px 0; margin: 1px 0; }
+                .official-stamp .stamp-verified { font-size: 7.5px; color: #800020; font-weight: 800; }
             </style>
         </head>
         <body>
@@ -3622,7 +3626,7 @@
                         <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="padding-top:8px;">
+                        <td colspan="2" style="padding-top:4px;">
                             <strong>अदा केलेली रक्कम:</strong> 
                             <span class="amount-highlight">${formatIndianNum(expenseAmount)}</span>
                             <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
@@ -3631,7 +3635,7 @@
                 </table>
                 <div class="bottom-auth-section">
                     <div class="sig-box">
-                        <div style="height:25px;"></div>
+                        <div style="height:15px;"></div>
                         रक्कम घेणाऱ्याची सही
                     </div>
                     <div class="official-stamp">
@@ -3640,7 +3644,7 @@
                         <span class="stamp-verified">✓ पास / अदा</span>
                     </div>
                     <div class="sig-box">
-                        <div style="height:25px;"></div>
+                        <div style="height:15px;"></div>
                         सचिव / अध्यक्ष
                     </div>
                 </div>
@@ -3677,11 +3681,11 @@
 `🚩 *स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था* 🚩
 श्रीराम नगर भद्रावती (Reg. No. F-0016068)
 ----------------------------------------
-📜 *अधिकृत देणगी पावती (Donation Receipt)*
+📜 *अधिकृत पावती / देणगी पावती*
 ----------------------------------------
 ${voucherText}📅 *दिनांक:* ${item.date}
-🧑‍💼 *दात्याचे नाव:* ${item.name || '-'}
-${modeText}${descText}💰 *स्वीकारलेली रक्कम:* ${formatIndianNum(receiptAmount)}
+🧑‍💼 *नाव:* ${item.name || '-'}
+${modeText}${descText}💰 *रक्कम:* ${formatIndianNum(receiptAmount)}
 ✍️ *अक्षरी:* ${amountWords}
 ----------------------------------------
 आपल्या सहकार्याबद्दल मनःपूर्वक धन्यवाद! 🙏`;
