@@ -611,19 +611,6 @@
         }
         .toast.error { background: #dc3545; }
 
-        .edit-indicator {
-            background: #fff3cd;
-            padding: 8px 16px;
-            border-radius: 8px;
-            color: #856404;
-            font-weight: 600;
-            font-size: 13px;
-            display: none;
-            margin-bottom: 12px;
-            border: 1px solid #ffc107;
-        }
-        .edit-indicator .cancel-edit { color: #dc3545; cursor: pointer; font-weight: 700; margin-left: 12px; }
-
         .required-star { color: #dc3545; font-weight: 700; }
 
         .monthly-viewer-box {
@@ -655,16 +642,37 @@
             box-shadow: 0 10px 35px rgba(0,0,0,0.3);
             text-align: left;
         }
+        .modal-box.modal-lg {
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
         .modal-box h3 { color: #0d2b44; margin-bottom: 14px; font-size: 1.25rem; }
-        .modal-box input {
+        .modal-box input, .modal-box select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 9px 12px;
             border: 1.5px solid #cbd5e1;
             border-radius: 6px;
             font-size: 13.5px;
             margin-bottom: 12px;
         }
-        .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+        .modal-box .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+
+        .modal-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .modal-form-grid .full-width {
+            grid-column: span 2;
+        }
+        .modal-form-grid label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            display: block;
+            margin-bottom: 4px;
+        }
 
         .wa-modal-box {
             background: white;
@@ -709,6 +717,8 @@
             .add-entry-form .field { width: 100%; }
             .add-entry-form input, .add-entry-form select { width: 100%; }
             .voucher-input-group { flex-direction: column; align-items: stretch; width: 100%; }
+            .modal-form-grid { grid-template-columns: 1fr; }
+            .modal-form-grid .full-width { grid-column: span 1; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .org-header { flex-direction: column; align-items: stretch; text-align: center; }
             .header-left-brand { flex-direction: column; text-align: center; }
@@ -852,12 +862,8 @@
 
         <!-- TAB 1: ADD ENTRY -->
         <div id="tabPanelAdd" class="tab-panel-section admin-item-block active">
-            <div class="card" id="addEditCard">
-                <h2 id="formTitle">➕ Add New Transaction</h2>
-                <div class="edit-indicator" id="editIndicator">
-                    ✏️ Editing: <span id="editDescDisplay"></span>
-                    <span class="cancel-edit" onclick="cancelEdit()">✖ Cancel</span>
-                </div>
+            <div class="card" id="addCard">
+                <h2>➕ Add New Transaction</h2>
                 <div class="add-entry-form">
                     <div class="field">
                         <label>📅 Date <span class="required-star">*</span></label>
@@ -915,8 +921,7 @@
                         </select>
                     </div>
                     <div class="field field-actions">
-                        <button class="btn btn-success" id="addUpdateBtn" onclick="submitTransaction()">➕ Add Transaction</button>
-                        <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">✖ Cancel</button>
+                        <button class="btn btn-success" id="addBtn" onclick="submitNewTransaction()">➕ Add Transaction</button>
                     </div>
                 </div>
             </div>
@@ -1007,7 +1012,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: CASH BOOK (LEDGER & OPTION 1 UNIFIED TOOLBAR) -->
+        <!-- TAB 3: CASH BOOK (LEDGER) -->
         <div id="tabPanelLedger" class="tab-panel-section">
             <div class="card" style="border: 1.5px solid #2a7de1;">
                 <div>
@@ -1103,7 +1108,6 @@
 
         <!-- TAB 4: MANAGEMENT -->
         <div id="tabPanelMgmt" class="tab-panel-section admin-item-block">
-            <!-- 1. Admin Security -->
             <div class="card">
                 <div class="flex-between">
                     <h2>🔑 Admin Security & Account <span class="badge" style="background:#ffc107; color:#212529; font-size:11px; padding:2px 8px; border-radius:12px;">Admin Only</span></h2>
@@ -1113,7 +1117,6 @@
                 </div>
             </div>
 
-            <!-- 2. Cloud & Backup Management -->
             <div class="card">
                 <div class="flex-between">
                     <h2>💾 Cloud & Backup Management <span class="badge" style="background:#e2e8f0; color:#475569; font-size:11px; padding:2px 8px; border-radius:12px;">Admin</span></h2>
@@ -1126,7 +1129,6 @@
                 </div>
             </div>
 
-            <!-- 3. CSV Import / Export -->
             <div class="card" id="csvCard">
                 <h2>📂 CSV Import / Export <span class="badge" style="background:#e2e8f0; color:#475569; font-size:11px; padding:2px 8px; border-radius:12px;">Admin</span></h2>
                 <div class="flex-row">
@@ -1139,7 +1141,6 @@
                 </div>
             </div>
 
-            <!-- 4. Viewer Management -->
             <div class="card">
                 <h2>👥 Viewer Management <span class="badge" style="background:#e2e8f0; color:#475569; font-size:11px; padding:2px 8px; border-radius:12px;">Admin</span></h2>
                 <div class="add-entry-form" style="margin-bottom:15px;">
@@ -1181,7 +1182,76 @@
     </div>
 </div>
 
-<!-- MODALS -->
+<!-- ============================================================
+     EDIT TRANSACTION POPUP MODAL (OPTION 1)
+============================================================ -->
+<div class="modal-overlay" id="editModalOverlay">
+    <div class="modal-box modal-lg">
+        <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 8px; margin-bottom: 14px;">
+            <h3 style="color:#0d2b44; font-size: 1.15rem;">✏️ Edit Transaction (नोंदीत बदल करा)</h3>
+            <button onclick="closeEditModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">✖</button>
+        </div>
+
+        <input type="hidden" id="editEntryId">
+
+        <div class="modal-form-grid">
+            <div>
+                <label>📅 Date (दिनांक) <span class="required-star">*</span></label>
+                <input type="date" id="editDate">
+            </div>
+
+            <div>
+                <label>🔢 Voucher / Pavti No.</label>
+                <input type="text" id="editVoucher" placeholder="उदा. PN 216">
+            </div>
+
+            <div>
+                <label>💳 Payment Mode <span class="required-star">*</span></label>
+                <select id="editPaymentMode">
+                    <option value="bank">🏦 Bank (Online/UPI/NEFT/Cheque)</option>
+                    <option value="cash">💵 Cash (हातातील रोख)</option>
+                    <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
+                    <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
+                </select>
+            </div>
+
+            <div>
+                <label>📌 Flow Type (प्रकार) <span class="required-star">*</span></label>
+                <select id="editType">
+                    <option value="credit">📈 Receipt / Jama (Deposit)</option>
+                    <option value="debit">📉 Payment / Kharch (Expense)</option>
+                </select>
+            </div>
+
+            <div>
+                <label>💰 Amount (₹) <span class="required-star">*</span></label>
+                <input type="number" id="editAmount" placeholder="1000" step="0.01">
+            </div>
+
+            <div>
+                <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
+                <input type="text" id="editName" placeholder="नांव टाका">
+            </div>
+
+            <div class="full-width">
+                <label>📝 Description (तपशील / कारण)</label>
+                <input type="text" id="editDesc" placeholder="खर्च किंवा देणगीचे कारण">
+            </div>
+
+            <div class="full-width">
+                <label>🔗 Drive / Document Link (दस्तऐवज लिंक)</label>
+                <input type="url" id="editDocUrl" placeholder="https://drive.google.com/...">
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-secondary btn-sm" onclick="closeEditModal()">✖ रद्द करा</button>
+            <button class="btn btn-warning btn-sm" id="editSubmitBtn" onclick="saveEditedTransaction()">💾 बदल सेव्ह करा</button>
+        </div>
+    </div>
+</div>
+
+<!-- OTHER MODALS -->
 <div class="modal-overlay" id="viewerPasswordModal">
     <div class="modal-box">
         <h3>🔑 Change Viewer Password</h3>
@@ -1272,7 +1342,6 @@
     let viewersData = [];
     let monthlyContinuousMap = {};
     let currentRole = 'none';
-    let editingId = null;
     let currentWhatsAppText = '';
 
     const monthNamesMarathi = [
@@ -1477,7 +1546,6 @@
         showFrontPage();
         document.getElementById('adminPasswordInput').value = '';
         document.getElementById('viewerPasswordInput').value = '';
-        cancelEdit();
         showToast('👋 Logged out successfully.');
     }
 
@@ -2861,7 +2929,7 @@
                 <td style="text-align:center; white-space:nowrap;" class="admin-item">
                     ${receiptBtns}
                     ${voucherBtn}
-                    <button class="action-btn edit-btn" onclick="editEntry('${item.id}')" title="Edit">✏️</button>
+                    <button class="action-btn edit-btn" onclick="openEditModal('${item.id}')" title="Edit In Popup">✏️</button>
                     <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
                 </td>
             `;
@@ -2983,7 +3051,10 @@
         updateStats(transactionsData, filtered, isFiltered);
     }
 
-    async function submitTransaction() {
+    // ============================================================
+    //  TAB 1: SUBMIT NEW TRANSACTION
+    // ============================================================
+    async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
         const dateVal = document.getElementById('newDate').value;
         const voucher = document.getElementById('newVoucher').value.trim();
@@ -2994,7 +3065,7 @@
         const desc = document.getElementById('newDesc').value.trim();
         const amount = parseFloat(document.getElementById('newAmount').value);
         let type = document.getElementById('newType').value;
-        const submitBtn = document.getElementById('addUpdateBtn');
+        const submitBtn = document.getElementById('addBtn');
         const statusText = document.getElementById('fileUploadStatus');
 
         if (!dateVal || !name || isNaN(amount) || amount <= 0) {
@@ -3044,16 +3115,10 @@
             };
 
             if (db) {
-                if (editingId) {
-                    await db.collection('transactions').doc(editingId).update(payload);
-                    showToast('✅ Transaction updated successfully!');
-                } else {
-                    await db.collection('transactions').add(payload);
-                    showToast('✅ Transaction added successfully!');
-                }
+                await db.collection('transactions').add(payload);
+                showToast('✅ Transaction added successfully!');
             }
 
-            cancelEdit();
             document.getElementById('newDocFile').value = '';
             document.getElementById('newDocUrlInput').value = '';
             document.getElementById('newName').value = '';
@@ -3067,69 +3132,92 @@
             alert('Error: ' + err.message);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = editingId ? '💾 Update Transaction' : '➕ Add Transaction';
+            submitBtn.textContent = '➕ Add Transaction';
             statusText.textContent = '';
         }
     }
 
-    function editEntry(id) {
+    // ============================================================
+    //  OPTION 1: EDIT TRANSACTION IN POPUP MODAL
+    // ============================================================
+    function openEditModal(id) {
         if (currentRole !== 'admin') return;
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
 
-        editingId = id;
-        switchAppTab('tabPanelAdd');
-
-        document.getElementById('formTitle').textContent = '✏️ Edit Transaction';
-        document.getElementById('editIndicator').style.display = 'block';
-        document.getElementById('editDescDisplay').textContent = item.name || item.description || 'Entry';
-        document.getElementById('addUpdateBtn').textContent = '💾 Update Transaction';
-        document.getElementById('addUpdateBtn').className = 'btn btn-warning';
-        document.getElementById('cancelEditBtn').style.display = 'inline-block';
-
-        document.getElementById('newDate').value = item.rawDate || parseToIsoDate(item.date);
-        
-        const v = item.voucher || '';
-        const vSelect = document.getElementById('voucherTypeSelect');
-        if (/^PN/i.test(v)) vSelect.value = 'PN';
-        else if (/^A\/VSN/i.test(v)) vSelect.value = 'A/VSN';
-        else if (/^VN.*IBT/i.test(v)) vSelect.value = 'VN_IBT';
-        else if (/^VN/i.test(v)) vSelect.value = 'VN';
-        else vSelect.value = 'OTHER';
-        
-        document.getElementById('newVoucher').value = v;
-        document.getElementById('newPaymentMode').value = item.paymentMode || 'bank';
-        handlePaymentModeChange();
-
-        document.getElementById('newDocUrlInput').value = item.docUrl || '';
-        document.getElementById('newDocFile').value = '';
-
-        document.getElementById('newName').value = item.name || '';
-        document.getElementById('newDesc').value = item.description || '';
+        document.getElementById('editEntryId').value = item.id;
+        document.getElementById('editDate').value = item.rawDate || parseToIsoDate(item.date);
+        document.getElementById('editVoucher').value = item.voucher || '';
+        document.getElementById('editPaymentMode').value = item.paymentMode || 'bank';
+        document.getElementById('editType').value = (item.credit > 0) ? 'credit' : 'debit';
         
         const amt = item.credit > 0 ? item.credit : item.debit;
-        document.getElementById('newAmount').value = amt;
-        document.getElementById('newType').value = item.credit > 0 ? 'credit' : 'debit';
+        document.getElementById('editAmount').value = amt || 0;
+        document.getElementById('editName').value = item.name || '';
+        document.getElementById('editDesc').value = item.description || '';
+        document.getElementById('editDocUrl').value = item.docUrl || '';
 
-        document.getElementById('addEditCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('editModalOverlay').style.display = 'flex';
     }
 
-    function cancelEdit() {
-        editingId = null;
-        document.getElementById('formTitle').textContent = '➕ Add New Transaction';
-        document.getElementById('editIndicator').style.display = 'none';
-        document.getElementById('addUpdateBtn').textContent = '➕ Add Transaction';
-        document.getElementById('addUpdateBtn').className = 'btn btn-success';
-        document.getElementById('cancelEditBtn').style.display = 'none';
-        document.getElementById('newDocFile').value = '';
-        document.getElementById('newDocUrlInput').value = '';
-        document.getElementById('fileUploadStatus').textContent = '';
-        document.getElementById('newName').value = '';
-        document.getElementById('newDesc').value = '';
-        document.getElementById('newAmount').value = '';
-        document.getElementById('newPaymentMode').value = 'bank';
-        handlePaymentModeChange();
-        handleVoucherTypeChange();
+    function closeEditModal() {
+        document.getElementById('editModalOverlay').style.display = 'none';
+        document.getElementById('editEntryId').value = '';
+    }
+
+    async function saveEditedTransaction() {
+        if (currentRole !== 'admin') return;
+        const id = document.getElementById('editEntryId').value;
+        const dateVal = document.getElementById('editDate').value;
+        const voucher = document.getElementById('editVoucher').value.trim();
+        const modeVal = document.getElementById('editPaymentMode').value;
+        let typeVal = document.getElementById('editType').value;
+        const amount = parseFloat(document.getElementById('editAmount').value);
+        const name = document.getElementById('editName').value.trim();
+        const desc = document.getElementById('editDesc').value.trim();
+        const docUrl = document.getElementById('editDocUrl').value.trim();
+        const saveBtn = document.getElementById('editSubmitBtn');
+
+        if (!id || !dateVal || !name || isNaN(amount) || amount <= 0) {
+            alert('कृपया दिनांक, नाव आणि योग्य रक्कम टाका.');
+            return;
+        }
+
+        if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c') {
+            typeVal = 'credit';
+        }
+
+        const rawDate = parseToIsoDate(dateVal);
+        const formattedDate = formatDateToDisplay(rawDate);
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Saving...';
+
+        try {
+            const payload = {
+                rawDate: rawDate,
+                date: formattedDate,
+                voucher: voucher,
+                paymentMode: modeVal,
+                docUrl: docUrl,
+                name: name,
+                description: desc,
+                credit: (typeVal === 'credit') ? amount : 0,
+                debit: (typeVal === 'debit') ? amount : 0,
+                fy: getFinancialYear(rawDate)
+            };
+
+            if (db) {
+                await db.collection('transactions').doc(id).update(payload);
+                showToast('✅ नोंद यशस्वीरीत्या अपडेट केली!');
+                closeEditModal();
+            }
+        } catch(err) {
+            alert('अपडेट करताना त्रुटी आली: ' + err.message);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 बदल सेव्ह करा';
+        }
     }
 
     async function deleteEntry(id) {
@@ -3139,7 +3227,6 @@
         try {
             await db.collection('transactions').doc(id).delete();
             showToast('🗑️ Entry deleted from Cloud.');
-            if (editingId === id) cancelEdit();
         } catch(err) {
             alert('Error deleting: ' + err.message);
         }
@@ -3160,7 +3247,6 @@
                 await batch.commit();
             }
 
-            cancelEdit();
             showToast('🗑️ All cloud data cleared!');
         } catch(err) {
             alert('Error: ' + err.message);
@@ -3536,7 +3622,7 @@
     }
 
     // ============================================================
-    //  WHATSAPP AUTOMATION & SHARE (FULL WORKING)
+    //  WHATSAPP AUTOMATION & SHARE
     // ============================================================
     function openWhatsAppModal(id) {
         const item = (transactionsData || []).find(t => t.id === id);
