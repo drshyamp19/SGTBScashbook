@@ -1055,6 +1055,7 @@
                         </div>
                         <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📑 कॅश बुक PDF</button>
                         <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च PDF</button>
+                        <button class="btn btn-warning btn-sm" onclick="generateBulkReceiptsPDF()" title="निवडलेल्या कालावधीतील सर्व पावत्या व व्हाउचर एकाच वेळी प्रिंट करा">📑 सर्व पावती/व्हाउचर एकत्रित प्रिंट (Bulk)</button>
                     </div>
                 </div>
 
@@ -2614,6 +2615,194 @@
         printWin.document.close();
     }
 
+    // ============================================================
+    //  BULK RECEIPTS & VOUCHERS PRINT (NEW FEATURE)
+    // ============================================================
+    function generateBulkReceiptsPDF() {
+        if (currentRole !== 'admin') return;
+        const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
+        const allKeys = Object.keys(monthlyContinuousMap).sort();
+
+        if (allKeys.length === 0 || !transactionsData || transactionsData.length === 0) {
+            alert('प्रिंट करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
+            return;
+        }
+
+        let targetItems = [];
+        if (selectedPeriod === 'all') {
+            targetItems = transactionsData;
+        } else {
+            targetItems = transactionsData.filter(t => t.fy === selectedPeriod);
+        }
+
+        if (targetItems.length === 0) {
+            alert(`निवडलेल्या कालावधीसाठी (${selectedPeriod}) कोणत्याही नोंदी उपलब्ध नाहीत.`);
+            return;
+        }
+
+        let bulkHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>सर्व पावती व व्हाउचर एकत्रित प्रिंट - Swami Gopal Tirth</title>
+            <style>
+                @page { size: A5 landscape; margin: 4mm; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; }
+                .doc-page { page-break-after: always; break-after: page; padding: 6px; }
+                .doc-page:last-child { page-break-after: avoid; break-after: avoid; }
+                
+                .receipt-box { border: 2px solid #0d2b44; border-radius: 8px; padding: 10px 14px; position: relative; background: #fff; max-height: 130mm; overflow: hidden; }
+                .voucher-box { border: 2px solid #800020; border-radius: 8px; padding: 10px 14px; position: relative; background:#fff; max-height: 130mm; overflow: hidden; }
+                
+                .header { text-align: center; border-bottom: 1.5px solid; padding-bottom: 4px; }
+                .header h1 { margin: 0; font-size: 16px; font-weight: 800; }
+                .header p { margin: 1px 0; font-size: 11px; color: #555; }
+                .reg-tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-weight: bold; font-size: 9.5px; margin-top: 2px; }
+                
+                .doc-title { text-align: center; font-size: 13px; font-weight: bold; margin: 6px 0; text-decoration: underline; }
+                .details-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 12px; }
+                .details-table td { padding: 4px 4px; }
+                .amount-highlight { font-size: 15px; font-weight: bold; padding: 3px 10px; border-radius: 4px; display: inline-block; }
+                .words-text { font-size: 11px; font-weight: bold; margin-top: 2px; }
+                
+                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding: 0 5px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 120px; font-size: 10.5px; font-weight: bold; padding-top: 2px; }
+                .official-stamp {
+                    width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4px; font-size: 7.5px; font-weight: 700; transform: rotate(-7deg); opacity: 0.9;
+                }
+                .official-stamp .stamp-sub { font-size: 7px; border-top: 1px solid; border-bottom: 1px solid; padding: 0.5px 0; margin: 1px 0; }
+                .official-stamp .stamp-verified { font-size: 7.5px; font-weight: 800; }
+            </style>
+        </head>
+        <body>
+        `;
+
+        targetItems.forEach((item) => {
+            const isCredit = (item.credit > 0 || item.cashIn > 0 || item.bankIn > 0);
+            const isContra = (item.paymentMode || '').startsWith('contra');
+            const amount = isCredit ? (item.cashIn > 0 ? item.cashIn : item.bankIn) : (item.cashOut > 0 ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.debit > 0 ? item.debit : item.credit)));
+            const amountWords = numberToMarathiWords(amount);
+            const voucherNum = item.voucher || '-';
+
+            if (isCredit && !isContra) {
+                // पावती (Receipt)
+                let receiptTitleText = 'देणगी पावती (Donation Receipt)';
+                if (/^A\/VSN/i.test(voucherNum)) {
+                    receiptTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
+                } else if (/^PN/i.test(voucherNum)) {
+                    receiptTitleText = 'देणगी पावती (Donation Receipt)';
+                }
+
+                bulkHtml += `
+                <div class="doc-page">
+                    <div class="receipt-box">
+                        <div class="header" style="border-color: #0d2b44;">
+                            <h1 style="color: #0d2b44;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                            <p>श्रीराम नगर भद्रावती</p>
+                            <span class="reg-tag" style="background: #fff3cd; color: #856404;">📜 Reg. No.: F-0016068(CDP)</span>
+                        </div>
+                        <div class="doc-title" style="color: #0d2b44;">${escapeHTML(receiptTitleText)}</div>
+                        <table class="details-table">
+                            <tr>
+                                <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(getCleanReceiptNumber(voucherNum))}</td>
+                                <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || '-')}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding-top:4px;">
+                                    <strong>स्वीकारलेली रक्कम:</strong> 
+                                    <span class="amount-highlight" style="color: #0d2b44; background: #eef4fb; border: 1px dashed #2a7de1;">${formatIndianNum(amount)}</span>
+                                    <div class="words-text" style="color: #084298;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="bottom-auth-section">
+                            <div class="sig-box"><div style="height:15px;"></div>दात्याची स्वाक्षरी</div>
+                            <div class="official-stamp" style="border: 2.5px dashed #0b5ed7; color: #084298;">
+                                <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                                <span class="stamp-sub" style="border-color:#0b5ed7;">भद्रावती F-0016068</span>
+                                <span class="stamp-verified" style="color:#198754;">✓ अधिकृत पावती</span>
+                            </div>
+                            <div class="sig-box"><div style="height:15px;"></div>स्वीकारणारा / खजिनदार</div>
+                        </div>
+                    </div>
+                </div>`;
+            } else {
+                // खर्च किंवा कॉन्ट्रा व्हाउचर (Voucher)
+                let voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
+                if (isContra || /contra/i.test(voucherNum) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
+                    voucherTitleText = 'Cash to Bank / Contra Transfer (बँक व रोख अंतर्गत हस्तांतरण)';
+                } else if (/VN\s*.*IBT/i.test(voucherNum) || /IBT/i.test(voucherNum) || /बँक चार्जेस/i.test(item.description)) {
+                    voucherTitleText = 'Internal Banking Transaction (बँक अंतर्गत व्यवहार)';
+                }
+
+                bulkHtml += `
+                <div class="doc-page">
+                    <div class="voucher-box">
+                        <div class="header" style="border-color: #800020;">
+                            <h1 style="color: #800020;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                            <p>श्रीराम नगर भद्रावती</p>
+                            <span class="reg-tag" style="background: #fdf2e9; color: #a04000; border: 1px solid #f5cba7;">📜 Reg. No.: F-0016068(CDP)</span>
+                        </div>
+                        <div class="doc-title" style="color: #800020;">${escapeHTML(voucherTitleText)}</div>
+                        <table class="details-table">
+                            <tr>
+                                <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(voucherNum)}</td>
+                                <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding-top:4px;">
+                                    <strong>रक्कम:</strong> 
+                                    <span class="amount-highlight" style="color: #800020; background: #fbf2f4; border: 1px dashed #c0392b;">${formatIndianNum(amount)}</span>
+                                    <div class="words-text" style="color: #721c24;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="bottom-auth-section">
+                            <div class="sig-box"><div style="height:15px;"></div>स्वाक्षरी / सही</div>
+                            <div class="official-stamp" style="border: 2.5px dashed #800020; color: #800020;">
+                                <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                                <span class="stamp-sub" style="border-color:#800020;">भद्रावती F-0016068</span>
+                                <span class="stamp-verified" style="color:#800020;">✓ पास / अदा</span>
+                            </div>
+                            <div class="sig-box"><div style="height:15px;"></div>सचिव / अध्यक्ष</div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        });
+
+        bulkHtml += `<script>window.onload = function() { window.print(); };<\/script></body></html>`;
+        
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
+            return;
+        }
+        printWin.document.open();
+        printWin.document.write(bulkHtml);
+        printWin.document.close();
+    }
+
     function printCurrentScreenMonth() {
         const selectedVal = document.getElementById('screenMonthSelect').value;
         if (!transactionsData || transactionsData.length === 0) {
@@ -3573,7 +3762,6 @@
         const expenseAmount = (item.cashOut > 0) ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.credit > 0 ? item.credit : item.debit));
         const amountWords = numberToMarathiWords(expenseAmount);
 
-        // डायनॅमिक शीर्षक (Voucher Title) ठरवणे
         let voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
         const voucherStr = (item.voucher || '').trim();
         const modeStr = (item.paymentMode || '').trim();
@@ -3634,7 +3822,7 @@
                         <td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><strong>कारڻ / तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
+                        <td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
                     </tr>
                     <tr>
                         <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
