@@ -14,7 +14,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
     <style>
         * {
@@ -853,7 +852,7 @@
                 <span>📒</span> Tab 3: Cash Book (Ledger)
             </button>
             <button class="nav-tab-item admin-item" id="tabNavMgmt" onclick="switchAppTab('tabPanelMgmt')">
-                <span>⚙️</span> Tab 4: Management
+                <span>⚙️️</span> Tab 4: Management
             </button>
         </div>
 
@@ -891,7 +890,7 @@
                         </select>
                     </div>
                     <div class="field">
-                        <label>📎 Upload File <span style="font-weight:400; color:#888;">(Photo or PDF)</span></label>
+                        <label>📎 Upload File <span style="font-weight:400; color:#888;">(Direct Google Drive)</span></label>
                         <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
                     </div>
                     <div class="field">
@@ -961,7 +960,6 @@
                             </select>
                         </label>
                         <label>FY:
-                            <!-- SUDHARNA 4: Pudhil Arthik Varshe (FY) ithe add keli -->
                             <select id="filterFYSelect" onchange="filterTable()">
                                 <option value="all">All FYs</option>
                                 <option value="2023-24">FY 2023-24</option>
@@ -1038,7 +1036,7 @@
                     <div class="toolbar-group">
                         <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
                         <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12.5px; background:#fff; max-width:260px;"></select>
-                        <button class="btn btn-success btn-sm" onclick="viewSelectedMonthOnScreen()">👁️ उघडा</button>
+                        <button class="btn btn-success btn-sm" onclick="viewSelectedMonthOnScreen()">👁️️ उघडा</button>
                         <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
                     </div>
 
@@ -1047,7 +1045,6 @@
                     <div class="toolbar-group">
                         <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
                             <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
-                            <!-- SUDHARNA 4: PDF Period madhehi pudhil FYs add keli -->
                             <select id="pdfPeriodSelect" style="padding:4px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
                                 <option value="all">🌟 सर्व नोंदी (सुरुवातीपासून)</option>
                                 <option value="2023-24">📅 FY 2023-24</option>
@@ -1073,7 +1070,6 @@
                     <div class="row align-items-center mb-3" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
                         <div style="flex: 1; min-width: 180px;">
                             <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 वर्ष (Year):</label>
-                            <!-- SUDHARNA 1: Dropdown madhe 2027, 2028, 2029 default dile ani he load jalyaver auto-populate pan hoil -->
                             <select id="statementYearSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
                                 <option value="all">सर्व वर्षे (All Years)</option>
                                 <option value="2029">2029</option>
@@ -1415,7 +1411,6 @@
 
     let auth = null;
     let db = null;
-    let storage = null;
     let transactionsData = [];
     let currentFilteredData = [];
     let viewersData = [];
@@ -1424,7 +1419,7 @@
     let currentWhatsAppText = '';
 
     // ============================================================
-    //  BANK STATEMENTS API INTEGRATION
+    //  GOOGLE DRIVE API INTEGRATION (APPS SCRIPT WEB APP)
     // ============================================================
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8bYYwVOJ1ul5UF01oeEdhGfexUhqkb2ByBARoLRvRdAAJBiM7phRkZCeLWnmSxwKMtA/exec";
     let allStatementsData = [];
@@ -1440,10 +1435,7 @@
                     throw new Error(data.error);
                 }
                 allStatementsData = data;
-                
-                // SUDHARNA 1: Drive varun aalelya files madhun sarv years shodhun dropdown auto-populate karne
                 populateStatementYearsDynamically(allStatementsData);
-
                 filterStatementsByDropdown();
             })
             .catch(error => {
@@ -1452,7 +1444,6 @@
             });
     }
 
-    // SUDHARNA 1 FUNCTION: Varsha auto add karne
     function populateStatementYearsDynamically(data) {
         const yearSelect = document.getElementById("statementYearSelect");
         if (!yearSelect || !data) return;
@@ -1516,6 +1507,39 @@
         displayStatements(filtered);
     }
 
+    // ============================================================
+    //  GOOGLE DRIVE FILE UPLOAD HELPER (BASE64 CONVERTER)
+    // ============================================================
+    function uploadFileToGoogleDrive(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result.split(',')[1];
+                const payload = {
+                    filename: `${Date.now()}_${file.name}`,
+                    mimeType: file.type || 'application/octet-stream',
+                    base64: base64Data
+                };
+
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(json => {
+                    if (json.status === 'success' && json.fileUrl) {
+                        resolve(json.fileUrl);
+                    } else {
+                        reject(new Error(json.message || 'Drive Upload Failed'));
+                    }
+                })
+                .catch(err => reject(err));
+            };
+            reader.onerror = (err) => reject(err);
+            reader.readAsDataURL(file);
+        });
+    }
+
     const monthNamesMarathi = [
         "जानेवारी (January)", "फेब्रुवारी (February)", "मार्च (March)", "एप्रिल (April)",
         "मे (May)", "जून (June)", "जुलै (July)", "ऑगस्ट (August)",
@@ -1576,7 +1600,6 @@
         }
         auth = firebase.auth();
         db = firebase.firestore();
-        try { storage = firebase.storage(); } catch(e) { console.warn("Storage warning:", e); }
     } catch(err) {
         console.error("Firebase init error:", err);
     }
@@ -1615,7 +1638,6 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // SUDHARNA 5: Tab 3 var click kelyas background madhe auto-loadStatements run karne
     function switchAppTab(panelId) {
         document.querySelectorAll('.tab-panel-section').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
@@ -1629,7 +1651,6 @@
         else if (panelId === 'tabPanelRecords') document.getElementById('tabNavRecords').classList.add('active');
         else if (panelId === 'tabPanelLedger') {
             document.getElementById('tabNavLedger').classList.add('active');
-            // Sudharna 5 Logic: Statement list adhi load naslyas auto call
             if (allStatementsData.length === 0) {
                 loadStatements();
             }
@@ -2489,7 +2510,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
+                            ℹ️️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
                         </td>
                     </tr>
                 `;
@@ -2618,7 +2639,7 @@
                     rowsHtml = `
                     <tr>
                         <td colspan="7" style="text-align:center; padding:25px; color:#666; font-size:11px; font-weight:bold; background:#fafafa;">
-                            ℹ️️ या महिन्यात कोणताही खर्च झालेला नाही (NIL Expenses).
+                            ℹ️ या महिन्यात कोणताही खर्च झालेला नाही (NIL Expenses).
                         </td>
                     </tr>`;
                 } else {
@@ -3281,7 +3302,7 @@
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
                     <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">
-                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11.01 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
                     </button>
                 `;
             }
@@ -3369,7 +3390,6 @@
         filterTable();
     }
 
-    // SUDHARNA 3: Case-insensitive matching sarv parameters sathi
     function filterTable() {
         const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
         const fromDate = document.getElementById('filterFromDate').value;
@@ -3406,7 +3426,6 @@
 
             if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
             
-            // Sudharna 3 Logic:
             const itemMode = (t.paymentMode || '').toLowerCase();
             if (modeFilter !== 'all') {
                 if (modeFilter === 'contra' && !itemMode.startsWith('contra')) return false;
@@ -3440,7 +3459,7 @@
     }
 
     // ============================================================
-    //  TAB 1: SUBMIT NEW TRANSACTION (SUDHARNA 2: FILE UPLOAD FAIL ALERT)
+    //  TAB 1: SUBMIT NEW TRANSACTION (DIRECT GOOGLE DRIVE UPLOAD)
     // ============================================================
     async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
@@ -3473,28 +3492,22 @@
         submitBtn.textContent = '⏳ Processing...';
 
         try {
-            // SUDHARNA 2: File upload verify karne
+            // DIRECT GOOGLE DRIVE UPLOAD LOGIC
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
-                statusText.textContent = '⏳ Uploading file...';
+                statusText.textContent = '⏳ Uploading to Google Drive...';
 
-                if (storage) {
-                    try {
-                        const fileExt = file.name.split('.').pop();
-                        const fileName = `bills/${Date.now()}_${Math.random().toString(36).substr(2, 6)}.${fileExt}`;
-                        const storageRef = storage.ref(fileName);
-                        const snapshot = await storageRef.put(file);
-                        finalDocUrl = await snapshot.ref.getDownloadURL();
-                    } catch(storageErr) {
-                        console.warn("Storage upload error:", storageErr);
-                        // Sudharna 2 Alert Logic:
-                        const proceed = confirm("⚠️ फाईल (फोटो/PDF) क्लाउडवर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद फाईल लिंकशिवाय सेव्ह करायची आहे का?");
-                        if (!proceed) {
-                            submitBtn.disabled = false;
-                            submitBtn.textContent = '➕ Add Transaction';
-                            statusText.textContent = '❌ Upload cancelled';
-                            return;
-                        }
+                try {
+                    finalDocUrl = await uploadFileToGoogleDrive(file);
+                    statusText.textContent = '✅ Drive वर फाईल सेव्ह झाली!';
+                } catch(driveErr) {
+                    console.warn("Drive upload error:", driveErr);
+                    const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद फाईल लिंकशिवाय सेव्ह करायची आहे का?");
+                    if (!proceed) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '➕ Add Transaction';
+                        statusText.textContent = '❌ Upload cancelled';
+                        return;
                     }
                 }
             }
