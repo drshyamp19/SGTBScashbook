@@ -641,8 +641,8 @@
             text-align: left;
         }
         .modal-box.modal-lg {
-            max-width: 680px;
-            max-height: 90vh;
+            max-width: 720px;
+            max-height: 92vh;
             overflow-y: auto;
         }
         .modal-box h3 { color: #0d2b44; margin-bottom: 14px; font-size: 1.25rem; }
@@ -892,7 +892,7 @@
                     
                     <!-- DIRECT PRE-UPLOAD TO GOOGLE DRIVE -->
                     <div class="field">
-                        <label>📎 Upload File <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
+                        <label>📁 Upload File <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
                         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                             <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0; max-width:180px;" onchange="handleFileSelectionChange()">
                             <button type="button" class="btn btn-primary btn-sm" id="btnUploadDrive" onclick="startManualDriveUpload()" style="display:none; margin:0;">📤 Upload</button>
@@ -1266,7 +1266,7 @@
     </div>
 </div>
 
-<!-- EDIT TRANSACTION POPUP MODAL (अपडेटेड थेट फाईल अपलोडसह) -->
+<!-- EDIT TRANSACTION POPUP MODAL (100% PERFECT 2-COLUMN & AUTOCOMPLETE SETUP) -->
 <div class="modal-overlay" id="editModalOverlay">
     <div class="modal-box modal-lg">
         <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 8px; margin-bottom: 14px;">
@@ -1283,13 +1283,22 @@
             </div>
 
             <div>
-                <label>🔢 Voucher / Pavti No.</label>
-                <input type="text" id="editVoucher" placeholder="उदा. PN 216">
+                <label>🔢 Voucher / Pavti No. <span class="required-star">*</span></label>
+                <div class="voucher-input-group">
+                    <select id="editVoucherTypeSelect" onchange="handleEditVoucherTypeChange()">
+                        <option value="PN">PN (General Donation)</option>
+                        <option value="A/VSN">A/VSN (Membership)</option>
+                        <option value="VN">VN (General Expense)</option>
+                        <option value="VN_IBT">VN IBT (Bank Charges)</option>
+                        <option value="OTHER">Other / इतर (Manual Box)</option>
+                    </select>
+                    <input type="text" id="editVoucher" placeholder="उदा. PN 216">
+                </div>
             </div>
 
             <div>
                 <label>💳 Payment Mode <span class="required-star">*</span></label>
-                <select id="editPaymentMode">
+                <select id="editPaymentMode" onchange="handleEditPaymentModeChange()">
                     <option value="bank">🏦 Bank (Online/UPI/NEFT/Cheque)</option>
                     <option value="cash">💵 Cash (हातातील रोख)</option>
                     <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
@@ -1299,7 +1308,7 @@
 
             <div>
                 <label>📌 Flow Type (प्रकार) <span class="required-star">*</span></label>
-                <select id="editType">
+                <select id="editType" onchange="handleEditTypeChange()">
                     <option value="credit">📈 Receipt / Jama (Deposit)</option>
                     <option value="debit">📉 Payment / Kharch (Expense)</option>
                 </select>
@@ -1312,27 +1321,28 @@
 
             <div>
                 <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
-                <input type="text" id="editName" placeholder="नांव टाका">
+                <input type="text" id="editName" list="donorNamesList" placeholder="नांव टाका" autocomplete="off">
             </div>
 
             <div class="full-width">
                 <label>📝 Description (तपशील / कारण)</label>
-                <input type="text" id="editDesc" placeholder="खर्च किंवा देणगीचे कारण">
+                <input type="text" id="editDesc" list="descSuggestionsList" placeholder="खर्च किंवा देणगीचे कारण" autocomplete="off">
             </div>
 
-            <!-- नवीन थेट फाईल अपलोड पर्याय एडिट मोडलमध्ये -->
-            <div class="full-width">
-                <label>📎 Upload New File / बिल किंवा पावती फाईल बदला <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
-                    <input type="file" id="editDocFile" accept="image/*,.pdf" style="padding:5px 0; max-width:240px; margin-bottom:0;" onchange="handleEditFileSelectionChange()">
+            <!-- NEAT 2-COLUMN SIDE-BY-SIDE FILE UPLOAD & DRIVE LINK SETUP -->
+            <div>
+                <label>📁 Upload New File <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <input type="file" id="editDocFile" accept="image/*,.pdf" style="padding:5px 0; max-width:180px; margin-bottom:0;" onchange="handleEditFileSelectionChange()">
                     <button type="button" class="btn btn-primary btn-sm" id="btnEditUploadDrive" onclick="startEditManualDriveUpload()" style="display:none; margin:0;">📤 Upload</button>
                 </div>
-                <div id="editFileUploadStatus" style="font-size:12px; font-weight:700; margin-top:4px; margin-bottom:10px;"></div>
+                <div id="editFileUploadStatus" style="font-size:11.5px; font-weight:700; margin-top:3px;"></div>
             </div>
 
-            <div class="full-width">
-                <label>🔗 Drive / Document Link (दस्तऐवज लिंक)</label>
-                <input type="url" id="editDocUrl" placeholder="https://drive.google.com/...">
+            <div>
+                <label>🔗 Drive Link <span style="font-weight:400; color:#888;">(File Link)</span></label>
+                <input type="url" id="editDocUrl" placeholder="https://drive.google.com/..." style="margin-bottom:2px;">
+                <div id="editDocExistingLinkBox" style="font-size:11.5px; font-weight:600; margin-top:3px;"></div>
             </div>
         </div>
 
@@ -1582,7 +1592,7 @@
 
         if (fileInput.files && fileInput.files[0]) {
             uploadBtn.style.display = 'inline-flex';
-            statusText.innerHTML = `📁 नवीन फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट बदल सेव्ह करा)</span>`;
+            statusText.innerHTML = `📁 नवीन फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट सेव्ह करा)</span>`;
             startEditManualDriveUpload();
         } else {
             uploadBtn.style.display = 'none';
@@ -2307,6 +2317,64 @@
     }
 
     // ============================================================
+    //  EDIT MODAL VOUCHER & TYPE HANDLING (NEW)
+    // ============================================================
+    function detectVoucherType(voucherStr) {
+        if (!voucherStr) return 'OTHER';
+        const v = voucherStr.trim();
+        if (/^PN/i.test(v)) return 'PN';
+        if (/^A\/VSN/i.test(v)) return 'A/VSN';
+        if (/^VN.*IBT/i.test(v) || /IBT/i.test(v)) return 'VN_IBT';
+        if (/^VN/i.test(v)) return 'VN';
+        return 'OTHER';
+    }
+
+    function handleEditVoucherTypeChange() {
+        const typeSelect = document.getElementById('editVoucherTypeSelect').value;
+        const voucherInput = document.getElementById('editVoucher');
+
+        if (typeSelect === 'OTHER') {
+            voucherInput.placeholder = 'उदा. UPI / Cheque / UTR नंबर टाका';
+        } else {
+            // जर जुना व्हाउचर नंबर प्रकाराशी जुळत नसेल तर सिरीज तयार करणे
+            if (!voucherInput.value.toLowerCase().startsWith(typeSelect.toLowerCase())) {
+                voucherInput.value = getNextVoucherString(typeSelect);
+            }
+        }
+    }
+
+    function handleEditTypeChange() {
+        const entryType = document.getElementById('editType').value;
+        const vSelect = document.getElementById('editVoucherTypeSelect');
+
+        if (entryType === 'credit') {
+            if (vSelect.value === 'VN' || vSelect.value === 'VN_IBT') {
+                vSelect.value = 'PN';
+                handleEditVoucherTypeChange();
+            }
+        } else if (entryType === 'debit') {
+            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN') {
+                vSelect.value = 'VN';
+                handleEditVoucherTypeChange();
+            }
+        }
+    }
+
+    function handleEditPaymentModeChange() {
+        const mode = document.getElementById('editPaymentMode').value;
+        const descInput = document.getElementById('editDesc');
+        const nameInput = document.getElementById('editName');
+
+        if (mode === 'contra_c2b') {
+            if (!descInput.value) descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
+            if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
+        } else if (mode === 'contra_b2c') {
+            if (!descInput.value) descInput.value = 'कार्यालयीन खर्चासाठी बँकेतून रोख काढली (Cash Withdrawn from Bank)';
+            if (!nameInput.value) nameInput.value = 'Self (बँक उचल)';
+        }
+    }
+
+    // ============================================================
     //  TWO-COLUMN ENGINE & MONTH MAP
     // ============================================================
     function calculateTwoColumnBalances(data) {
@@ -2620,7 +2688,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
+                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
                         </td>
                     </tr>
                 `;
@@ -2789,7 +2857,7 @@
                                 <th style="width:75px;">📅 दिनांक</th>
                                 <th style="width:90px;">🔢 व्हाउचर क्र.</th>
                                 <th style="width:65px;">💳 प्रकार</th>
-                                <th>🧑‍💼 कोणास दिले</th>
+                                <th>🧑‍‍💼 कोणास दिले</th>
                                 <th>📝 खर्चाचा तपशील</th>
                                 <th class="text-right" style="width:110px;">📉 खर्च (Debit ₹)</th>
                             </tr>
@@ -3569,7 +3637,7 @@
     }
 
     // ============================================================
-    //  TAB 1: SUBMIT NEW TRANSACTION (WITH PRE-LOADED DRIVE LINK)
+    //  TAB 1: SUBMIT NEW TRANSACTION
     // ============================================================
     async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
@@ -3659,7 +3727,7 @@
     }
 
     // ============================================================
-    //  EDIT TRANSACTION IN POPUP MODAL (अपडेटेड फाईल अपलोडसह)
+    //  EDIT TRANSACTION IN POPUP MODAL (100% REFINED LOGIC)
     // ============================================================
     function openEditModal(id) {
         if (currentRole !== 'admin') return;
@@ -3668,7 +3736,12 @@
 
         document.getElementById('editEntryId').value = item.id;
         document.getElementById('editDate').value = item.rawDate || parseToIsoDate(item.date);
+        
+        // व्हाउचर टाईप आणि नंबर अचूकपणे सेट करणे
+        const detectedType = detectVoucherType(item.voucher);
+        document.getElementById('editVoucherTypeSelect').value = detectedType;
         document.getElementById('editVoucher').value = item.voucher || '';
+        
         document.getElementById('editPaymentMode').value = item.paymentMode || 'bank';
         document.getElementById('editType').value = (item.credit > 0) ? 'credit' : 'debit';
         
@@ -3678,17 +3751,22 @@
         document.getElementById('editDesc').value = item.description || '';
         document.getElementById('editDocUrl').value = item.docUrl || '';
 
-        // फाईल इनपुट व स्टेटस रीसेट करणे
+        // फाईल इनपुट आणि स्टेटस पूर्णपणे रीसेट करणे
         const editFileInput = document.getElementById('editDocFile');
         if (editFileInput) editFileInput.value = '';
         const editUploadBtn = document.getElementById('btnEditUploadDrive');
         if (editUploadBtn) editUploadBtn.style.display = 'none';
+        
         const editStatusText = document.getElementById('editFileUploadStatus');
-        if (editStatusText) {
+        if (editStatusText) editStatusText.textContent = '';
+
+        // विद्यमान लिंक पाहण्यासाठी बटन
+        const existingLinkBox = document.getElementById('editDocExistingLinkBox');
+        if (existingLinkBox) {
             if (item.docUrl) {
-                editStatusText.innerHTML = `📎 चालू फाईल लिंक: <a href="${sanitizeUrl(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">पहा ↗</a>`;
+                existingLinkBox.innerHTML = `📄 <a href="${sanitizeUrl(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">विद्यमान फाईल/बिल पहा ↗</a>`;
             } else {
-                editStatusText.textContent = '';
+                existingLinkBox.innerHTML = `<span style="color:#888;">कोणतीही जुनी फाईल जोडलेली नाही</span>`;
             }
         }
 
@@ -3704,6 +3782,8 @@
         if (editUploadBtn) editUploadBtn.style.display = 'none';
         const editStatusText = document.getElementById('editFileUploadStatus');
         if (editStatusText) editStatusText.textContent = '';
+        const existingLinkBox = document.getElementById('editDocExistingLinkBox');
+        if (existingLinkBox) existingLinkBox.innerHTML = '';
     }
 
     async function saveEditedTransaction() {
@@ -3733,7 +3813,7 @@
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
 
-        // जर एडिट मोडलमध्ये नवीन फाईल निवडली असेल आणि Drive लिंक बॉक्स रिकामा किंवा जुना असेल, तर आधी अपलोड करणे
+        // नवीन फाईल सिलेक्ट केली असल्यास अपलोड करणे
         if (editFileInput && editFileInput.files && editFileInput.files[0]) {
             saveBtn.disabled = true;
             saveBtn.textContent = '⏳ Uploading File...';
@@ -3744,7 +3824,7 @@
                 document.getElementById('editDocUrl').value = docUrl;
             } catch(driveErr) {
                 console.warn("Edit drive upload error:", driveErr);
-                const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद जुन्या/विद्यमान लिंकसह सेव्ह करायची आहे का?");
+                const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद विद्यमान लिंकसह सेव्ह करायची आहे का?");
                 if (!proceed) {
                     saveBtn.disabled = false;
                     saveBtn.textContent = '💾 बदल सेव्ह करा';
@@ -3797,7 +3877,7 @@
 
     async function clearAllData() {
         if (currentRole !== 'admin') return;
-        if (!confirm('⚠️️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
+        if (!confirm('⚠️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
         
         try {
             const snapshot = await db.collection('transactions').get();
@@ -3810,7 +3890,7 @@
                 await batch.commit();
             }
 
-            showToast('🗑️ All cloud data cleared!');
+            showToast('🗑️️ All cloud data cleared!');
         } catch(err) {
             alert('Error: ' + err.message);
         }
