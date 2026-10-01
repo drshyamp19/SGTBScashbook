@@ -852,7 +852,7 @@
                 <span>📒</span> Tab 3: Cash Book (Ledger)
             </button>
             <button class="nav-tab-item admin-item" id="tabNavMgmt" onclick="switchAppTab('tabPanelMgmt')">
-                <span>⚙️️</span> Tab 4: Management
+                <span>⚙️</span> Tab 4: Management
             </button>
         </div>
 
@@ -889,15 +889,22 @@
                             <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
                         </select>
                     </div>
+                    
+                    <!-- DIRECT PRE-UPLOAD TO GOOGLE DRIVE -->
                     <div class="field">
-                        <label>📎 Upload File <span style="font-weight:400; color:#888;">(Direct Google Drive)</span></label>
-                        <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0;">
+                        <label>📎 Upload File <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
+                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0; max-width:180px;" onchange="handleFileSelectionChange()">
+                            <button type="button" class="btn btn-primary btn-sm" id="btnUploadDrive" onclick="startManualDriveUpload()" style="display:none; margin:0;">📤 Upload</button>
+                        </div>
+                        <div id="fileUploadStatus" style="font-size:11.5px; font-weight:700; margin-top:3px;"></div>
                     </div>
+
                     <div class="field">
-                        <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(Alternative Link)</span></label>
-                        <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:170px;">
-                        <span id="fileUploadStatus" style="font-size:11px; color:#2a7de1; font-weight:600; margin-top:2px;"></span>
+                        <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(File Link)</span></label>
+                        <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:180px;">
                     </div>
+
                     <div class="field">
                         <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
                         <input type="text" id="newName" list="donorNamesList" placeholder="E.g. Saurabh Yamawar" style="min-width:180px;" autocomplete="off">
@@ -982,7 +989,7 @@
                         <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
                         <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
                         <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
-                        <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️ Print</button>
+                        <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️️ Print</button>
                     </div>
                 </div>
 
@@ -1036,7 +1043,7 @@
                     <div class="toolbar-group">
                         <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
                         <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12.5px; background:#fff; max-width:260px;"></select>
-                        <button class="btn btn-success btn-sm" onclick="viewSelectedMonthOnScreen()">👁️️ उघडा</button>
+                        <button class="btn btn-success btn-sm" onclick="viewSelectedMonthOnScreen()">👁️ उघडा</button>
                         <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
                     </div>
 
@@ -1487,7 +1494,7 @@
                 <td style="padding: 8px;"><strong>${escapeHTML(item.month)} ${escapeHTML(item.year)}</strong></td>
                 <td style="padding: 8px;">${escapeHTML(item.name)}</td>
                 <td style="padding: 8px; text-align: center;">
-                    <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️ View PDF</a>
+                    <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️️ View PDF</a>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1508,8 +1515,54 @@
     }
 
     // ============================================================
-    //  GOOGLE DRIVE FILE UPLOAD HELPER (BASE64 CONVERTER)
+    //  FILE SELECTION & IMMEDIATE DRIVE UPLOAD HANDLER
     // ============================================================
+    function handleFileSelectionChange() {
+        const fileInput = document.getElementById('newDocFile');
+        const uploadBtn = document.getElementById('btnUploadDrive');
+        const statusText = document.getElementById('fileUploadStatus');
+
+        if (fileInput.files && fileInput.files[0]) {
+            uploadBtn.style.display = 'inline-flex';
+            statusText.innerHTML = `📁 फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट सेव्ह करा)</span>`;
+            // थेट ऑटो-अपलोड सुरू करण्यासाठी:
+            startManualDriveUpload();
+        } else {
+            uploadBtn.style.display = 'none';
+            statusText.textContent = '';
+        }
+    }
+
+    async function startManualDriveUpload() {
+        const fileInput = document.getElementById('newDocFile');
+        const uploadBtn = document.getElementById('btnUploadDrive');
+        const statusText = document.getElementById('fileUploadStatus');
+        const docUrlInput = document.getElementById('newDocUrlInput');
+
+        if (!fileInput.files || !fileInput.files[0]) {
+            alert('कृपया आधी फाईल निवडा.');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = '⏳ Uploading...';
+        statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे... कृपया थांबा.</span>`;
+
+        try {
+            const uploadedUrl = await uploadFileToGoogleDrive(file);
+            docUrlInput.value = uploadedUrl;
+            statusText.innerHTML = `<span style="color:#28a745;">✅ फाईल Drive वर सेव्ह झाली! (<a href="${escapeHTML(uploadedUrl)}" target="_blank" style="color:#28a745; text-decoration:underline;">पहा ↗</a>)</span>`;
+            uploadBtn.style.display = 'none';
+            showToast('✅ फाईल Google Drive वर यशस्वीरीत्या अपलोड झाली!');
+        } catch(err) {
+            console.error("Upload error:", err);
+            statusText.innerHTML = `<span style="color:#dc3545;">❌ फाईल अपलोड अयशस्वी: ${escapeHTML(err.message)}</span>`;
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = '🔄 पुन्हा प्रयत्न करा';
+        }
+    }
+
     function uploadFileToGoogleDrive(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -2510,7 +2563,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
+                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
                         </td>
                     </tr>
                 `;
@@ -2679,7 +2732,7 @@
                                 <th style="width:75px;">📅 दिनांक</th>
                                 <th style="width:90px;">🔢 व्हाउचर क्र.</th>
                                 <th style="width:65px;">💳 प्रकार</th>
-                                <th>🧑‍💼 कोणास दिले</th>
+                                <th>🧑‍‍💼 कोणास दिले</th>
                                 <th>📝 खर्चाचा तपशील</th>
                                 <th class="text-right" style="width:110px;">📉 खर्च (Debit ₹)</th>
                             </tr>
@@ -2860,7 +2913,7 @@
                     width: 75px; height: 75px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4px; font-size: 7.5px; font-weight: 700; transform: rotate(-7deg); opacity: 0.9;
                 }
                 .official-stamp .stamp-sub { font-size: 7px; border-top: 1px solid; border-bottom: 1px solid; padding: 0.5px 0; margin: 1px 0; }
-                .official-stamp .stamp-verified { font-size: 7.5px; font-weight: 800; }
+                .official-stamp .stamp-verified { font-size: 7.5px; color: #198754; font-weight: 800; }
             </style>
         </head>
         <body>
@@ -3302,7 +3355,7 @@
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
                     <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">
-                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11.01 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
                     </button>
                 `;
             }
@@ -3459,7 +3512,7 @@
     }
 
     // ============================================================
-    //  TAB 1: SUBMIT NEW TRANSACTION (DIRECT GOOGLE DRIVE UPLOAD)
+    //  TAB 1: SUBMIT NEW TRANSACTION (WITH PRE-LOADED DRIVE LINK)
     // ============================================================
     async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
@@ -3467,7 +3520,7 @@
         const voucher = document.getElementById('newVoucher').value.trim();
         const modeVal = document.getElementById('newPaymentMode').value;
         const fileInput = document.getElementById('newDocFile');
-        const docUrlInput = document.getElementById('newDocUrlInput').value.trim();
+        let docUrl = document.getElementById('newDocUrlInput').value.trim();
         const name = document.getElementById('newName').value.trim();
         const desc = document.getElementById('newDesc').value.trim();
         const amount = parseFloat(document.getElementById('newAmount').value);
@@ -3486,38 +3539,38 @@
 
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
-        let finalDocUrl = docUrlInput;
 
-        submitBtn.disabled = true;
-        submitBtn.textContent = '⏳ Processing...';
+        // जर फाईल निवडली असेल आणि ती अजून अपलोड झाली नसेल तर आता अपलोड करा:
+        if (fileInput.files && fileInput.files[0] && !docUrl) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Uploading File...';
+            statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे...</span>`;
 
-        try {
-            // DIRECT GOOGLE DRIVE UPLOAD LOGIC
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                statusText.textContent = '⏳ Uploading to Google Drive...';
-
-                try {
-                    finalDocUrl = await uploadFileToGoogleDrive(file);
-                    statusText.textContent = '✅ Drive वर फाईल सेव्ह झाली!';
-                } catch(driveErr) {
-                    console.warn("Drive upload error:", driveErr);
-                    const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद फाईल लिंकशिवाय सेव्ह करायची आहे का?");
-                    if (!proceed) {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = '➕ Add Transaction';
-                        statusText.textContent = '❌ Upload cancelled';
-                        return;
-                    }
+            try {
+                docUrl = await uploadFileToGoogleDrive(fileInput.files[0]);
+                document.getElementById('newDocUrlInput').value = docUrl;
+            } catch(driveErr) {
+                console.warn("Drive upload error:", driveErr);
+                const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद फाईल लिंकशिवाय सेव्ह करायची आहे का?");
+                if (!proceed) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '➕ Add Transaction';
+                    statusText.innerHTML = `<span style="color:#dc3545;">❌ Upload cancelled</span>`;
+                    return;
                 }
             }
+        }
 
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Saving...';
+
+        try {
             const payload = {
                 rawDate: rawDate,
                 date: formattedDate,
                 voucher: voucher,
                 paymentMode: modeVal,
-                docUrl: finalDocUrl,
+                docUrl: docUrl,
                 name: name,
                 description: desc,
                 credit: (type === 'credit') ? amount : 0,
@@ -3534,6 +3587,7 @@
             document.getElementById('newName').value = '';
             document.getElementById('newDesc').value = '';
             document.getElementById('newAmount').value = '';
+            document.getElementById('btnUploadDrive').style.display = 'none';
             statusText.textContent = '';
 
             handleVoucherTypeChange();
@@ -3545,7 +3599,6 @@
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = '➕ Add Transaction';
-            statusText.textContent = '';
         }
     }
 
