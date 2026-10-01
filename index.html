@@ -35,36 +35,40 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            background: linear-gradient(135deg, #0d2b44 0%, #1e4d6b 100%);
+            /* बॅकग्राउंडवर थेट banner.jpg आणि त्यावर डार्क निळा पारदर्शक ओव्हरले */
+            background: linear-gradient(rgba(13, 43, 68, 0.78), rgba(13, 43, 68, 0.85)), url('banner.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
         .front-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            max-width: 520px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            max-width: 500px;
             width: 100%;
             overflow: hidden;
             animation: fadeIn 0.4s ease-in-out;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
         .front-banner-img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             display: block;
             border-bottom: 4px solid #ffc107;
         }
         .front-content {
-            padding: 0 30px 30px 30px;
+            padding: 0 28px 28px 28px;
             position: relative;
         }
         .front-logo-wrapper {
-            margin-top: -60px;
+            margin-top: -55px;
             margin-bottom: 12px;
             display: inline-block;
         }
         .front-logo-img {
-            width: 110px;
-            height: 110px;
+            width: 105px;
+            height: 105px;
             border-radius: 50%;
             border: 4px solid white;
             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
@@ -73,13 +77,13 @@
         }
         .front-card h1 {
             color: #0d2b44;
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             font-weight: 800;
             line-height: 1.3;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .front-card p.sub {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #555;
             font-weight: 600;
             margin-bottom: 8px;
@@ -89,10 +93,10 @@
             color: #856404;
             padding: 4px 16px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             border: 1px solid #ffeeba;
         }
 
@@ -101,16 +105,16 @@
             background: #f0f4f9;
             border-radius: 12px;
             padding: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             gap: 5px;
         }
         .login-tab-btn {
             flex: 1;
-            padding: 11px;
+            padding: 10px;
             border: none;
             background: none;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13.5px;
             color: #555;
             border-radius: 8px;
             cursor: pointer;
@@ -129,7 +133,8 @@
             display: block;
             margin-bottom: 5px;
         }
-        .login-form-box input {
+        .login-form-box input[type="email"],
+        .login-form-box input[type="text"] {
             width: 100%;
             padding: 11px 14px;
             border: 1.5px solid #ced4da;
@@ -137,6 +142,57 @@
             font-size: 14px;
             margin-bottom: 14px;
         }
+
+        /* पासवर्ड इनपुट आणि शो/हाईड डोळा आयकॉन */
+        .password-field-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .password-field-wrapper input {
+            width: 100%;
+            padding: 11px 42px 11px 14px;
+            border: 1.5px solid #ced4da;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+        .pwd-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #64748b;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pwd-toggle-btn:hover {
+            color: #0d2b44;
+        }
+
+        .remember-me-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-size: 12.5px;
+            color: #555;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .remember-me-row input[type="checkbox"] {
+            cursor: pointer;
+            width: 15px;
+            height: 15px;
+            accent-color: #0d2b44;
+        }
+
         .login-submit-btn {
             width: 100%;
             padding: 12px;
@@ -158,7 +214,7 @@
             text-decoration: underline;
             cursor: pointer;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 12px;
             text-align: center;
             width: 100%;
         }
@@ -722,12 +778,19 @@
             .header-left-brand { flex-direction: column; text-align: center; }
             .app-nav-tabs { flex-wrap: nowrap; overflow-x: auto; }
             .nav-tab-item { flex: 0 0 auto; font-size: 13px; padding: 10px 14px; }
+            
+            /* मोबाईलवर फ्रंट पेज कॉम्पॅक्ट */
+            .front-banner-img { height: 140px; }
+            .front-logo-img { width: 90px; height: 90px; }
+            .front-logo-wrapper { margin-top: -45px; margin-bottom: 8px; }
+            .front-content { padding: 0 18px 20px 18px; }
+            .front-card h1 { font-size: 1.35rem; }
         }
     </style>
 </head>
 <body>
 
-<!-- FRONT PAGE -->
+<!-- FRONT PAGE (BANNER BACKGROUND & MODERN OVERLAY) -->
 <div id="frontPageSection">
     <div class="front-card">
         <img src="banner.jpg" class="front-banner-img" alt="Temple Banner" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada?w=800&auto=format&fit=crop&q=80'">
@@ -748,18 +811,32 @@
 
             <div id="adminLoginForm" class="login-form-box">
                 <label>Admin Email (फायरबेस ईमेल):</label>
-                <input type="email" id="adminEmailInput" placeholder="उदा. shyam.mauli@gmail.com">
+                <input type="email" id="adminEmailInput" placeholder="उदा. shyam.mauli@gmail.com" onkeydown="if(event.key==='Enter') document.getElementById('adminPasswordInput').focus()">
+                
                 <label>Admin Password:</label>
-                <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
+                <div class="password-field-wrapper">
+                    <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
+                    <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('adminPasswordInput', this)" title="पासवर्ड पहा/लपवा">👁️</button>
+                </div>
+
+                <label class="remember-me-row">
+                    <input type="checkbox" id="rememberAdminEmailCheckbox"> ईमेल लक्षात ठेवा (Remember Email)
+                </label>
+
                 <button class="login-submit-btn admin-btn" id="adminSubmitBtn" onclick="loginAsAdmin()">🔐 Admin Login</button>
                 <span class="forgot-pass-link" onclick="openForgotModal()">❓ Forgot Password (ईमेलवर लिंक मिळवा)</span>
             </div>
 
             <div id="viewerLoginForm" class="login-form-box" style="display:none;">
                 <label>Viewer Username (युझरनेम):</label>
-                <input type="text" id="viewerUsernameInput" placeholder="उदा. trustee1">
+                <input type="text" id="viewerUsernameInput" placeholder="उदा. trustee1" onkeydown="if(event.key==='Enter') document.getElementById('viewerPasswordInput').focus()">
+                
                 <label>Viewer Password (पासवर्ड):</label>
-                <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
+                <div class="password-field-wrapper">
+                    <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
+                    <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('viewerPasswordInput', this)" title="पासवर्ड पहा/लपवा">👁️</button>
+                </div>
+
                 <button class="login-submit-btn viewer-btn" onclick="loginAsViewer()">👁️ Viewer Login (पहा)</button>
             </div>
         </div>
@@ -1266,7 +1343,7 @@
     </div>
 </div>
 
-<!-- EDIT TRANSACTION POPUP MODAL (100% PERFECT 2-COLUMN & AUTOCOMPLETE SETUP) -->
+<!-- EDIT TRANSACTION POPUP MODAL (100% REFINED 2-COLUMN & AUTOCOMPLETE SETUP) -->
 <div class="modal-overlay" id="editModalOverlay">
     <div class="modal-box modal-lg">
         <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 8px; margin-bottom: 14px;">
@@ -1535,6 +1612,21 @@
     }
 
     // ============================================================
+    //  PASSWORD SHOW/HIDE TOGGLE HANDLER (NEW)
+    // ============================================================
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+        }
+    }
+
+    // ============================================================
     //  FILE SELECTION & IMMEDIATE DRIVE UPLOAD HANDLER (ADD ENTRY)
     // ============================================================
     function handleFileSelectionChange() {
@@ -1749,6 +1841,15 @@
         document.body.className = '';
         document.getElementById('mainAppSection').style.display = 'none';
         document.getElementById('frontPageSection').style.display = 'flex';
+        
+        // सेव्ह केलेला ईमेल पूर्ववत लोड करणे
+        const savedEmail = localStorage.getItem('sgtb_admin_saved_email');
+        if (savedEmail) {
+            const emailInput = document.getElementById('adminEmailInput');
+            const chkBox = document.getElementById('rememberAdminEmailCheckbox');
+            if (emailInput) emailInput.value = savedEmail;
+            if (chkBox) chkBox.checked = true;
+        }
     }
 
     async function sha256(message) {
@@ -1801,6 +1902,7 @@
         const email = document.getElementById('adminEmailInput').value.trim();
         const pwd = document.getElementById('adminPasswordInput').value;
         const btn = document.getElementById('adminSubmitBtn');
+        const rememberMe = document.getElementById('rememberAdminEmailCheckbox').checked;
 
         if (!email || !pwd) {
             alert('कृपया ॲडमिनचा ईमेल आणि पासवर्ड दोन्ही टाका.');
@@ -1812,6 +1914,14 @@
 
         try {
             await auth.signInWithEmailAndPassword(email, pwd);
+            
+            // ईमेल लक्षात ठेवणे किंवा काढून टाकणे
+            if (rememberMe) {
+                localStorage.setItem('sgtb_admin_saved_email', email);
+            } else {
+                localStorage.removeItem('sgtb_admin_saved_email');
+            }
+
             showToast('🔓 Welcome Admin!');
         } catch(err) {
             console.error("Auth error:", err);
@@ -2006,7 +2116,7 @@
                 <td><span style="color:#28a745; font-weight:600;">🔒 Protected</span></td>
                 <td style="text-align:center; white-space:nowrap;">
                     <button class="btn btn-warning btn-sm" onclick="openViewerPasswordModal('${v.id}', '${escapeHTML(v.username)}')">🔑 Password</button>
-                    <button class="action-btn del-btn" onclick="deleteViewer('${v.id}')" title="Delete Viewer">🗑️</button>
+                    <button class="action-btn del-btn" onclick="deleteViewer('${v.id}')" title="Delete Viewer">🗑️️</button>
                 </td>
             `;
             tbody.appendChild(row);
@@ -2317,7 +2427,7 @@
     }
 
     // ============================================================
-    //  EDIT MODAL VOUCHER & TYPE HANDLING (NEW)
+    //  EDIT MODAL VOUCHER & TYPE HANDLING (REFINED)
     // ============================================================
     function detectVoucherType(voucherStr) {
         if (!voucherStr) return 'OTHER';
@@ -2336,7 +2446,6 @@
         if (typeSelect === 'OTHER') {
             voucherInput.placeholder = 'उदा. UPI / Cheque / UTR नंबर टाका';
         } else {
-            // जर जुना व्हाउचर नंबर प्रकाराशी जुळत नसेल तर सिरीज तयार करणे
             if (!voucherInput.value.toLowerCase().startsWith(typeSelect.toLowerCase())) {
                 voucherInput.value = getNextVoucherString(typeSelect);
             }
@@ -3135,7 +3244,7 @@
                             <tr>
                                 <td colspan="2" style="padding-top:4px;">
                                     <strong>रक्कम:</strong> 
-                                    <span class="amount-highlight" style="color: #800020; background: #fbf2f4; border: 1px dashed #c0392b;">${formatIndianNum(amount)}</span>
+                                    <span class="amount-highlight" style="color: #800020; background: #fbf2f4; border: 1px dashed #c0392b;">${formatIndianNum(expenseAmount)}</span>
                                     <div class="words-text" style="color: #721c24;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
                                 </td>
                             </tr>
@@ -3480,7 +3589,7 @@
                 receiptBtns = `
                     <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
                     <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">
-                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
                     </button>
                 `;
             }
@@ -3727,7 +3836,7 @@
     }
 
     // ============================================================
-    //  EDIT TRANSACTION IN POPUP MODAL (100% REFINED LOGIC)
+    //  EDIT TRANSACTION IN POPUP MODAL (REFINED LOGIC)
     // ============================================================
     function openEditModal(id) {
         if (currentRole !== 'admin') return;
@@ -3737,7 +3846,6 @@
         document.getElementById('editEntryId').value = item.id;
         document.getElementById('editDate').value = item.rawDate || parseToIsoDate(item.date);
         
-        // व्हाउचर टाईप आणि नंबर अचूकपणे सेट करणे
         const detectedType = detectVoucherType(item.voucher);
         document.getElementById('editVoucherTypeSelect').value = detectedType;
         document.getElementById('editVoucher').value = item.voucher || '';
@@ -3751,7 +3859,6 @@
         document.getElementById('editDesc').value = item.description || '';
         document.getElementById('editDocUrl').value = item.docUrl || '';
 
-        // फाईल इनपुट आणि स्टेटस पूर्णपणे रीसेट करणे
         const editFileInput = document.getElementById('editDocFile');
         if (editFileInput) editFileInput.value = '';
         const editUploadBtn = document.getElementById('btnEditUploadDrive');
@@ -3760,7 +3867,6 @@
         const editStatusText = document.getElementById('editFileUploadStatus');
         if (editStatusText) editStatusText.textContent = '';
 
-        // विद्यमान लिंक पाहण्यासाठी बटन
         const existingLinkBox = document.getElementById('editDocExistingLinkBox');
         if (existingLinkBox) {
             if (item.docUrl) {
@@ -3813,7 +3919,6 @@
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
 
-        // नवीन फाईल सिलेक्ट केली असल्यास अपलोड करणे
         if (editFileInput && editFileInput.files && editFileInput.files[0]) {
             saveBtn.disabled = true;
             saveBtn.textContent = '⏳ Uploading File...';
@@ -4383,6 +4488,15 @@ ${modeText}${descText}💰 *रक्कम:* ${formatIndianNum(receiptAmount)}
     window.onload = function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('newDate').value = today;
+
+        // सेव्ह केलेला ईमेल पूर्ववत भरणे
+        const savedEmail = localStorage.getItem('sgtb_admin_saved_email');
+        if (savedEmail) {
+            const emailInput = document.getElementById('adminEmailInput');
+            const chkBox = document.getElementById('rememberAdminEmailCheckbox');
+            if (emailInput) emailInput.value = savedEmail;
+            if (chkBox) chkBox.checked = true;
+        }
     };
 </script>
 </body>
