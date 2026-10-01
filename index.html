@@ -961,12 +961,15 @@
                             </select>
                         </label>
                         <label>FY:
+                            <!-- SUDHARNA 4: Pudhil Arthik Varshe (FY) ithe add keli -->
                             <select id="filterFYSelect" onchange="filterTable()">
                                 <option value="all">All FYs</option>
                                 <option value="2023-24">FY 2023-24</option>
                                 <option value="2024-25">FY 2024-25</option>
                                 <option value="2025-26">FY 2025-26</option>
                                 <option value="2026-27">FY 2026-27</option>
+                                <option value="2027-28">FY 2027-28</option>
+                                <option value="2028-29">FY 2028-29</option>
                             </select>
                         </label>
                         <label>Mode: 
@@ -1044,12 +1047,15 @@
                     <div class="toolbar-group">
                         <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
                             <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
+                            <!-- SUDHARNA 4: PDF Period madhehi pudhil FYs add keli -->
                             <select id="pdfPeriodSelect" style="padding:4px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
                                 <option value="all">🌟 सर्व नोंदी (सुरुवातीपासून)</option>
                                 <option value="2023-24">📅 FY 2023-24</option>
                                 <option value="2024-25">📅 FY 2024-25</option>
                                 <option value="2025-26">📅 FY 2025-26</option>
                                 <option value="2026-27" selected>📅 FY 2026-27</option>
+                                <option value="2027-28">📅 FY 2027-28</option>
+                                <option value="2028-29">📅 FY 2028-29</option>
                             </select>
                         </div>
                         <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📑 कॅश बुक PDF</button>
@@ -1067,8 +1073,12 @@
                     <div class="row align-items-center mb-3" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
                         <div style="flex: 1; min-width: 180px;">
                             <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 वर्ष (Year):</label>
+                            <!-- SUDHARNA 1: Dropdown madhe 2027, 2028, 2029 default dile ani he load jalyaver auto-populate pan hoil -->
                             <select id="statementYearSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
                                 <option value="all">सर्व वर्षे (All Years)</option>
+                                <option value="2029">2029</option>
+                                <option value="2028">2028</option>
+                                <option value="2027">2027</option>
                                 <option value="2026">2026</option>
                                 <option value="2025">2025</option>
                                 <option value="2024">2024</option>
@@ -1414,7 +1424,7 @@
     let currentWhatsAppText = '';
 
     // ============================================================
-    //  BANK STATEMENTS API INTEGRATION (NEW DEPLOYED WEB APP URL)
+    //  BANK STATEMENTS API INTEGRATION
     // ============================================================
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8bYYwVOJ1ul5UF01oeEdhGfexUhqkb2ByBARoLRvRdAAJBiM7phRkZCeLWnmSxwKMtA/exec";
     let allStatementsData = [];
@@ -1430,12 +1440,45 @@
                     throw new Error(data.error);
                 }
                 allStatementsData = data;
+                
+                // SUDHARNA 1: Drive varun aalelya files madhun sarv years shodhun dropdown auto-populate karne
+                populateStatementYearsDynamically(allStatementsData);
+
                 filterStatementsByDropdown();
             })
             .catch(error => {
                 console.error("Error:", error);
                 tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger" style="text-align:center; padding:20px; color:#dc3545; font-weight:600;">❌ स्टेटमेंट लोड करताना त्रुटी आली. कृपया Google Drive वरील फोल्डर Permission तपासणे.</td></tr>`;
             });
+    }
+
+    // SUDHARNA 1 FUNCTION: Varsha auto add karne
+    function populateStatementYearsDynamically(data) {
+        const yearSelect = document.getElementById("statementYearSelect");
+        if (!yearSelect || !data) return;
+
+        const currentVal = yearSelect.value;
+        const yearsSet = new Set(["2023", "2024", "2025", "2026", "2027", "2028", "2029"]);
+        
+        data.forEach(item => {
+            if (item.year && item.year !== 'Other' && !isNaN(item.year)) {
+                yearsSet.add(String(item.year));
+            }
+        });
+
+        const sortedYears = Array.from(yearsSet).sort((a,b) => b.localeCompare(a));
+
+        let html = '<option value="all">सर्व वर्षे (All Years)</option>';
+        sortedYears.forEach(y => {
+            html += `<option value="${y}">${y}</option>`;
+        });
+        yearSelect.innerHTML = html;
+
+        if (currentVal && (currentVal === 'all' || yearsSet.has(currentVal))) {
+            yearSelect.value = currentVal;
+        } else {
+            yearSelect.value = 'all';
+        }
     }
 
     function displayStatements(statements) {
@@ -1572,6 +1615,7 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
+    // SUDHARNA 5: Tab 3 var click kelyas background madhe auto-loadStatements run karne
     function switchAppTab(panelId) {
         document.querySelectorAll('.tab-panel-section').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
@@ -1583,7 +1627,13 @@
 
         if (panelId === 'tabPanelAdd') document.getElementById('tabNavAdd').classList.add('active');
         else if (panelId === 'tabPanelRecords') document.getElementById('tabNavRecords').classList.add('active');
-        else if (panelId === 'tabPanelLedger') document.getElementById('tabNavLedger').classList.add('active');
+        else if (panelId === 'tabPanelLedger') {
+            document.getElementById('tabNavLedger').classList.add('active');
+            // Sudharna 5 Logic: Statement list adhi load naslyas auto call
+            if (allStatementsData.length === 0) {
+                loadStatements();
+            }
+        }
         else if (panelId === 'tabPanelMgmt') document.getElementById('tabNavMgmt').classList.add('active');
     }
 
@@ -2568,7 +2618,7 @@
                     rowsHtml = `
                     <tr>
                         <td colspan="7" style="text-align:center; padding:25px; color:#666; font-size:11px; font-weight:bold; background:#fafafa;">
-                            ℹ️ या महिन्यात कोणताही खर्च झालेला नाही (NIL Expenses).
+                            ℹ️️ या महिन्यात कोणताही खर्च झालेला नाही (NIL Expenses).
                         </td>
                     </tr>`;
                 } else {
@@ -3319,11 +3369,12 @@
         filterTable();
     }
 
+    // SUDHARNA 3: Case-insensitive matching sarv parameters sathi
     function filterTable() {
         const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
         const fromDate = document.getElementById('filterFromDate').value;
         const toDate = document.getElementById('filterToDate').value;
-        const modeFilter = document.getElementById('filterModeSelect').value;
+        const modeFilter = (document.getElementById('filterModeSelect').value || 'all').toLowerCase();
         const fyFilter = document.getElementById('filterFYSelect').value;
         const voucherTypeFilter = document.getElementById('filterVoucherTypeSelect').value;
         const flowTypeFilter = document.getElementById('filterFlowTypeSelect').value;
@@ -3354,9 +3405,12 @@
             if (flowTypeFilter === 'debit' && !(t.cashOut > 0 || t.bankOut > 0)) return false;
 
             if (fyFilter !== 'all' && t.fy !== fyFilter) return false;
+            
+            // Sudharna 3 Logic:
+            const itemMode = (t.paymentMode || '').toLowerCase();
             if (modeFilter !== 'all') {
-                if (modeFilter === 'contra' && !t.paymentMode.startsWith('contra')) return false;
-                if (modeFilter !== 'contra' && t.paymentMode !== modeFilter) return false;
+                if (modeFilter === 'contra' && !itemMode.startsWith('contra')) return false;
+                if (modeFilter !== 'contra' && itemMode !== modeFilter) return false;
             }
 
             if (voucherTypeFilter !== 'all') {
@@ -3386,7 +3440,7 @@
     }
 
     // ============================================================
-    //  TAB 1: SUBMIT NEW TRANSACTION
+    //  TAB 1: SUBMIT NEW TRANSACTION (SUDHARNA 2: FILE UPLOAD FAIL ALERT)
     // ============================================================
     async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
@@ -3419,6 +3473,7 @@
         submitBtn.textContent = '⏳ Processing...';
 
         try {
+            // SUDHARNA 2: File upload verify karne
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
                 statusText.textContent = '⏳ Uploading file...';
@@ -3432,6 +3487,14 @@
                         finalDocUrl = await snapshot.ref.getDownloadURL();
                     } catch(storageErr) {
                         console.warn("Storage upload error:", storageErr);
+                        // Sudharna 2 Alert Logic:
+                        const proceed = confirm("⚠️ फाईल (फोटो/PDF) क्लाउडवर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद फाईल लिंकशिवाय सेव्ह करायची आहे का?");
+                        if (!proceed) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = '➕ Add Transaction';
+                            statusText.textContent = '❌ Upload cancelled';
+                            return;
+                        }
                     }
                 }
             }
