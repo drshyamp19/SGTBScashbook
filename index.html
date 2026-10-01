@@ -989,7 +989,7 @@
                         <label>To: <input type="date" id="filterToDate" onchange="filterTable()"></label>
                         <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
                         <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
-                        <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨️️ Print</button>
+                        <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨 Print</button>
                     </div>
                 </div>
 
@@ -1266,7 +1266,7 @@
     </div>
 </div>
 
-<!-- EDIT TRANSACTION POPUP MODAL -->
+<!-- EDIT TRANSACTION POPUP MODAL (अपडेटेड थेट फाईल अपलोडसह) -->
 <div class="modal-overlay" id="editModalOverlay">
     <div class="modal-box modal-lg">
         <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 8px; margin-bottom: 14px;">
@@ -1318,6 +1318,16 @@
             <div class="full-width">
                 <label>📝 Description (तपशील / कारण)</label>
                 <input type="text" id="editDesc" placeholder="खर्च किंवा देणगीचे कारण">
+            </div>
+
+            <!-- नवीन थेट फाईल अपलोड पर्याय एडिट मोडलमध्ये -->
+            <div class="full-width">
+                <label>📎 Upload New File / बिल किंवा पावती फाईल बदला <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+                    <input type="file" id="editDocFile" accept="image/*,.pdf" style="padding:5px 0; max-width:240px; margin-bottom:0;" onchange="handleEditFileSelectionChange()">
+                    <button type="button" class="btn btn-primary btn-sm" id="btnEditUploadDrive" onclick="startEditManualDriveUpload()" style="display:none; margin:0;">📤 Upload</button>
+                </div>
+                <div id="editFileUploadStatus" style="font-size:12px; font-weight:700; margin-top:4px; margin-bottom:10px;"></div>
             </div>
 
             <div class="full-width">
@@ -1494,7 +1504,7 @@
                 <td style="padding: 8px;"><strong>${escapeHTML(item.month)} ${escapeHTML(item.year)}</strong></td>
                 <td style="padding: 8px;">${escapeHTML(item.name)}</td>
                 <td style="padding: 8px; text-align: center;">
-                    <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️️ View PDF</a>
+                    <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁 View PDF</a>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1515,7 +1525,7 @@
     }
 
     // ============================================================
-    //  FILE SELECTION & IMMEDIATE DRIVE UPLOAD HANDLER
+    //  FILE SELECTION & IMMEDIATE DRIVE UPLOAD HANDLER (ADD ENTRY)
     // ============================================================
     function handleFileSelectionChange() {
         const fileInput = document.getElementById('newDocFile');
@@ -1525,7 +1535,6 @@
         if (fileInput.files && fileInput.files[0]) {
             uploadBtn.style.display = 'inline-flex';
             statusText.innerHTML = `📁 फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट सेव्ह करा)</span>`;
-            // थेट ऑटो-अपलोड सुरू करण्यासाठी:
             startManualDriveUpload();
         } else {
             uploadBtn.style.display = 'none';
@@ -1557,6 +1566,54 @@
             showToast('✅ फाईल Google Drive वर यशस्वीरीत्या अपलोड झाली!');
         } catch(err) {
             console.error("Upload error:", err);
+            statusText.innerHTML = `<span style="color:#dc3545;">❌ फाईल अपलोड अयशस्वी: ${escapeHTML(err.message)}</span>`;
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = '🔄 पुन्हा प्रयत्न करा';
+        }
+    }
+
+    // ============================================================
+    //  FILE SELECTION & DRIVE UPLOAD HANDLER (EDIT POPUP MODAL)
+    // ============================================================
+    function handleEditFileSelectionChange() {
+        const fileInput = document.getElementById('editDocFile');
+        const uploadBtn = document.getElementById('btnEditUploadDrive');
+        const statusText = document.getElementById('editFileUploadStatus');
+
+        if (fileInput.files && fileInput.files[0]) {
+            uploadBtn.style.display = 'inline-flex';
+            statusText.innerHTML = `📁 नवीन फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट बदल सेव्ह करा)</span>`;
+            startEditManualDriveUpload();
+        } else {
+            uploadBtn.style.display = 'none';
+            statusText.textContent = '';
+        }
+    }
+
+    async function startEditManualDriveUpload() {
+        const fileInput = document.getElementById('editDocFile');
+        const uploadBtn = document.getElementById('btnEditUploadDrive');
+        const statusText = document.getElementById('editFileUploadStatus');
+        const docUrlInput = document.getElementById('editDocUrl');
+
+        if (!fileInput.files || !fileInput.files[0]) {
+            alert('कृपया आधी फाईल निवडा.');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = '⏳ Uploading...';
+        statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे... कृपया थांबा.</span>`;
+
+        try {
+            const uploadedUrl = await uploadFileToGoogleDrive(file);
+            docUrlInput.value = uploadedUrl;
+            statusText.innerHTML = `<span style="color:#28a745;">✅ नवीन फाईल Drive वर सेव्ह झाली! (<a href="${escapeHTML(uploadedUrl)}" target="_blank" style="color:#28a745; text-decoration:underline;">पहा ↗</a>)</span>`;
+            uploadBtn.style.display = 'none';
+            showToast('✅ फाईल Google Drive वर यशस्वीरीत्या अपलोड झाली!');
+        } catch(err) {
+            console.error("Edit Upload error:", err);
             statusText.innerHTML = `<span style="color:#dc3545;">❌ फाईल अपलोड अयशस्वी: ${escapeHTML(err.message)}</span>`;
             uploadBtn.disabled = false;
             uploadBtn.textContent = '🔄 पुन्हा प्रयत्न करा';
@@ -1613,7 +1670,7 @@
             'चाळीस', 'एक्केचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास',
             'पन्नास', 'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ',
             'साठ', 'एकसष्ट', 'पासष्ट', 'त्रेसष्ट', 'चौसष्ट', 'पासष्ट', 'सहासष्ट', 'सदुसष्ट', 'अडुसष्ट', 'एकोणसत्तर',
-            'सत्तर', 'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौर्‍याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी',
+            'सत्तर', 'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौऱ्याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी',
             'ऐंशी', 'एक्क्याऐंशी', 'ब्याऐंशी', 'त्र्याऐंशी', 'चौऱ्याऐंशी', 'पंच्याऐंशी', 'शहाऐंशी', 'सत्त्याऐंशी', 'अठ्ठ्याऐंशी', 'एकोणनव्वद',
             'नव्वद', 'एक्याण्णव', 'ब्याण्णव', 'त्र्याण्णव', 'चौऱ्याण्णव', 'पंच्याण्णव', 'शहाण्णव', 'सत्त्याण्णव', 'अठ्ठ्याण्णव', 'नव्व्याण्णव'
         ];
@@ -2563,7 +2620,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="12" style="text-align:center; padding:30px; color:#555; font-size:13px; font-weight:600; background:#fffcf5;">
-                            ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
+                            ℹ️️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
                         </td>
                     </tr>
                 `;
@@ -2732,7 +2789,7 @@
                                 <th style="width:75px;">📅 दिनांक</th>
                                 <th style="width:90px;">🔢 व्हाउचर क्र.</th>
                                 <th style="width:65px;">💳 प्रकार</th>
-                                <th>🧑‍‍💼 कोणास दिले</th>
+                                <th>🧑‍💼 कोणास दिले</th>
                                 <th>📝 खर्चाचा तपशील</th>
                                 <th class="text-right" style="width:110px;">📉 खर्च (Debit ₹)</th>
                             </tr>
@@ -3540,7 +3597,6 @@
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
 
-        // जर फाईल निवडली असेल आणि ती अजून अपलोड झाली नसेल तर आता अपलोड करा:
         if (fileInput.files && fileInput.files[0] && !docUrl) {
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Uploading File...';
@@ -3603,7 +3659,7 @@
     }
 
     // ============================================================
-    //  EDIT TRANSACTION IN POPUP MODAL
+    //  EDIT TRANSACTION IN POPUP MODAL (अपडेटेड फाईल अपलोडसह)
     // ============================================================
     function openEditModal(id) {
         if (currentRole !== 'admin') return;
@@ -3622,12 +3678,32 @@
         document.getElementById('editDesc').value = item.description || '';
         document.getElementById('editDocUrl').value = item.docUrl || '';
 
+        // फाईल इनपुट व स्टेटस रीसेट करणे
+        const editFileInput = document.getElementById('editDocFile');
+        if (editFileInput) editFileInput.value = '';
+        const editUploadBtn = document.getElementById('btnEditUploadDrive');
+        if (editUploadBtn) editUploadBtn.style.display = 'none';
+        const editStatusText = document.getElementById('editFileUploadStatus');
+        if (editStatusText) {
+            if (item.docUrl) {
+                editStatusText.innerHTML = `📎 चालू फाईल लिंक: <a href="${sanitizeUrl(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">पहा ↗</a>`;
+            } else {
+                editStatusText.textContent = '';
+            }
+        }
+
         document.getElementById('editModalOverlay').style.display = 'flex';
     }
 
     function closeEditModal() {
         document.getElementById('editModalOverlay').style.display = 'none';
         document.getElementById('editEntryId').value = '';
+        const editFileInput = document.getElementById('editDocFile');
+        if (editFileInput) editFileInput.value = '';
+        const editUploadBtn = document.getElementById('btnEditUploadDrive');
+        if (editUploadBtn) editUploadBtn.style.display = 'none';
+        const editStatusText = document.getElementById('editFileUploadStatus');
+        if (editStatusText) editStatusText.textContent = '';
     }
 
     async function saveEditedTransaction() {
@@ -3640,8 +3716,10 @@
         const amount = parseFloat(document.getElementById('editAmount').value);
         const name = document.getElementById('editName').value.trim();
         const desc = document.getElementById('editDesc').value.trim();
-        const docUrl = document.getElementById('editDocUrl').value.trim();
+        let docUrl = document.getElementById('editDocUrl').value.trim();
+        const editFileInput = document.getElementById('editDocFile');
         const saveBtn = document.getElementById('editSubmitBtn');
+        const statusText = document.getElementById('editFileUploadStatus');
 
         if (!id || !dateVal || !name || isNaN(amount) || amount <= 0) {
             alert('कृपया दिनांक, नाव आणि योग्य रक्कम टाका.');
@@ -3654,6 +3732,26 @@
 
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
+
+        // जर एडिट मोडलमध्ये नवीन फाईल निवडली असेल आणि Drive लिंक बॉक्स रिकामा किंवा जुना असेल, तर आधी अपलोड करणे
+        if (editFileInput && editFileInput.files && editFileInput.files[0]) {
+            saveBtn.disabled = true;
+            saveBtn.textContent = '⏳ Uploading File...';
+            if (statusText) statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे... कृपया थांबा.</span>`;
+
+            try {
+                docUrl = await uploadFileToGoogleDrive(editFileInput.files[0]);
+                document.getElementById('editDocUrl').value = docUrl;
+            } catch(driveErr) {
+                console.warn("Edit drive upload error:", driveErr);
+                const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद जुन्या/विद्यमान लिंकसह सेव्ह करायची आहे का?");
+                if (!proceed) {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = '💾 बदल सेव्ह करा';
+                    return;
+                }
+            }
+        }
 
         saveBtn.disabled = true;
         saveBtn.textContent = '⏳ Saving...';
@@ -3699,7 +3797,7 @@
 
     async function clearAllData() {
         if (currentRole !== 'admin') return;
-        if (!confirm('⚠️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
+        if (!confirm('⚠️️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
         
         try {
             const snapshot = await db.collection('transactions').get();
