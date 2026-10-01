@@ -1030,7 +1030,7 @@
                     <p style="font-size:12px; color:#666;">विशिष्ट महिना स्क्रीनवर पाहण्यासाठी किंवा संपूर्ण अहवाल डाऊनलोड करण्यासाठी खालील टूलबार वापरा.</p>
                 </div>
 
-                <!-- UNIFIED TOOLBAR (ADMIN & VIEWER VISIBLE OPTIONS) -->
+                <!-- UNIFIED TOOLBAR -->
                 <div class="unified-ledger-toolbar">
                     <div class="toolbar-group">
                         <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
@@ -1058,7 +1058,7 @@
                     </div>
                 </div>
 
-                <!-- 📁 BANK ACCOUNT STATEMENTS VIEWER & DROPDOWN FILTER SECTION -->
+                <!-- 📁 BANK ACCOUNT STATEMENTS VIEWER -->
                 <div class="card mt-4 p-3 shadow-sm" style="background: #fdfdfd; border-radius: 8px; margin-top: 20px; border: 1.5px dashed #2a7de1;">
                     <h5 style="color: #0d2b44; font-weight: bold; font-size: 1.1rem; margin-bottom: 6px;">📁 Bank Account Statements (बँक स्टेटमेंट फायली)</h5>
                     <p class="text-muted" style="font-size: 12.5px; color: #555; margin-bottom: 6px;">Google Drive वरील 2023 पासूनच्या बँक स्टेटमेंट PDF फाईल्स पाहण्यासाठी महिना आणि वर्ष निवडा.</p>
@@ -1104,7 +1104,7 @@
                         <table style="font-size: 13px; min-width: 100%;">
                             <thead class="table-dark" style="background: #0d2b44; color: white;">
                                 <tr>
-                                    <th style="padding: 8px; text-align: left;">महिना / वर्ष (Folder)</th>
+                                    <th style="padding: 8px; text-align: left;">महिना / वर्ष</th>
                                     <th style="padding: 8px; text-align: left;">फाइलचे नाव (Statement Name)</th>
                                     <th style="padding: 8px; text-align: center; width: 120px;">Action</th>
                                 </tr>
@@ -1414,24 +1414,27 @@
     let currentWhatsAppText = '';
 
     // ============================================================
-    //  BANK STATEMENTS API INTEGRATION (WITH MONTH & YEAR DROPDOWN)
+    //  BANK STATEMENTS API INTEGRATION (NEW DEPLOYED WEB APP URL)
     // ============================================================
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUpejHaNoq1UWU0rSfvU_KopQaX-rvgpIZpSphaek0RTMLr_NcoaWmLU7Z_MFkCQouQA/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8bYYwVOJ1ul5UF01oeEdhGfexUhqkb2ByBARoLRvRdAAJBiM7phRkZCeLWnmSxwKMtA/exec";
     let allStatementsData = [];
 
     function loadStatements() {
         const tbody = document.getElementById("statementsTableBody");
-        tbody.innerHTML = `<tr><td colspan="3" class="text-center" style="text-align:center; padding:20px;">Loading statements from Google Drive...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center" style="text-align:center; padding:20px; color:#0d2b44; font-weight:600;">⏳ Google Drive वरून बँक स्टेटमेंट फायली लोड होत आहेत...</td></tr>`;
 
         fetch(WEB_APP_URL)
             .then(response => response.json())
             .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
                 allStatementsData = data;
-                displayStatements(allStatementsData);
+                filterStatementsByDropdown();
             })
             .catch(error => {
                 console.error("Error:", error);
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger" style="text-align:center; padding:20px; color:#dc3545;">Data load honyat adchan aali. Kripya URL tapse.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger" style="text-align:center; padding:20px; color:#dc3545; font-weight:600;">❌ स्टेटमेंट लोड करताना त्रुटी आली. कृपया Google Drive वरील फोल्डर Permission तपासणे.</td></tr>`;
             });
     }
 
@@ -1440,17 +1443,17 @@
         tbody.innerHTML = "";
 
         if (!statements || statements.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted" style="text-align:center; padding:20px; color:#777;">Kontehi statements sapadle nahit.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted" style="text-align:center; padding:20px; color:#777;">📭 निवडलेल्या महिना किंवा वर्षासाठी कोणतेही स्टेटमेंट उपलब्ध नाही.</td></tr>`;
             return;
         }
 
         statements.forEach(item => {
             let tr = document.createElement("tr");
             tr.innerHTML = `
-                <td style="padding: 8px;"><strong>${escapeHTML(item.monthFolder)}</strong></td>
+                <td style="padding: 8px;"><strong>${escapeHTML(item.month)} ${escapeHTML(item.year)}</strong></td>
                 <td style="padding: 8px;">${escapeHTML(item.name)}</td>
                 <td style="padding: 8px; text-align: center;">
-                    <a href="${escapeHTML(item.url)}" target="_blank" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️ View PDF</a>
+                    <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 11px;">👁️ View PDF</a>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1462,9 +1465,8 @@
         let selectedMonth = document.getElementById("statementMonthSelect").value;
 
         let filtered = allStatementsData.filter(item => {
-            let folder = item.monthFolder || ""; // उदा. "September 2026"
-            let matchYear = (selectedYear === "all" || folder.includes(selectedYear));
-            let matchMonth = (selectedMonth === "all" || folder.toLowerCase().includes(selectedMonth.toLowerCase()));
+            let matchYear = (selectedYear === "all" || String(item.year) === selectedYear);
+            let matchMonth = (selectedMonth === "all" || String(item.month).toLowerCase() === selectedMonth.toLowerCase());
             return matchYear && matchMonth;
         });
 
@@ -3384,7 +3386,7 @@
     }
 
     // ============================================================
-    //  TAB 1: SUBMIT NEW TRANSACTION (WITH SMART RESET & AUTO-FOCUS)
+    //  TAB 1: SUBMIT NEW TRANSACTION
     // ============================================================
     async function submitNewTransaction() {
         if (currentRole !== 'admin') return;
@@ -3756,7 +3758,7 @@
     }
 
     // ============================================================
-    //  PRINT SINGLE RECEIPT (DONATION / MEMBERSHIP) - 1 PAGE OPTIMIZED
+    //  PRINT SINGLE RECEIPT
     // ============================================================
     function printSingleReceipt(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -3864,7 +3866,7 @@
     }
 
     // ============================================================
-    //  PRINT PAYMENT VOUCHER / CONTRA / IBT (1 PAGE OPTIMIZED & DYNAMIC TITLES)
+    //  PRINT PAYMENT VOUCHER
     // ============================================================
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
@@ -3978,7 +3980,7 @@
     }
 
     // ============================================================
-    //  WHATSAPP AUTOMATION & SHARE (DYNAMIC TITLE UPDATED)
+    //  WHATSAPP AUTOMATION & SHARE
     // ============================================================
     function openWhatsAppModal(id) {
         const item = (transactionsData || []).find(t => t.id === id);
