@@ -35,12 +35,10 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            /* बॅनर पूर्णपणे शार्प आणि क्लियर दिसण्यासाठी */
             background: url('banner.jpg') no-repeat center center fixed;
             background-size: cover;
         }
         .front-card {
-            /* आरपार दिसणारा क्रिस्टल ग्लास इफेक्ट */
             background: rgba(255, 255, 255, 0.22);
             border-radius: 24px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
@@ -1918,6 +1916,9 @@
         document.getElementById('viewerLoginForm').style.display = (tab === 'viewer') ? 'block' : 'none';
     }
 
+    // ============================================================
+    //  LOGIN AS ADMIN (WITH SESSION PERSISTENCE)
+    // ============================================================
     async function loginAsAdmin() {
         const email = document.getElementById('adminEmailInput').value.trim();
         const pwd = document.getElementById('adminPasswordInput').value;
@@ -1933,6 +1934,9 @@
         btn.textContent = '⏳ Verifying...';
 
         try {
+            // टॅब किंवा ब्राउझर विंडो बंद करताच आपोआप लॉगआउट होण्यासाठी SESSION Persistence
+            await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
             await auth.signInWithEmailAndPassword(email, pwd);
             
             if (rememberMe) {
@@ -1951,6 +1955,9 @@
         }
     }
 
+    // ============================================================
+    //  LOGIN AS VIEWER (WITH TAB SESSION)
+    // ============================================================
     async function loginAsViewer() {
         const u = document.getElementById('viewerUsernameInput').value.trim();
         const p = document.getElementById('viewerPasswordInput').value.trim();
@@ -1970,6 +1977,10 @@
             if (!snap.empty) {
                 const viewer = snap.docs[0].data();
                 currentRole = 'viewer';
+                
+                // टॅब पुरता सेशन सेव्ह ठेवा
+                sessionStorage.setItem('sgtb_viewer_session', JSON.stringify({ name: viewer.name || viewer.username }));
+
                 document.body.className = 'viewer-mode';
                 document.getElementById('userRoleBadge').textContent = `Viewer: ${viewer.name || viewer.username}`;
                 document.getElementById('userRoleBadge').className = 'user-role-badge viewer';
@@ -1987,10 +1998,14 @@
         }
     }
 
+    // ============================================================
+    //  PERFORM LOGOUT
+    // ============================================================
     async function performLogout() {
         if (currentRole === 'admin' && auth) {
             await auth.signOut();
         }
+        sessionStorage.removeItem('sgtb_viewer_session');
         currentRole = 'none';
         showFrontPage();
         document.getElementById('adminPasswordInput').value = '';
@@ -3640,7 +3655,7 @@
                 <td style="text-align:center; white-space:nowrap;" class="admin-item">
                     ${receiptBtns}
                     ${voucherBtn}
-                    <button class="action-btn edit-btn" onclick="openEditModal('${item.id}')" title="Edit In Popup">✏️️</button>
+                    <button class="action-btn edit-btn" onclick="openEditModal('${item.id}')" title="Edit In Popup">✏</button>
                     <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
                 </td>
             `;
@@ -4001,7 +4016,7 @@
 
     async function clearAllData() {
         if (currentRole !== 'admin') return;
-        if (!confirm('⚠️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
+        if (!confirm('⚠️️ सावधगिरी! तुम्ही सर्व क्लाउड ट्रान्झॅक्शन्स डिलीट करत आहात. खात्री आहे?')) return;
         
         try {
             const snapshot = await db.collection('transactions').get();
