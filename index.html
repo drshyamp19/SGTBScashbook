@@ -1922,4 +1922,320 @@
             await auth.signInWithEmailAndPassword(email, pwd);
             
             if (rememberMe) {
-                localStorage.setItem('sgtb_admin_saved_email',
+                localStorage.setItem('sgtb_admin_saved_email', email);
+            } else {
+                localStorage.removeItem('sgtb_admin_saved_email');
+            }
+
+            showToast('🔓 Welcome Admin!');
+        } catch(err) {
+            console.error("Auth error:", err);
+            alert('लॉगिन अयशस्वी: ' + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '🔐 Admin Login';
+        }
+    }
+
+    async function loginAsViewer() {
+        const u = document.getElementById('viewerUsernameInput').value.trim();
+        const p = document.getElementById('viewerPasswordInput').value.trim();
+
+        if (!u || !p) {
+            alert('कृपया युझरनेम आणि पासवर्ड दोन्ही भरा.');
+            return;
+        }
+
+        try {
+            const pHash = await sha256(p);
+            let snap = await db.collection('viewers').where('username', '==', u).where('passwordHash', '==', pHash).get();
+            if (snap.empty) {
+                snap = await db.collection('viewers').where('username', '==', u).where('password', '==', p).get();
+            }
+
+            if (!snap.empty) {
+                const viewer = snap.docs[0].data();
+                currentRole = 'viewer';
+                sessionStorage.setItem('sgtb_viewer_session', JSON.stringify({ name: viewer.name || viewer.username }));
+
+                document.body.className = 'viewer-mode';
+                document.getElementById('userRoleBadge').textContent = `Viewer: ${viewer.name || viewer.username}`;
+                document.getElementById('userRoleBadge').className = 'user-role-badge viewer';
+                
+                document.getElementById('frontPageSection').style.display = 'none';
+                document.getElementById('mainAppSection').style.display = 'block';
+                showToast(`👋 Welcome ${viewer.name || viewer.username}!`);
+                initRealtimeSync();
+                switchAppTab('tabPanelRecords');
+            } else {
+                alert('❌ युझरनेम किंवा पासवर्ड चुकीचा आहे!');
+            }
+        } catch(e) {
+            alert('लॉगिन करताना त्रुटी आली: ' + e.message);
+        }
+    }
+
+    async function performLogout() {
+        if (currentRole === 'admin' && auth) {
+            await auth.signOut();
+        }
+        sessionStorage.removeItem('sgtb_viewer_session');
+        currentRole = 'none';
+        showFrontPage();
+        document.getElementById('adminPasswordInput').value = '';
+        document.getElementById('viewerPasswordInput').value = '';
+        showToast('👋 Logged out successfully.');
+    }
+
+    function openForgotModal() {
+        document.getElementById('modalResetEmailInput').value = document.getElementById('adminEmailInput').value;
+        document.getElementById('forgotModal').style.display = 'flex';
+    }
+
+    function closeForgotModal() {
+        document.getElementById('forgotModal').style.display = 'none';
+    }
+
+    async function performResetPasswordEmail() {
+        const email = document.getElementById('modalResetEmailInput').value.trim();
+        if (!email) {
+            alert('कृपया नोंदणीकृत ईमेल पत्ता टाका.');
+            return;
+        }
+        try {
+            await auth.sendPasswordResetEmail(email);
+            closeForgotModal();
+            alert('✅ पासवर्ड रीसेट करण्याची लिंक पाठवली आहे.');
+        } catch(err) {
+            alert('त्रुटी: ' + err.message);
+        }
+    }
+
+    function openChangePasswordModal() {
+        document.getElementById('oldAdminPasswordInput').value = '';
+        document.getElementById('newAdminPasswordInput').value = '';
+        document.getElementById('confirmAdminPasswordInput').value = '';
+        document.getElementById('changePasswordModal').style.display = 'flex';
+    }
+
+    function closeChangePasswordModal() {
+        document.getElementById('changePasswordModal').style.display = 'none';
+    }
+
+    async function performUpdatePassword() {
+        const oldP = document.getElementById('oldAdminPasswordInput').value;
+        const newP = document.getElementById('newAdminPasswordInput').value;
+        const confP = document.getElementById('confirmAdminPasswordInput').value;
+
+        if (!oldP) {
+            alert('कृपया आधी सध्याचा जुना पासवर्ड टाका.');
+            return;
+        }
+        if (!newP || newP.length < 6) {
+            alert('नवीन पासवर्ड किमान ६ अक्षरांचा असावा.');
+            return;
+        }
+        if (newP !== confP) {
+            alert('नवीन पासवर्ड जुळत नाहीत!');
+            return;
+        }
+
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldP);
+            await user.reauthenticateWithCredential(cred);
+            await user.updatePassword(newP);
+            closeChangePasswordModal();
+            showToast('✅ Admin पासवर्ड यशस्वीरीत्या बदलला गेला!');
+        } catch(err) {
+            if (err.code === 'auth/wrong-password') {
+                alert('चुकीचा जुना पासवर्ड टाकण्यात आला आहे.');
+            } else {
+                alert('त्रुटी: ' + err.message);
+            }
+        }
+    }
+
+    function openViewerPasswordModal(id, username) {
+        document.getElementById('targetViewerId').value = id;
+        document.getElementById('targetViewerUsername').textContent = username;
+        document.getElementById('targetViewerNewPass').value = '';
+        document.getElementById('viewerPasswordModal').style.display = 'flex';
+    }
+
+    function closeViewerPasswordModal() {
+        document.getElementById('viewerPasswordModal').style.display = 'none';
+    }
+
+    async function saveViewerPassword() {
+        const id = document.getElementById('targetViewerId').value;
+        const newPass = document.getElementById('targetViewerNewPass').value.trim();
+
+        if (!newPass || newPass.length < 4) {
+            alert('पासवर्ड किमान ४ अक्षरांचा असणे आवश्यक आहे.');
+            return;
+        }
+
+        try {
+            const passHash = await sha256(newPass);
+            await db.collection('viewers').doc(id).update({
+                passwordHash: passHash,
+                password: newPass
+            });
+            closeViewerPasswordModal();
+            showToast('✅ Viewer पासवर्ड अपडेट झाला!');
+        } catch(err) {
+            alert('त्रुटी: ' + err.message);
+        }
+    }
+
+    function initViewersSync() {
+        if (db && currentRole === 'admin') {
+            db.collection('viewers').onSnapshot((snapshot) => {
+                let list = [];
+                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+                viewersData = list;
+                renderViewersTable(viewersData);
+            }, (err) => console.error("Viewers error:", err));
+        }
+    }
+
+    function renderViewersTable(list) {
+        const tbody = document.getElementById('viewersTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (!list || list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">कोणतेही विवर ॲड केलेले नाहीत.</td></tr>';
+            return;
+        }
+
+        list.forEach((v, idx) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="text-align:center;">${idx + 1}</td>
+                <td><strong>${escapeHTML(v.name || '-')}</strong></td>
+                <td><code>${escapeHTML(v.username || '-')}</code></td>
+                <td><span style="color:#28a745; font-weight:600;">🔒 Protected</span></td>
+                <td style="text-align:center; white-space:nowrap;">
+                    <button class="btn btn-warning btn-sm" onclick="openViewerPasswordModal('${v.id}', '${escapeHTML(v.username)}')">🔑 Password</button>
+                    <button class="action-btn del-btn" onclick="deleteViewer('${v.id}')" title="Delete Viewer">🗑</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    async function addNewViewer() {
+        if (currentRole !== 'admin') return;
+        const name = document.getElementById('newViewerName').value.trim();
+        const user = document.getElementById('newViewerUser').value.trim();
+        const pass = document.getElementById('newViewerPass').value.trim();
+
+        if (!user || !pass) {
+            alert('Username आणि Password आवश्यक आहे.');
+            return;
+        }
+
+        try {
+            const passHash = await sha256(pass);
+            await db.collection('viewers').add({
+                name: name || user,
+                username: user,
+                passwordHash: passHash,
+                password: pass,
+                createdAt: new Date().toISOString()
+            });
+
+            document.getElementById('newViewerName').value = '';
+            document.getElementById('newViewerUser').value = '';
+            document.getElementById('newViewerPass').value = '';
+            showToast('✅ नवीन विवर युझर तयार झाला!');
+        } catch(e) {
+            alert('Error: ' + e.message);
+        }
+    }
+
+    async function deleteViewer(id) {
+        if (currentRole !== 'admin') return;
+        if (!confirm('या विवरचे खाते डिलीट करायचे आहे का?')) return;
+        try {
+            await db.collection('viewers').doc(id).delete();
+            showToast('🗑️ विवर खाते डिलीट झाले.');
+        } catch(e) {
+            alert('Error deleting: ' + e.message);
+        }
+    }
+
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function sanitizeUrl(url) {
+        if (!url) return '';
+        const trimmed = String(url).trim();
+        if (/^(https?:\/\/|data:image)/i.test(trimmed)) {
+            return escapeHTML(trimmed);
+        }
+        return '';
+    }
+
+    function parseIndianNum(str) {
+        if (str === null || str === undefined || str === '') return 0;
+        const val = parseFloat(String(str).replace(/,/g, '').trim());
+        return isNaN(val) ? 0 : val;
+    }
+
+    function formatIndianNum(num) {
+        if (num === null || num === undefined || isNaN(num)) return '₹ 0.00';
+        let isNegative = num < 0;
+        let absNum = Math.abs(num);
+        let n = absNum.toFixed(2);
+        let parts = n.split('.');
+        let intPart = parts[0];
+        let decPart = parts[1];
+        let lastThree = intPart.slice(-3);
+        let other = intPart.slice(0, -3);
+        if (other !== '') lastThree = ',' + lastThree;
+        let formatted = other.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+        return (isNegative ? '- ' : '') + '₹ ' + formatted + '.' + decPart;
+    }
+
+    function formatDateToDisplay(isoDateStr) {
+        if (!isoDateStr) return '';
+        const parts = String(isoDateStr).split('-');
+        if (parts.length === 3) {
+            const y = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10) - 1;
+            const d = parseInt(parts[2], 10);
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            return `${String(d).padStart(2, '0')}-${months[m] || 'Jan'}-${y}`;
+        }
+        return isoDateStr;
+    }
+
+    function parseToIsoDate(dateStr) {
+        if (!dateStr) return new Date().toISOString().split('T')[0];
+        dateStr = String(dateStr).trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+
+        const monthMap = {'jan':1,'feb':2,'mar':3,'apr':4,'may':5,'jun':6,'jul':7,'aug':8,'sep':9,'oct':10,'nov':11,'dec':12};
+        const parts = dateStr.split(/[-/]/);
+        if (parts.length === 3) {
+            let d, m, y;
+            if (parts[0].length === 4) {
+                y = parts[0]; m = parts[1]; d = parts[2];
+            } else {
+                d = parts[0];
+                let monthPart = parts[1].toLowerCase();
+                m = monthMap[monthPart] ? monthMap[monthPart] : parseInt(parts[1], 10);
+                y = parts[2];
+            }
