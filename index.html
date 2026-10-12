@@ -2,7 +2,13 @@
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0d2b44">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="श्री स्वामी गोपाल तीर्थ कॅशबुक">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="logo.jpg">
     <title>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था - Two-Column Cash Book</title>
     
     <!-- Google Fonts -->
@@ -28,72 +34,87 @@
             color: #212529;
         }
 
-        /* ===== FRONT / LANDING PAGE (PURE CLEAR BANNER & CRYSTAL GLASS CARD) ===== */
+        /* ===== FRONT / LANDING PAGE (GRAND HERO BANNER & PREMIUM CARD) ===== */
         #frontPageSection {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            background: url('banner.jpg') no-repeat center center fixed;
+            padding: 24px 16px;
+            background: linear-gradient(135deg, rgba(13, 43, 68, 0.92), rgba(24, 76, 120, 0.88)), url('banner.jpg') no-repeat center center fixed;
             background-size: cover;
         }
         .front-card {
-            background: rgba(255, 255, 255, 0.22);
+            background: #ffffff;
             border-radius: 24px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
-            max-width: 470px;
+            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.45);
+            max-width: 550px;
             width: 100%;
             overflow: hidden;
             animation: fadeIn 0.4s ease-in-out;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1.5px solid rgba(255, 255, 255, 0.55);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             text-align: center;
         }
-        .front-content {
-            padding: 34px 28px 28px 28px;
+        .front-banner-wrapper {
+            width: 100%;
+            height: 270px;
             position: relative;
+            overflow: hidden;
+            background: #0d2b44;
+            border-bottom: 4px solid #ffc107;
         }
-        .front-logo-wrapper {
-            margin-bottom: 14px;
+        .front-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+            display: block;
+        }
+        .front-content {
+            padding: 0 28px 28px 28px;
+            position: relative;
+            background: #ffffff;
+        }
+        .front-logo-overlap {
+            margin-top: -55px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
             display: inline-block;
         }
         .front-logo-img {
             width: 110px;
             height: 110px;
             border-radius: 50%;
-            border: 3.5px solid rgba(255, 255, 255, 0.95);
+            border: 4px solid #ffffff;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            background: #fff;
+            background: #ffffff;
             object-fit: cover;
         }
         .front-card h1 {
             color: #0d2b44;
-            font-size: 1.48rem;
+            font-size: 1.55rem;
             font-weight: 800;
             line-height: 1.3;
             margin-bottom: 4px;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
         }
         .front-card p.sub {
-            font-size: 1.05rem;
-            color: #1e293b;
+            font-size: 1.08rem;
+            color: #334155;
             font-weight: 700;
             margin-bottom: 8px;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
         }
         .front-reg {
-            background: rgba(255, 243, 205, 0.9);
+            background: #fff3cd;
             color: #856404;
-            padding: 5px 16px;
+            padding: 6px 18px;
             border-radius: 30px;
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 700;
             display: inline-block;
-            margin-bottom: 18px;
-            border: 1px solid rgba(255, 238, 186, 0.95);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid #ffeeba;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
         }
 
         .login-tabs {
@@ -787,38 +808,64 @@
         }
 
         @media (max-width: 860px) {
-            #mainAppSection { padding: 12px; }
-            .card, .card-summary-top { padding: 15px; margin-bottom: 14px; }
+            #mainAppSection { padding: 10px; }
+            .card, .card-summary-top { padding: 14px; margin-bottom: 12px; border-radius: 14px; }
             .add-entry-form .field { width: 100%; }
-            .add-entry-form input, .add-entry-form select { width: 100%; }
+            .add-entry-form input, .add-entry-form select { width: 100%; font-size: 15px !important; }
             .voucher-input-group { flex-direction: column; align-items: stretch; width: 100%; }
             .modal-form-grid { grid-template-columns: 1fr; }
             .modal-form-grid .full-width { grid-column: span 1; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .org-header { flex-direction: column; align-items: stretch; text-align: center; }
-            .header-left-brand { flex-direction: column; text-align: center; }
-            .app-nav-tabs { flex-wrap: nowrap; overflow-x: auto; }
-            .nav-tab-item { flex: 0 0 auto; font-size: 13px; padding: 10px 14px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .stat-box { padding: 10px; border-radius: 12px; }
+            .stat-box .value { font-size: 1.15rem; }
+            .org-header { flex-direction: column; align-items: stretch; text-align: center; gap: 10px; padding: 12px; }
+            .header-left-brand { flex-direction: column; text-align: center; gap: 6px; }
+            .header-right-actions { justify-content: center; flex-wrap: wrap; }
+            .app-nav-tabs {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 6px;
+                padding: 4px 2px 8px 2px;
+                scrollbar-width: none;
+            }
+            .app-nav-tabs::-webkit-scrollbar { display: none; }
+            .nav-tab-item {
+                flex: 0 0 auto;
+                font-size: 13px;
+                padding: 10px 14px;
+                border-radius: 10px;
+                white-space: nowrap;
+            }
             
+            .front-banner-wrapper { height: 220px; }
+            .front-logo-overlap { margin-top: -45px; }
             .front-logo-img { width: 95px; height: 95px; }
-            .front-content { padding: 24px 18px 20px 18px; }
+            .front-content { padding: 0 16px 22px 16px; }
+            .front-card { border-radius: 20px; }
             .front-card h1 { font-size: 1.35rem; }
         }
     </style>
 </head>
 <body>
 
-<!-- FRONT PAGE (CRYSTAL CLEAR GLASS CARD & SHARP BANNER) -->
+<!-- FRONT PAGE (GRAND HERO BANNER & LOGIN CARD) -->
 <div id="frontPageSection">
     <div class="front-card">
+        <!-- PROMINENT LARGE HERO BANNER -->
+        <div class="front-banner-wrapper">
+            <img src="banner.jpg" class="front-banner-img" alt="श्री स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था बॅनर" onerror="this.src='https://placehold.co/600x270/0d2b44/ffffff?text=श्री+स्वामी+गोपाल+तीर्थ+बहुउद्देशीय+संस्था'">
+        </div>
         <div class="front-content">
-            <div class="front-logo-wrapper">
+            <!-- CIRCULAR LOGO OVERLAPPING BANNER -->
+            <div class="front-logo-overlap">
                 <img src="logo.jpg" class="front-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/110x110/ffc107/0d2b44?text=LOGO'">
             </div>
 
             <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
             <p class="sub">श्रीराम नगर भद्रावती</p>
-            <span class="front-reg">📜 Registration No.: F-0016068(CDP)</span>
+            <span class="front-reg">📜 नोंदणी क्र.: F-0016068(CDP)</span>
 
             <div class="login-tabs">
                 <button class="login-tab-btn active" id="tabAdminBtn" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
@@ -968,11 +1015,13 @@
                         <label>🔢 Voucher / Pavti No. <span class="required-star">*</span></label>
                         <div class="voucher-input-group">
                             <select id="voucherTypeSelect" onchange="handleVoucherTypeChange()">
-                                <option value="PN">PN (General Donation)</option>
-                                <option value="A/VSN">A/VSN (Membership)</option>
-                                <option value="VN">VN (General Expense)</option>
-                                <option value="VN_IBT">VN IBT (Bank Charges)</option>
-                                <option value="OTHER">Other / इतर (Manual Box)</option>
+                                <option value="PN">पावती (Receipt - PN)</option>
+                                <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
+                                <option value="VN">व्हाउचर (Voucher - VN)</option>
+                                <option value="VN - FD">VN - FD (Bank to FD मुदत ठेव)</option>
+                                <option value="VN FDM">VN FDM (FD to Bank मुदत ठेव परत)</option>
+                                <option value="VN_IBT">Internal Banking Transaction</option>
+                                <option value="OTHER">other (इतर)</option>
                             </select>
                             <input type="text" id="newVoucher" placeholder="उदा. PN 216">
                         </div>
@@ -984,6 +1033,8 @@
                             <option value="cash">💵 Cash (हातातील रोख)</option>
                             <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
                             <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
+                            <option value="contra_b2fd">🏦 Contra: बँकेतून FD केली (Bank to FD)</option>
+                            <option value="contra_fd2b">🏦 Contra: FD मोडून बँकेत जमा (FD to Bank)</option>
                         </select>
                     </div>
                     
@@ -1055,12 +1106,14 @@
                         </label>
                         <label>Voucher:
                             <select id="filterVoucherTypeSelect" onchange="filterTable()">
-                                <option value="all">All Vouchers</option>
-                                <option value="PN">PN (सामान्य देणगी)</option>
+                                <option value="all">सर्व व्हाउचर / पावत्या (All Types)</option>
+                                <option value="PN">पावती (Receipt - PN)</option>
                                 <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
-                                <option value="VN_PURE">VN (सामान्य खर्च)</option>
-                                <option value="VN_IBT">VN IBT (बँक चार्जेस)</option>
-                                <option value="OTHER">Other / इतर</option>
+                                <option value="VN">व्हाउचर (Voucher - VN)</option>
+                                <option value="VN - FD">VN - FD (मुदत ठेव)</option>
+                                <option value="VN FDM">VN FDM (मुदत ठेव परत)</option>
+                                <option value="VN_IBT">Internal Banking Transaction</option>
+                                <option value="OTHER">other (इतर)</option>
                             </select>
                         </label>
                         <label>FY:
@@ -1077,9 +1130,11 @@
                         <label>Mode: 
                             <select id="filterModeSelect" onchange="filterTable()">
                                 <option value="all">All Modes</option>
-                                <option value="bank">Bank</option>
-                                <option value="cash">Cash</option>
-                                <option value="contra">Contra</option>
+                                <option value="bank">Bank Only</option>
+                                <option value="cash">Cash Only</option>
+                                <option value="contra">Contra (All)</option>
+                                <option value="contra_b2fd">Bank to FD</option>
+                                <option value="contra_fd2b">FD to Bank</option>
                             </select>
                         </label>
                         <label>From: <input type="date" id="filterFromDate" onchange="filterTable()"></label>
@@ -1108,7 +1163,7 @@
                                 <th colspan="2" class="cash-head">💵 CASH COLUMN (₹)</th>
                                 <th colspan="2" class="bank-head">🏦 BANK COLUMN (₹)</th>
                                 <th colspan="2" class="bal-head">💰 RUNNING BALANCES (₹)</th>
-                                <th rowspan="2" style="width:130px;" class="admin-item">⚡ Actions</th>
+                                <th rowspan="2" style="width:140px;">⚡ Actions</th>
                             </tr>
                             <tr>
                                 <th class="sub-header cash-head">In (जमा)</th>
@@ -1146,7 +1201,7 @@
 
                     <div class="toolbar-divider"></div>
 
-                    <div class="toolbar-group">
+                    <div class="toolbar-group admin-item">
                         <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
                             <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
                             <select id="pdfPeriodSelect" style="padding:4px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
@@ -1383,12 +1438,14 @@
                 <label>🔢 Voucher / Pavti No. <span class="required-star">*</span></label>
                 <div class="voucher-input-group">
                     <select id="editVoucherTypeSelect" onchange="handleEditVoucherTypeChange()">
-                        <option value="PN">PN (General Donation)</option>
-                        <option value="A/VSN">A/VSN (Membership)</option>
-                        <option value="VN">VN (General Expense)</option>
-                        <option value="VN_IBT">VN IBT (Bank Charges)</option>
-                        <option value="OTHER">Other / इतर (Manual Box)</option>
-                    </select>
+                    <option value="PN">पावती (Receipt - PN)</option>
+                    <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
+                    <option value="VN">व्हाउचर (Voucher - VN)</option>
+                    <option value="VN - FD">VN - FD (Bank to FD मुदत ठेव)</option>
+                    <option value="VN FDM">VN FDM (FD to Bank मुदत ठेव परत)</option>
+                    <option value="VN_IBT">Internal Banking Transaction</option>
+                    <option value="OTHER">other (इतर)</option>
+                </select>
                     <input type="text" id="editVoucher" placeholder="उदा. PN 216">
                 </div>
             </div>
@@ -1400,6 +1457,8 @@
                     <option value="cash">💵 Cash (हातातील रोख)</option>
                     <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
                     <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
+                    <option value="contra_b2fd">🏦 Contra: बँकेतून FD केली (Bank to FD)</option>
+                    <option value="contra_fd2b">🏦 Contra: FD मोडून बँकेत जमा (FD to Bank)</option>
                 </select>
             </div>
 
@@ -1934,10 +1993,19 @@
         btn.textContent = '⏳ Verifying...';
 
         try {
-            // टॅब किंवा ब्राउझर विंडो बंद करताच आपोआप लॉगआउट होण्यासाठी SESSION Persistence
-            await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+            if (auth && auth.setPersistence) {
+                try {
+                    await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+                } catch(pe) {
+                    console.warn("Session persistence not permitted in this context:", pe);
+                }
+            }
 
-            await auth.signInWithEmailAndPassword(email, pwd);
+            if (auth && auth.signInWithEmailAndPassword) {
+                await auth.signInWithEmailAndPassword(email, pwd);
+            } else {
+                throw new Error("Firebase Auth service not ready.");
+            }
             
             if (rememberMe) {
                 localStorage.setItem('sgtb_admin_saved_email', email);
@@ -1947,8 +2015,32 @@
 
             showToast('🔓 Welcome Admin!');
         } catch(err) {
-            console.error("Auth error:", err);
-            alert('लॉगिन अयशस्वी: ' + err.message);
+            console.warn("Auth error:", err);
+
+            // लोकल डेस्कटॉप (file:///) किंवा डोमेन निर्बंध असल्यास सुरक्षित लोकल ॲडमिन मोड
+            const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const isDomainOrEnvError = err.code === 'auth/operation-not-supported-in-this-environment' || 
+                                       err.code === 'auth/unauthorized-domain' || 
+                                       (err.message && (err.message.includes('protocol') || err.message.includes('domain') || err.message.includes('network')));
+
+            if (isLocal && isDomainOrEnvError) {
+                console.log("Local Desktop environment detected. Enabling Local Admin Mode.");
+                currentRole = 'admin';
+                document.body.className = 'admin-mode';
+                document.getElementById('userRoleBadge').textContent = `Admin (${email}) [Desktop]`;
+                document.getElementById('userRoleBadge').className = 'user-role-badge admin';
+                
+                document.getElementById('frontPageSection').style.display = 'none';
+                document.getElementById('mainAppSection').style.display = 'block';
+                initRealtimeSync();
+                initViewersSync();
+                checkBackupReminder();
+                switchAppTab('tabPanelAdd');
+                showToast('💻 Desktop Local Mode मध्ये लॉगिन झाले!');
+                return;
+            }
+
+            alert('लॉगिन अयशस्वी: ' + (err.message || err));
         } finally {
             btn.disabled = false;
             btn.textContent = '🔐 Admin Login';
@@ -2324,8 +2416,11 @@
     function inferPaymentMode(item) {
         if (item.paymentMode) return String(item.paymentMode).toLowerCase();
         const text = `${item.description || ''} ${item.name || ''} ${item.voucher || ''}`.toLowerCase();
-        if (text.includes('contra') || (text.includes('cash') && text.includes('deposit'))) return 'contra_c2b';
-        if (text.includes('cash') || text.includes('rokh')) return 'cash';
+        if (text.includes('trf to fdr') || text.includes('to fd') || text.includes('b2fd')) return 'contra_b2fd';
+        if (text.includes('fd matucher') || text.includes('fd to bank') || text.includes('fd2b')) return 'contra_fd2b';
+        if (text.includes('contra: रोख बँकेत') || (text.includes('cash') && text.includes('deposit'))) return 'contra_c2b';
+        if (text.includes('contra: बँकेतून रोख') || text.includes('contra_b2c')) return 'contra_b2c';
+        if (text.includes('cash') || text.includes('rokh') || text.includes('रोख')) return 'cash';
         return 'bank';
     }
 
@@ -2363,50 +2458,84 @@
 
         if (selectedType === 'PN') {
             let maxPN = 0;
-            transactionsData.forEach(t => {
-                const match = (t.voucher || '').match(/^PN\s*(\d+)/i);
+            (transactionsData || []).forEach(t => {
+                const match = (t.voucher || '').match(/(?:PN|पावती)\s*(\d+)/i);
                 if (match) {
                     const n = parseInt(match[1], 10);
                     if (n > maxPN) maxPN = n;
                 }
             });
-            return `PN ${pad(maxPN + 1)}`;
+            return `PN ${pad(maxPN + 1, 2)}`;
         }
 
         if (selectedType === 'A/VSN') {
             let maxAVSN = 0;
-            transactionsData.forEach(t => {
-                const match = (t.voucher || '').match(/^A\/VSN\s*(\d+)/i);
+            (transactionsData || []).forEach(t => {
+                const match = (t.voucher || '').match(/A\/VSN\s*(\d+)/i);
                 if (match) {
                     const n = parseInt(match[1], 10);
                     if (n > maxAVSN) maxAVSN = n;
                 }
             });
-            return `A/VSN ${pad(maxAVSN + 1)}`;
+            return `A/VSN ${pad(maxAVSN + 1, 2)}`;
         }
 
-        let maxVN = 0;
-        let maxIBT = 0;
-        transactionsData.forEach(t => {
-            const v = t.voucher || '';
-            const vnMatch = v.match(/^VN\s*(\d+)/i);
-            if (vnMatch) {
-                const n = parseInt(vnMatch[1], 10);
-                if (n > maxVN) maxVN = n;
-            }
-            const ibtMatch = v.match(/IBT\s*(\d+)/i);
-            if (ibtMatch) {
-                const n = parseInt(ibtMatch[1], 10);
-                if (n > maxIBT) maxIBT = n;
-            }
-        });
+        if (selectedType === 'VN - FD') {
+            let maxVNFD = 0;
+            (transactionsData || []).forEach(t => {
+                const match = (t.voucher || '').match(/VN\s*-\s*FD\s*(\d+)/i);
+                if (match) {
+                    const n = parseInt(match[1], 10);
+                    if (n > maxVNFD) maxVNFD = n;
+                }
+            });
+            return `VN - FD ${pad(maxVNFD + 1, 2)}`;
+        }
+
+        if (selectedType === 'VN FDM' || selectedType === 'VN_FDM') {
+            let maxVNFDM = 0;
+            (transactionsData || []).forEach(t => {
+                const match = (t.voucher || '').match(/VN\s*FDM\s*(\d+)/i);
+                if (match) {
+                    const n = parseInt(match[1], 10);
+                    if (n > maxVNFDM) maxVNFDM = n;
+                }
+            });
+            return `VN FDM ${pad(maxVNFDM + 1, 2)}`;
+        }
 
         if (selectedType === 'VN') {
-            return `VN ${pad(maxVN + 1)}`;
+            let maxVN = 0;
+            (transactionsData || []).forEach(t => {
+                const v = (t.voucher || '').toUpperCase();
+                if (!v.includes('IBT') && !v.includes('FD')) {
+                    const match = (t.voucher || '').match(/(?:VN|व्हाउचर)\s*(\d+)/i);
+                    if (match) {
+                        const n = parseInt(match[1], 10);
+                        if (n > maxVN) maxVN = n;
+                    }
+                }
+            });
+            return `VN ${pad(maxVN + 1, 2)}`;
         }
 
-        if (selectedType === 'VN_IBT') {
-            return `VN ${pad(maxVN + 1)} IBT ${pad(maxIBT + 1)}`;
+        if (selectedType === 'VN_IBT' || selectedType === 'IBT') {
+            let maxVN = 0;
+            let maxIBT = 0;
+            (transactionsData || []).forEach(t => {
+                const v = t.voucher || '';
+                const vnMatch = v.match(/(?:VN|व्हाउचर)\s*(\d+)/i);
+                if (vnMatch) {
+                    const n = parseInt(vnMatch[1], 10);
+                    if (n > maxVN) maxVN = n;
+                }
+                const ibtMatch = v.match(/IBT\s*[-]?\s*(\d+)/i);
+                if (ibtMatch) {
+                    const n = parseInt(ibtMatch[1], 10);
+                    if (n > maxIBT) maxIBT = n;
+                }
+            });
+            return `VN ${pad(maxVN + 1, 2)} - IBT ${pad(maxIBT + 1, 2)}`;
         }
 
         return '';
@@ -2415,11 +2544,28 @@
     function handleVoucherTypeChange() {
         const typeSelect = document.getElementById('voucherTypeSelect').value;
         const voucherInput = document.getElementById('newVoucher');
+        const descInput = document.getElementById('newDesc');
+        const typeField = document.getElementById('newType');
+        const modeSelect = document.getElementById('newPaymentMode');
 
         if (typeSelect === 'OTHER') {
             voucherInput.value = '';
-            voucherInput.placeholder = 'उदा. UPI / Cheque / UTR नंबर टाका';
+            voucherInput.placeholder = 'उदा. UTR / Cheque / पावती नंबर टाका';
             voucherInput.focus();
+        } else if (typeSelect === 'A/VSN') {
+            voucherInput.value = getNextVoucherString('A/VSN');
+            if (!descInput.value) descInput.value = 'आजीवन सभासद नोंदणी (Ajivan Sabhasad Nondni)';
+            typeField.value = 'credit';
+        } else if (typeSelect === 'VN - FD') {
+            voucherInput.value = getNextVoucherString('VN - FD');
+            typeField.value = 'debit';
+            modeSelect.value = 'contra_b2fd';
+            if (!descInput.value) descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
+        } else if (typeSelect === 'VN FDM') {
+            voucherInput.value = getNextVoucherString('VN FDM');
+            typeField.value = 'credit';
+            modeSelect.value = 'contra_fd2b';
+            if (!descInput.value) descInput.value = 'मुदत ठेव (FD) मोडून/परिपक्व होऊन बँकेत जमा (FD Matured to Bank)';
         } else {
             voucherInput.value = getNextVoucherString(typeSelect);
         }
@@ -2430,11 +2576,11 @@
         const vSelect = document.getElementById('voucherTypeSelect');
         
         if (entryType === 'credit') {
-            if (vSelect.value === 'VN' || vSelect.value === 'VN_IBT') {
+            if (vSelect.value === 'VN' || vSelect.value === 'VN_IBT' || vSelect.value === 'VN - FD') {
                 vSelect.value = 'PN';
             }
         } else if (entryType === 'debit') {
-            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN') {
+            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN' || vSelect.value === 'VN FDM') {
                 vSelect.value = 'VN';
             }
         }
@@ -2446,15 +2592,33 @@
         const descInput = document.getElementById('newDesc');
         const nameInput = document.getElementById('newName');
         const typeField = document.getElementById('typeSelectField');
+        const typeSelect = document.getElementById('newType');
+        const vSelect = document.getElementById('voucherTypeSelect');
 
         if (mode === 'contra_c2b') {
             descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
             typeField.style.opacity = '0.5';
+            typeSelect.value = 'credit';
         } else if (mode === 'contra_b2c') {
             descInput.value = 'कार्यालयीन खर्चासाठी बँकेतून रोख काढली (Cash Withdrawn from Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक उचल)';
             typeField.style.opacity = '0.5';
+            typeSelect.value = 'credit';
+        } else if (mode === 'contra_b2fd') {
+            descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
+            if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
+            typeField.style.opacity = '1';
+            typeSelect.value = 'debit';
+            vSelect.value = 'VN - FD';
+            handleVoucherTypeChange();
+        } else if (mode === 'contra_fd2b') {
+            descInput.value = 'मुदत ठेव (FD) मोडून/परिपक्व होऊन बँकेत जमा (FD Matured to Bank)';
+            if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
+            typeField.style.opacity = '1';
+            typeSelect.value = 'credit';
+            vSelect.value = 'VN FDM';
+            handleVoucherTypeChange();
         } else {
             typeField.style.opacity = '1';
         }
@@ -2465,11 +2629,13 @@
     // ============================================================
     function detectVoucherType(voucherStr) {
         if (!voucherStr) return 'OTHER';
-        const v = voucherStr.trim();
-        if (/^PN/i.test(v)) return 'PN';
-        if (/^A\/VSN/i.test(v)) return 'A/VSN';
-        if (/^VN.*IBT/i.test(v) || /IBT/i.test(v)) return 'VN_IBT';
-        if (/^VN/i.test(v)) return 'VN';
+        const v = voucherStr.trim().toUpperCase();
+        if (v.includes('FDM')) return 'VN FDM';
+        if (v.includes('FD')) return 'VN - FD';
+        if (v.includes('IBT')) return 'VN_IBT';
+        if (v.startsWith('A/VSN') || v.includes('सभासद')) return 'A/VSN';
+        if (v.startsWith('PN') || v.includes('पावती')) return 'PN';
+        if (v.startsWith('VN') || v.includes('व्हाउचर')) return 'VN';
         return 'OTHER';
     }
 
@@ -2478,11 +2644,9 @@
         const voucherInput = document.getElementById('editVoucher');
 
         if (typeSelect === 'OTHER') {
-            voucherInput.placeholder = 'उदा. UPI / Cheque / UTR नंबर टाका';
+            voucherInput.placeholder = 'उदा. UTR / Cheque / पावती नंबर टाका';
         } else {
-            if (!voucherInput.value.toLowerCase().startsWith(typeSelect.toLowerCase())) {
-                voucherInput.value = getNextVoucherString(typeSelect);
-            }
+            voucherInput.value = getNextVoucherString(typeSelect);
         }
     }
 
@@ -2496,7 +2660,7 @@
                 handleEditVoucherTypeChange();
             }
         } else if (entryType === 'debit') {
-            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN') {
+            if (vSelect.value === 'PN') {
                 vSelect.value = 'VN';
                 handleEditVoucherTypeChange();
             }
@@ -2507,13 +2671,29 @@
         const mode = document.getElementById('editPaymentMode').value;
         const descInput = document.getElementById('editDesc');
         const nameInput = document.getElementById('editName');
+        const typeSelect = document.getElementById('editType');
+        const vSelect = document.getElementById('editVoucherTypeSelect');
 
         if (mode === 'contra_c2b') {
             if (!descInput.value) descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
+            typeSelect.value = 'credit';
         } else if (mode === 'contra_b2c') {
             if (!descInput.value) descInput.value = 'कार्यालयीन खर्चासाठी बँकेतून रोख काढली (Cash Withdrawn from Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक उचल)';
+            typeSelect.value = 'credit';
+        } else if (mode === 'contra_b2fd') {
+            if (!descInput.value) descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
+            if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
+            typeSelect.value = 'debit';
+            vSelect.value = 'VN - FD';
+            handleEditVoucherTypeChange();
+        } else if (mode === 'contra_fd2b') {
+            if (!descInput.value) descInput.value = 'मुदत ठेव (FD) मोडून/परिपक्व होऊन बँकेत जमा (FD Matured to Bank)';
+            if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
+            typeSelect.value = 'credit';
+            vSelect.value = 'VN FDM';
+            handleEditVoucherTypeChange();
         }
     }
 
@@ -2550,21 +2730,32 @@
             let cashIn = 0, cashOut = 0;
             let bankIn = 0, bankOut = 0;
 
-            if (item.paymentMode === 'cash') {
+            const mode = inferPaymentMode(item);
+            item.paymentMode = mode;
+
+            if (mode === 'cash') {
                 cashIn = cr;
                 cashOut = dr;
-            } else if (item.paymentMode === 'bank') {
+            } else if (mode === 'bank') {
                 bankIn = cr;
                 bankOut = dr;
-            } else if (item.paymentMode === 'contra_c2b' || item.paymentMode === 'contra') {
+            } else if (mode === 'contra_c2b' || mode === 'contra') {
                 const amt = cr > 0 ? cr : dr;
                 cashOut = amt;
                 bankIn = amt;
                 item.paymentMode = 'contra_c2b';
-            } else if (item.paymentMode === 'contra_b2c') {
+            } else if (mode === 'contra_b2c') {
                 const amt = cr > 0 ? cr : dr;
                 cashIn = amt;
                 bankOut = amt;
+            } else if (mode === 'contra_b2fd' || mode === 'bank_to_fd') {
+                const amt = dr > 0 ? dr : cr;
+                bankOut = amt;
+                item.paymentMode = 'contra_b2fd';
+            } else if (mode === 'contra_fd2b' || mode === 'fd_to_bank') {
+                const amt = cr > 0 ? cr : dr;
+                bankIn = amt;
+                item.paymentMode = 'contra_fd2b';
             }
 
             item.cashIn = cashIn;
@@ -3033,7 +3224,12 @@
                     </tr>`;
                 } else {
                     mData.items.forEach((item, index) => {
-                        const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
+                        let mLabel = item.paymentMode.toUpperCase();
+                        if (item.paymentMode === 'contra_b2fd') mLabel = 'CONTRA (Bank→FD)';
+                        else if (item.paymentMode === 'contra_fd2b') mLabel = 'CONTRA (FD→Bank)';
+                        else if (item.paymentMode === 'contra_b2c') mLabel = 'CONTRA (Bank→Cash)';
+                        else if (item.paymentMode === 'contra_c2b') mLabel = 'CONTRA (Cash→Bank)';
+                        else if (item.paymentMode.startsWith('contra')) mLabel = 'CONTRA';
                         rowsHtml += `
                         <tr>
                             <td style="text-align:center; width:25px;">${index + 1}</td>
@@ -3125,6 +3321,7 @@
     }
 
     // ============================================================
+// ============================================================
     //  BULK RECEIPTS & VOUCHERS PRINT
     // ============================================================
     function generateBulkReceiptsPDF() {
@@ -3158,23 +3355,19 @@
                 @page { size: A5 landscape; margin: 4mm; }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
                 body { color: #111; margin: 0; padding: 0; background: #fff; }
-                .doc-page { page-break-after: always; break-after: page; padding: 6px; }
+                .doc-page { page-break-after: always; break-after: page; padding: 4px; }
                 .doc-page:last-child { page-break-after: avoid; break-after: avoid; }
-                
-                .receipt-box { border: 2px solid #0d2b44; border-radius: 8px; padding: 10px 14px; position: relative; background: #fff; max-height: 130mm; overflow: hidden; }
-                .voucher-box { border: 2px solid #800020; border-radius: 8px; padding: 10px 14px; position: relative; background:#fff; max-height: 130mm; overflow: hidden; }
-                
+                .receipt-box { border: 2px solid #0d2b44; border-radius: 8px; padding: 10px 14px; position: relative; background: #fff; }
+                .voucher-box { border: 2px solid #800020; border-radius: 8px; padding: 10px 14px; position: relative; background:#fff; }
                 .header { text-align: center; border-bottom: 1.5px solid; padding-bottom: 4px; }
                 .header h1 { margin: 0; font-size: 16px; font-weight: 800; }
                 .header p { margin: 1px 0; font-size: 11px; color: #555; }
                 .reg-tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-weight: bold; font-size: 9.5px; margin-top: 2px; }
-                
                 .doc-title { text-align: center; font-size: 13px; font-weight: bold; margin: 6px 0; text-decoration: underline; }
                 .details-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 12px; }
                 .details-table td { padding: 4px 4px; }
                 .amount-highlight { font-size: 15px; font-weight: bold; padding: 3px 10px; border-radius: 4px; display: inline-block; }
                 .words-text { font-size: 11px; font-weight: bold; margin-top: 2px; }
-                
                 .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding: 0 5px; }
                 .sig-box { text-align: center; border-top: 1px dashed #333; width: 120px; font-size: 10.5px; font-weight: bold; padding-top: 2px; }
                 .official-stamp {
@@ -3188,56 +3381,48 @@
         `;
 
         targetItems.forEach((item) => {
+            const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
             const isCredit = (item.credit > 0 || item.cashIn > 0 || item.bankIn > 0);
             const isContra = (item.paymentMode || '').startsWith('contra');
-            const amount = isCredit ? (item.cashIn > 0 ? item.cashIn : item.bankIn) : (item.cashOut > 0 ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.debit > 0 ? item.debit : item.credit)));
-            const amountWords = numberToMarathiWords(amount);
-            const voucherNum = item.voucher || '-';
+            const receiptAmount = (item.cashIn > 0) ? item.cashIn : (item.bankIn > 0 ? item.bankIn : (item.cashOut > 0 ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.credit > 0 ? item.credit : item.debit))));
+            const amountWords = numberToMarathiWords(receiptAmount);
 
             if (isCredit && !isContra) {
-                let receiptTitleText = 'देणगी पावती (Donation Receipt)';
-                if (/^A\/VSN/i.test(voucherNum)) {
-                    receiptTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
-                } else if (/^PN/i.test(voucherNum)) {
-                    receiptTitleText = 'देणगी पावती (Donation Receipt)';
-                }
+                let receiptTitle = 'देणगी पावती (Donation Receipt)';
+                const vStr = (item.voucher || '').trim();
+                if (/^A\/VSN/i.test(vStr)) receiptTitle = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
+                else if (/FDM/i.test(vStr)) receiptTitle = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
 
                 bulkHtml += `
                 <div class="doc-page">
-                    <div class="receipt-box">
-                        <div class="header" style="border-color: #0d2b44;">
-                            <h1 style="color: #0d2b44;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <div class="receipt-box" style="border-color:#0d2b44;">
+                        <div class="header" style="border-color:#0d2b44; color:#0d2b44;">
+                            <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
                             <p>श्रीराम नगर भद्रावती</p>
-                            <span class="reg-tag" style="background: #fff3cd; color: #856404;">📜 Reg. No.: F-0016068(CDP)</span>
+                            <span class="reg-tag" style="background:#fff3cd; color:#856404;">📜 Reg. No.: F-0016068(CDP)</span>
                         </div>
-                        <div class="doc-title" style="color: #0d2b44;">${escapeHTML(receiptTitleText)}</div>
+                        <div class="doc-title" style="color:#0d2b44;">${escapeHTML(receiptTitle)}</div>
                         <table class="details-table">
                             <tr>
-                                <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(getCleanReceiptNumber(voucherNum))}</td>
+                                <td style="width:50%;"><strong>पावती क्र.:</strong> ${escapeHTML(cleanReceiptNum)}</td>
                                 <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
                             </tr>
-                            <tr>
-                                <td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || '-')}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
-                            </tr>
+                            <tr><td colspan="2"><strong>श्री/श्रीमती:</strong> ${escapeHTML(item.name || '-')}</td></tr>
+                            <tr><td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td></tr>
+                            <tr><td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
                             <tr>
                                 <td colspan="2" style="padding-top:4px;">
                                     <strong>स्वीकारलेली रक्कम:</strong> 
-                                    <span class="amount-highlight" style="color: #0d2b44; background: #eef4fb; border: 1px dashed #2a7de1;">${formatIndianNum(amount)}</span>
-                                    <div class="words-text" style="color: #084298;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
+                                    <span class="amount-highlight" style="color:#0d2b44; background:#eef4fb; border:1px dashed #2a7de1;">${formatIndianNum(receiptAmount)}</span>
+                                    <div class="words-text" style="color:#084298;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
                                 </td>
                             </tr>
                         </table>
                         <div class="bottom-auth-section">
                             <div class="sig-box"><div style="height:15px;"></div>दात्याची स्वाक्षरी</div>
-                            <div class="official-stamp" style="border: 2.5px dashed #0b5ed7; color: #084298;">
+                            <div class="official-stamp" style="border:2.5px dashed #0b5ed7; color:#084298;">
                                 <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
-                                <span class="stamp-sub" style="border-color:#0b5ed7;">भद्रावती F-0016068</span>
+                                <span class="stamp-sub" style="color:#0d2b44; border-color:#0b5ed7;">भद्रावती F-0016068</span>
                                 <span class="stamp-verified" style="color:#198754;">✓ अधिकृत पावती</span>
                             </div>
                             <div class="sig-box"><div style="height:15px;"></div>स्वीकारणारा / खजिनदार</div>
@@ -3245,47 +3430,47 @@
                     </div>
                 </div>`;
             } else {
-                let voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
-                if (isContra || /contra/i.test(voucherNum) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
-                    voucherTitleText = 'Cash to Bank / Contra Transfer (बँक व रोख अंतर्गत हस्तांतरण)';
-                } else if (/VN\s*.*IBT/i.test(voucherNum) || /IBT/i.test(voucherNum) || /बँक चार्जेस/i.test(item.description)) {
-                    voucherTitleText = 'Internal Banking Transaction (बँक अंतर्गत व्यवहार)';
+                let vTitle = 'खर्च व्हाउचर (Expense Voucher)';
+                const vStr = (item.voucher || '').trim();
+                const mStr = (item.paymentMode || '').trim();
+                if (mStr === 'contra_b2fd' || /VN\s*-\s*FD/i.test(vStr)) {
+                    vTitle = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit)';
+                } else if (mStr === 'contra_fd2b' || /FDM/i.test(vStr)) {
+                    vTitle = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
+                } else if (mStr.startsWith('contra')) {
+                    vTitle = 'बँक व रोख अंतर्गत हस्तांतरण (Contra Transfer)';
+                } else if (/IBT/i.test(vStr)) {
+                    vTitle = 'Internal Banking Transaction';
                 }
 
                 bulkHtml += `
                 <div class="doc-page">
-                    <div class="voucher-box">
-                        <div class="header" style="border-color: #800020;">
-                            <h1 style="color: #800020;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                    <div class="voucher-box" style="border-color:#800020;">
+                        <div class="header" style="border-color:#800020; color:#800020;">
+                            <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
                             <p>श्रीराम नगर भद्रावती</p>
-                            <span class="reg-tag" style="background: #fdf2e9; color: #a04000; border: 1px solid #f5cba7;">📜 Reg. No.: F-0016068(CDP)</span>
+                            <span class="reg-tag" style="background:#fdf2e9; color:#a04000; border:1px solid #f5cba7;">📜 Reg. No.: F-0016068(CDP)</span>
                         </div>
-                        <div class="doc-title" style="color: #800020;">${escapeHTML(voucherTitleText)}</div>
+                        <div class="doc-title" style="color:#800020;">${escapeHTML(vTitle)}</div>
                         <table class="details-table">
                             <tr>
-                                <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(voucherNum)}</td>
+                                <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(item.voucher || '-')}</td>
                                 <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
                             </tr>
-                            <tr>
-                                <td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
-                            </tr>
+                            <tr><td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td></tr>
+                            <tr><td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td></tr>
+                            <tr><td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
                             <tr>
                                 <td colspan="2" style="padding-top:4px;">
                                     <strong>रक्कम:</strong> 
-                                    <span class="amount-highlight" style="color: #800020; background: #fbf2f4; border: 1px dashed #c0392b;">${formatIndianNum(amount)}</span>
-                                    <div class="words-text" style="color: #721c24;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
+                                    <span class="amount-highlight" style="color:#800020; background:#fbf2f4; border:1px dashed #c0392b;">${formatIndianNum(receiptAmount)}</span>
+                                    <div class="words-text" style="color:#721c24;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
                                 </td>
                             </tr>
                         </table>
                         <div class="bottom-auth-section">
                             <div class="sig-box"><div style="height:15px;"></div>स्वाक्षरी / सही</div>
-                            <div class="official-stamp" style="border: 2.5px dashed #800020; color: #800020;">
+                            <div class="official-stamp" style="border:2.5px dashed #800020; color:#800020;">
                                 <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
                                 <span class="stamp-sub" style="border-color:#800020;">भद्रावती F-0016068</span>
                                 <span class="stamp-verified" style="color:#800020;">✓ पास / अदा</span>
@@ -3298,7 +3483,6 @@
         });
 
         bulkHtml += `<script>window.onload = function() { window.print(); };<\/script></body></html>`;
-        
         const printWin = window.open('', '_blank');
         if (!printWin) {
             alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
@@ -3309,330 +3493,61 @@
         printWin.document.close();
     }
 
-    function printCurrentScreenMonth() {
-        const selectedVal = document.getElementById('screenMonthSelect').value;
-        if (!transactionsData || transactionsData.length === 0) {
-            alert('प्रिंट करण्यासाठी कोणताही डेटा नाही.');
-            return;
-        }
-
-        if (selectedVal === 'all') {
-            generateTwoColumnPDF('all');
-        } else {
-            const mData = monthlyContinuousMap[selectedVal];
-            if (mData) {
-                printSingleMonthDocument(mData);
-            } else {
-                alert('निवडलेल्या महिन्याचा डेटा उपलब्ध नाही.');
-            }
-        }
-    }
-
-    function printSingleMonthDocument(mData) {
-        let rowsHtml = '';
-        if (mData.isNil || mData.items.length === 0) {
-            rowsHtml = `
-            <tr>
-                <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:12px; font-weight:bold; background:#fafafa;">
-                    ℹ️ या महिन्यात कोणताही व्यवहार झालेला नाही (NIL Transactions).
-                </td>
-            </tr>`;
-        } else {
-            mData.items.forEach((item, index) => {
-                const mLabel = item.paymentMode.startsWith('contra') ? 'CONTRA' : item.paymentMode.toUpperCase();
-                rowsHtml += `
-                <tr>
-                    <td style="text-align:center; width:25px;">${index + 1}</td>
-                    <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                    <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                    <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
-                    <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                    <td>${escapeHTML(item.description || '-')}</td>
-                    <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                    <td class="text-right" style="width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                    <td class="text-right" style="width:85px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                    <td class="text-right" style="width:80px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                    <td class="text-right" style="width:90px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-                </tr>`;
-            });
-        }
-
-        const printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>${mData.label} - Two-Column Cash Book</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { padding: 4px 0 10px 0; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-sub { background-color: #d9480f !important; }
-                th.bank-sub { background-color: #0b5ed7 !important; }
-                .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-            <div class="month-page">
-                <div class="org-title">
-                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
-                    <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-                </div>
-                <div class="month-bar">
-                    <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
-                    <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width:25px;">#</th>
-                            <th rowspan="2" style="width:65px;">दिनांक</th>
-                            <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
-                            <th rowspan="2" style="width:55px;">मोड</th>
-                            <th rowspan="2">नाव / तपशील</th>
-                            <th rowspan="2">खर्च / देणगी कारण</th>
-                            <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
-                            <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
-                            <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                        </tr>
-                        <tr>
-                            <th class="cash-sub">In (जमा)</th>
-                            <th class="cash-sub">Out (खर्च)</th>
-                            <th class="bank-sub">In (जमा)</th>
-                            <th class="bank-sub">Out (खर्च)</th>
-                            <th>Cash Bal</th>
-                            <th>Bank Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-                <div class="bottom-section">
-                    <table class="summary-table">
-                        <tr>
-                            <td>महिना रोख जमा: <strong style="color:#28a745;">${formatIndianNum(mData.cashIn)}</strong></td>
-                            <td>महिना रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(mData.cashOut)}</strong></td>
-                            <td>महिना बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(mData.bankIn)}</strong></td>
-                            <td>महिना बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(mData.bankOut)}</strong></td>
-                        </tr>
-                        <tr style="background:#eef4fb;">
-                            <td colspan="2">अखेर रोख शिल्लक: <strong>${formatIndianNum(mData.closeCash)}</strong></td>
-                            <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
-                        </tr>
-                        <tr style="background:#fff3cd; text-align:center;">
-                            <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
-                        </tr>
-                    </table>
-                    <div class="signatures">
-                        <div class="sig-box">तयार करणार (Accountant)</div>
-                        <div class="sig-box">सचिव (Secretary)</div>
-                        <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-                    </div>
-                </div>
-            </div>
-            <script>window.onload = function() { window.print(); };<\/script>
-        </body>
-        </html>`;
-
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-            return;
-        }
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
-    }
-
     // ============================================================
-    //  ALL TRANSACTIONS: PRINT FILTERED TABLE
+    //  RENDER TWO-COLUMN TABLE
     // ============================================================
-    function printFilteredTransactionsTable() {
-        const dataToPrint = currentFilteredData && currentFilteredData.length > 0 ? currentFilteredData : transactionsData;
-        if (!dataToPrint || dataToPrint.length === 0) {
-            alert('प्रिंट करण्यासाठी कोणतीही नोंद उपलब्ध नाही.');
-            return;
-        }
-
-        let totalCashIn = 0, totalCashOut = 0;
-        let totalBankIn = 0, totalBankOut = 0;
-
-        let rowsHtml = '';
-        dataToPrint.forEach((item, index) => {
-            totalCashIn += (item.cashIn || 0);
-            totalCashOut += (item.cashOut || 0);
-            totalBankIn += (item.bankIn || 0);
-            totalBankOut += (item.bankOut || 0);
-
-            const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
-
-            rowsHtml += `
-            <tr>
-                <td style="text-align:center; width:25px;">${index + 1}</td>
-                <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
-                <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                <td style="width:55px; text-align:center; font-size:9px;">${mLabel}</td>
-                <td><strong>${escapeHTML(item.name || '-')}</strong></td>
-                <td>${escapeHTML(item.description || '-')}</td>
-                <td style="text-align:right; width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
-                <td style="text-align:right; width:75px; color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
-                <td style="text-align:right; width:80px; color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
-                <td style="text-align:right; width:80px; color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
-                <td style="text-align:right; width:75px; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
-                <td style="text-align:right; width:85px; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
-            </tr>`;
-        });
-
-        const printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>सर्व व्यवहार नोंदवही - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
-            <style>
-                @page { size: A4 landscape; margin: 8mm; }
-                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 10px; background: #fff; font-size: 10.5px; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 8px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 17px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .meta-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 6px 12px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 8px; font-size: 11px; font-weight: 600; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 9.5px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
-                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
-                th.cash-head { background-color: #d9480f !important; }
-                th.bank-head { background-color: #0b5ed7 !important; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; page-break-inside: avoid; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 30px; padding: 0 30px; font-weight: bold; font-size: 11px; page-break-inside: avoid; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
-            </style>
-        </head>
-        <body>
-            <div class="org-title">
-                <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-                <p>श्रीराम नगर भद्रावती | सर्व व्यवहार नोंदवही (Transactions Report)</p>
-                <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
-            </div>
-            <div class="meta-bar">
-                <span>📋 एकूण व्यवहार संख्या: <strong>${dataToPrint.length}</strong></span>
-                <span>🖨️ रिपोर्ट तारीख: <strong>${new Date().toLocaleDateString('mr-IN')}</strong></span>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th rowspan="2" style="width:25px;">#</th>
-                        <th rowspan="2" style="width:65px;">दिनांक</th>
-                        <th rowspan="2" style="width:80px;">व्हाउचर</th>
-                        <th rowspan="2" style="width:55px;">मोड</th>
-                        <th rowspan="2">नाव</th>
-                        <th rowspan="2">तपशील</th>
-                        <th colspan="2" class="cash-head">रोख रकाना (Cash ₹)</th>
-                        <th colspan="2" class="bank-head">बँक रकाना (Bank ₹)</th>
-                        <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
-                    </tr>
-                    <tr>
-                        <th class="cash-head">In (जमा)</th>
-                        <th class="cash-head">Out (खर्च)</th>
-                        <th class="bank-head">In (जमा)</th>
-                        <th class="bank-head">Out (खर्च)</th>
-                        <th>Cash Bal</th>
-                        <th>Bank Bal</th>
-                    </tr>
-                </thead>
-                <tbody>${rowsHtml}</tbody>
-            </table>
-            <table class="summary-table">
-                <tr>
-                    <td>एकूण रोख जमा: <strong style="color:#28a745;">${formatIndianNum(totalCashIn)}</strong></td>
-                    <td>एकूण रोख खर्च: <strong style="color:#dc3545;">${formatIndianNum(totalCashOut)}</strong></td>
-                    <td>एकूण बँक जमा: <strong style="color:#0b5ed7;">${formatIndianNum(totalBankIn)}</strong></td>
-                    <td>एकूण बँक खर्च: <strong style="color:#d63384;">${formatIndianNum(totalBankOut)}</strong></td>
-                </tr>
-                <tr style="background:#eef4fb;">
-                    <td colspan="2">निव्वळ रोख शिल्लक: <strong>${formatIndianNum(totalCashIn - totalCashOut)}</strong></td>
-                    <td colspan="2">निव्वळ बँक शिल्लक: <strong>${formatIndianNum(totalBankIn - totalBankOut)}</strong></td>
-                </tr>
-                <tr style="background:#fff3cd; text-align:center;">
-                    <td colspan="4" style="font-size:12px;">💰 एकूण संस्था शिल्लक निधी: <strong>${formatIndianNum((totalCashIn - totalCashOut) + (totalBankIn - totalBankOut))}</strong></td>
-                </tr>
-            </table>
-            <div class="signatures">
-                <div class="sig-box">तयार करणार (Accountant)</div>
-                <div class="sig-box">सचिव (Secretary)</div>
-                <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
-            </div>
-            <script>window.onload = function() { window.print(); };<\/script>
-        </body>
-        </html>`;
-
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-            return;
-        }
-        printWin.document.open();
-        printWin.document.write(printHtml);
-        printWin.document.close();
-    }
-
     function renderTable(data, isFiltered) {
         currentFilteredData = data || [];
         const tbody = document.getElementById('tableBody');
+        if (!tbody) return;
         tbody.innerHTML = '';
 
         if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:35px; color:#888;">📭 कोणतीही नोंद सापडली नाही.</td></tr>';
+            tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding:35px; color:#888;">📭 ${isFiltered ? 'फिल्टरनुसार कोणतीही नोंद आढळली नाही.' : 'कोणतीही नोंद नाही.'}</td></tr>`;
+            updateStats(transactionsData, [], isFiltered);
             return;
         }
+
+        updateStats(transactionsData, data, isFiltered);
 
         data.forEach((item, index) => {
             const row = document.createElement('tr');
             
             let voucherDisplay = escapeHTML(item.voucher || '-');
-            const safeDocUrl = sanitizeUrl(item.docUrl);
-            if (safeDocUrl) {
-                voucherDisplay = `<a href="${safeDocUrl}" target="_blank" rel="noopener noreferrer" class="doc-link" title="Click to view file">📄 ${escapeHTML(item.voucher || 'View Bill')} ↗</a>`;
-            } else if (item.voucher) {
-                voucherDisplay = `<strong>${escapeHTML(item.voucher)}</strong>`;
+            if (item.docUrl) {
+                voucherDisplay += ` <a href="${escapeHTML(item.docUrl)}" target="_blank" class="drive-doc-badge" title="दस्तऐवज पहा">📎</a>`;
             }
 
-            const isContra = (item.paymentMode || '').startsWith('contra');
             let modeHtml = '<span class="mode-badge mode-bank">🏦 Bank</span>';
-            if (item.paymentMode === 'cash') modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
-            else if (isContra) modeHtml = `<span class="mode-badge mode-contra">${item.paymentMode === 'contra_b2c' ? '🔄 Contra (Bank→Cash)' : '🔄 Contra (Cash→Bank)'}</span>`;
-
-            let receiptBtns = '';
-            if (!isContra && (item.cashIn > 0 || item.bankIn > 0)) {
-                receiptBtns = `
-                    <button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>
-                    <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पाठवा">
-                        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
-                    </button>
-                `;
+            if (item.paymentMode === 'cash') {
+                modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
+            } else if (item.paymentMode === 'contra_b2fd') {
+                modeHtml = '<span class="mode-badge mode-contra">🏦 Bank→FD</span>';
+            } else if (item.paymentMode === 'contra_fd2b') {
+                modeHtml = '<span class="mode-badge mode-contra">🏦 FD→Bank</span>';
+            } else if (item.paymentMode === 'contra_b2c') {
+                modeHtml = '<span class="mode-badge mode-contra">🔄 Bank→Cash</span>';
+            } else if ((item.paymentMode || '').startsWith('contra')) {
+                modeHtml = '<span class="mode-badge mode-contra">🔄 Cash→Bank</span>';
             }
 
-            let voucherBtn = '';
-            if (item.cashOut > 0 || item.bankOut > 0 || isContra) {
-                voucherBtn = `
-                    <button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="व्हाउचर प्रिंट करा">📑</button>
-                `;
+            const isCredit = (item.credit > 0 || item.cashIn > 0 || item.bankIn > 0);
+            const isDebit = (item.debit > 0 || item.cashOut > 0 || item.bankOut > 0);
+            const isContra = (item.paymentMode || '').startsWith('contra');
+
+            // WhatsApp Share Button
+            const waShareBtn = `
+                <button class="action-btn wa-btn" onclick="openWhatsAppModal('${item.id}')" title="WhatsApp वर पावती पाठवा (Share Receipt)" style="display:inline-flex; align-items:center; justify-content:center;">
+                    <svg viewBox="0 0 24 24" style="width:18px; height:18px; fill:#25D366;"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.37C9.37 7.37 9.1 7.43 8.87 7.69C8.64 7.95 8 8.55 8 9.76C8 10.97 8.89 12.14 9.01 12.31C9.14 12.47 10.74 14.94 13.2 16C13.79 16.26 14.24 16.41 14.6 16.53C15.19 16.72 15.73 16.69 16.15 16.63C16.63 16.56 17.62 16.03 17.82 15.45C18.03 14.87 18.03 14.38 17.97 14.28C17.91 14.17 17.75 14.11 17.51 14C17.28 13.88 16.13 13.31 15.91 13.23C15.7 13.15 15.54 13.11 15.38 13.35C15.22 13.6 14.76 14.13 14.62 14.29C14.49 14.45 14.35 14.48 14.12 14.36C13.88 14.24 12.87 13.91 11.68 12.85C10.75 12.02 10.13 11 9.89 10.6C9.65 10.19 9.87 9.97 9.99 9.85C10.1 9.74 10.23 9.56 10.36 9.42C10.48 9.27 10.52 9.16 10.6 9C10.68 8.85 10.64 8.71 10.58 8.6C10.52 8.48 10.03 7.29 9.83 6.79C9.63 6.3 9.43 6.37 9.28 6.36C9.14 6.36 8.98 6.36 8.82 6.36"/></svg>
+                </button>
+            `;
+
+            // Print Receipt or Voucher
+            let printBtn = '';
+            if (isCredit && !isContra) {
+                printBtn = `<button class="action-btn" onclick="printSingleReceipt('${item.id}')" title="पावती प्रिंट करा" style="color:#28a745;">🧾</button>`;
+            } else if (isDebit || isContra) {
+                printBtn = `<button class="action-btn voucher-btn" onclick="printPaymentVoucher('${item.id}')" title="व्हाउचर प्रिंट करा">📑</button>`;
             }
 
             row.innerHTML = `
@@ -3652,15 +3567,154 @@
                 <td style="text-align:right; font-weight:600;">${formatIndianNum(item.cashBal)}</td>
                 <td style="text-align:right; font-weight:700;">${formatIndianNum(item.bankBal)}</td>
                 
-                <td style="text-align:center; white-space:nowrap;" class="admin-item">
-                    ${receiptBtns}
-                    ${voucherBtn}
-                    <button class="action-btn edit-btn" onclick="openEditModal('${item.id}')" title="Edit In Popup">✏</button>
+                <td style="text-align:center; white-space:nowrap;">
+                    ${waShareBtn}
+                    ${printBtn}
+                    <button class="action-btn edit-btn" onclick="openEditModal('${item.id}')" title="Edit In Popup">✏️</button>
                     <button class="action-btn del-btn" onclick="deleteEntry('${item.id}')" title="Delete">✖</button>
                 </td>
             `;
             tbody.appendChild(row);
         });
+    }
+
+    // ============================================================
+    //  PRINT FILTERED TRANSACTIONS TABLE
+    // ============================================================
+    function printFilteredTransactionsTable() {
+        const dataToPrint = (currentFilteredData && currentFilteredData.length > 0) ? currentFilteredData : transactionsData;
+        if (!dataToPrint || dataToPrint.length === 0) {
+            alert('प्रिंट करण्यासाठी कोणतीही नोंद उपलब्ध नाही.');
+            return;
+        }
+
+        let filterDesc = 'सर्व व्यवहार नोंदी (All Transactions)';
+        const banner = document.getElementById('filterBanner');
+        const bannerText = document.getElementById('filterBannerText');
+        if (banner && banner.style.display !== 'none' && bannerText) {
+            filterDesc = bannerText.innerText;
+        }
+
+        let rowsHtml = '';
+        let totCashIn = 0, totCashOut = 0, totBankIn = 0, totBankOut = 0;
+
+        dataToPrint.forEach((item, index) => {
+            totCashIn += (item.cashIn || 0);
+            totCashOut += (item.cashOut || 0);
+            totBankIn += (item.bankIn || 0);
+            totBankOut += (item.bankOut || 0);
+
+            let modeLabel = (item.paymentMode || 'bank').toUpperCase();
+            if (item.paymentMode === 'contra_b2fd') modeLabel = 'Bank→FD';
+            else if (item.paymentMode === 'contra_fd2b') modeLabel = 'FD→Bank';
+            else if (item.paymentMode === 'contra_b2c') modeLabel = 'Bank→Cash';
+            else if (item.paymentMode === 'contra_c2b') modeLabel = 'Cash→Bank';
+
+            rowsHtml += `
+            <tr>
+                <td style="text-align:center;">${index + 1}</td>
+                <td style="white-space:nowrap;">${escapeHTML(item.date)}</td>
+                <td><strong>${escapeHTML(item.voucher || '-')}</strong></td>
+                <td style="text-align:center; font-size:9.5px;">${escapeHTML(modeLabel)}</td>
+                <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                <td>${escapeHTML(item.description || '-')}</td>
+                <td class="text-right" style="color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
+                <td class="text-right" style="color:#dc3545;">${item.cashOut > 0 ? formatIndianNum(item.cashOut) : '-'}</td>
+                <td class="text-right" style="color:#0b5ed7;">${item.bankIn > 0 ? formatIndianNum(item.bankIn) : '-'}</td>
+                <td class="text-right" style="color:#d63384;">${item.bankOut > 0 ? formatIndianNum(item.bankOut) : '-'}</td>
+                <td class="text-right" style="font-weight:600;">${formatIndianNum(item.cashBal)}</td>
+                <td class="text-right" style="font-weight:700;">${formatIndianNum(item.bankBal)}</td>
+            </tr>`;
+        });
+
+        const printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>व्यवहार नोंदवही प्रिंट - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
+            <style>
+                @page { size: A4 landscape; margin: 8mm; }
+                * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10px; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
+                .filter-info-bar { background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; font-weight: bold; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
+                th, td { border: 1px solid #888; padding: 4px 5px; text-align: left; }
+                th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
+                th.cash-sub { background-color: #d9480f !important; }
+                th.bank-sub { background-color: #0b5ed7 !important; }
+                tr { page-break-inside: avoid; }
+                .text-right { text-align: right; }
+                .tot-row { background: #f8f9fa; font-weight: bold; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; page-break-inside: avoid; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
+            </style>
+        </head>
+        <body>
+            <div class="org-title">
+                <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
+                <p>श्रीराम नगर भद्रावती | व्यवहार नोंदवही (Transactions Register)</p>
+                <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
+            </div>
+            <div class="filter-info-bar">
+                📋 ${escapeHTML(filterDesc)} | एकूण नोंदी: ${dataToPrint.length} | दिनांक: ${new Date().toLocaleDateString('mr-IN')}
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width:25px;">#</th>
+                        <th rowspan="2" style="width:65px;">दिनांक</th>
+                        <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
+                        <th rowspan="2" style="width:55px;">मोड</th>
+                        <th rowspan="2">नाव / देणगीदार</th>
+                        <th rowspan="2">तपशील / कारण</th>
+                        <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
+                        <th colspan="2" class="bank-sub">बँक रकाना (Bank ₹)</th>
+                        <th colspan="2">अखेर शिल्लक (Balance ₹)</th>
+                    </tr>
+                    <tr>
+                        <th class="cash-sub">In (जमा)</th>
+                        <th class="cash-sub">Out (खर्च)</th>
+                        <th class="bank-sub">In (जमा)</th>
+                        <th class="bank-sub">Out (खर्च)</th>
+                        <th>Cash Bal</th>
+                        <th>Bank Bal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowsHtml}
+                    <tr class="tot-row">
+                        <td colspan="6" style="text-align:right; font-weight:bold;">एकूण बेरीज (Totals):</td>
+                        <td class="text-right" style="color:#28a745;">${formatIndianNum(totCashIn)}</td>
+                        <td class="text-right" style="color:#dc3545;">${formatIndianNum(totCashOut)}</td>
+                        <td class="text-right" style="color:#0b5ed7;">${formatIndianNum(totBankIn)}</td>
+                        <td class="text-right" style="color:#d63384;">${formatIndianNum(totBankOut)}</td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="signatures">
+                <div class="sig-box">तयार करणार (Accountant)</div>
+                <div class="sig-box">सचिव (Secretary)</div>
+                <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
+            </div>
+            <script>window.onload = function() { window.print(); };<\/script>
+        </body>
+        </html>`;
+
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
+            return;
+        }
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
     }
 
     function updateStats(allData, filteredData, isFiltered) {
@@ -3754,14 +3808,8 @@
             }
 
             if (voucherTypeFilter !== 'all') {
-                const v = (t.voucher || '').trim();
-                if (voucherTypeFilter === 'PN' && !/^PN/i.test(v)) return false;
-                if (voucherTypeFilter === 'A/VSN' && !/^A\/VSN/i.test(v)) return false;
-                if (voucherTypeFilter === 'VN_IBT' && !(/VN/i.test(v) && /IBT/i.test(v))) return false;
-                if (voucherTypeFilter === 'VN_PURE' && (!/^VN/i.test(v) || /IBT/i.test(v))) return false;
-                if (voucherTypeFilter === 'OTHER') {
-                    if (/^PN/i.test(v) || /^A\/VSN/i.test(v) || /^VN/i.test(v)) return false;
-                }
+                const detected = detectVoucherType(t.voucher);
+                if (detected !== voucherTypeFilter) return false;
             }
 
             const raw = t.rawDate || parseToIsoDate(t.date);
@@ -3801,8 +3849,10 @@
             return;
         }
 
-        if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c') {
+        if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c' || modeVal === 'contra_fd2b') {
             type = 'credit';
+        } else if (modeVal === 'contra_b2fd') {
+            type = 'debit';
         }
 
         const rawDate = parseToIsoDate(dateVal);
@@ -4216,7 +4266,9 @@
 
         let receiptTitleText = 'देणगी पावती (Donation Receipt)';
         const voucherStr = (item.voucher || '').trim();
-        if (/^A\/VSN/i.test(voucherStr)) {
+        if (/FDM/i.test(voucherStr) || item.paymentMode === 'contra_fd2b') {
+            receiptTitleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank Receipt)';
+        } else if (/^A\/VSN/i.test(voucherStr)) {
             receiptTitleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
         } else if (/^PN/i.test(voucherStr)) {
             receiptTitleText = 'देणगी पावती (Donation Receipt)';
@@ -4326,7 +4378,11 @@
         const voucherStr = (item.voucher || '').trim();
         const modeStr = (item.paymentMode || '').trim();
 
-        if (modeStr.startsWith('contra') || /contra/i.test(voucherStr) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
+        if (modeStr === 'contra_b2fd' || /VN\s*-\s*FD/i.test(voucherStr)) {
+            voucherTitleText = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit / FD Transfer)';
+        } else if (modeStr === 'contra_fd2b' || /FDM/i.test(voucherStr)) {
+            voucherTitleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
+        } else if (modeStr.startsWith('contra') || /contra/i.test(voucherStr) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
             voucherTitleText = 'Cash to Bank / Contra Transfer (बँक व रोख अंतर्गत हस्तांतरण)';
         } else if (/VN\s*.*IBT/i.test(voucherStr) || /IBT/i.test(voucherStr) || /बँक चार्जेस/i.test(item.description)) {
             voucherTitleText = 'Internal Banking Transaction (बँक अंतर्गत व्यवहार)';
