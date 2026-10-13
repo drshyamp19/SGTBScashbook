@@ -1189,11 +1189,26 @@
                     <p style="font-size:12px; color:#666;">विशिष्ट महिना स्क्रीनवर पाहण्यासाठी किंवा संपूर्ण अहवाल डाऊनलोड करण्यासाठी खालील टूलबार वापरा.</p>
                 </div>
 
-                <!-- UNIFIED TOOLBAR -->
+                <!-- UNIFIED TOOLBAR: YEAR + MONTH SELECTION (LIKE BANK STATEMENTS) -->
                 <div class="unified-ledger-toolbar">
                     <div class="toolbar-group">
-                        <label for="screenMonthSelect" style="font-size:12.5px; font-weight:700; color:#0d2b44;">👁️ महिना पहा:</label>
-                        <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12.5px; background:#fff; max-width:260px;"></select>
+                        <div style="display:inline-flex; align-items:center; gap:6px;">
+                            <label for="screenYearSelect" style="font-size:12px; font-weight:700; color:#0d2b44; white-space:nowrap;">📅 वर्ष (Year):</label>
+                            <select id="screenYearSelect" onchange="onScreenYearChange()" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:700; font-size:12px; background:#fff; color:#0d2b44; min-width:130px; cursor:pointer;">
+                                <option value="all">सर्व वर्षे (All Years)</option>
+                                <option value="2026-27" selected>FY 2026-27</option>
+                                <option value="2025-26">FY 2025-26</option>
+                                <option value="2024-25">FY 2024-25</option>
+                                <option value="2023-24">FY 2023-24</option>
+                            </select>
+                        </div>
+
+                        <div style="display:inline-flex; align-items:center; gap:6px;">
+                            <label for="screenMonthSelect" style="font-size:12px; font-weight:700; color:#0d2b44; white-space:nowrap;">🗓️ महिना (Month):</label>
+                            <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12px; background:#fff; color:#0d2b44; min-width:170px; cursor:pointer;">
+                            </select>
+                        </div>
+
                         <button class="btn btn-success btn-sm" onclick="viewSelectedMonthOnScreen()">👁️ उघडा</button>
                         <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()" id="closeMonthlyViewBtn" style="display:none;">✖ बंद करा</button>
                     </div>
@@ -1201,18 +1216,7 @@
                     <div class="toolbar-divider"></div>
 
                     <div class="toolbar-group admin-item">
-                        <div style="display:inline-flex; align-items:center; gap:6px; background:#eef4fb; padding:3px 8px; border-radius:6px; border:1px solid #bfdbfe;">
-                            <label for="pdfPeriodSelect" style="font-size:12px; font-weight:700; color:#1e3a8a;">📅 कालावधी:</label>
-                            <select id="pdfPeriodSelect" style="padding:4px 8px; border:1.5px solid #2a7de1; border-radius:5px; font-size:12px; font-weight:700; background:#fff; color:#0d2b44;">
-                                <option value="all">🌟 सर्व नोंदी (सुरुवातीपासून)</option>
-                                <option value="2023-24">📅 FY 2023-24</option>
-                                <option value="2024-25">📅 FY 2024-25</option>
-                                <option value="2025-26">📅 FY 2025-26</option>
-                                <option value="2026-27" selected>📅 FY 2026-27</option>
-                                <option value="2027-28">📅 FY 2027-28</option>
-                                <option value="2028-29">📅 FY 2028-29</option>
-                            </select>
-                        </div>
+                        <input type="hidden" id="pdfPeriodSelect" value="2026-27">
                         <button class="btn btn-pdf btn-sm" onclick="generateTwoColumnPDF('all')">📑 कॅश बुक PDF</button>
                         <button class="btn btn-pdf-debit btn-sm" onclick="generateTwoColumnPDF('debit')">📉 निव्वळ खर्च PDF</button>
                         <button class="btn btn-warning btn-sm" onclick="generateBulkReceiptsPDF()" title="निवडलेल्या कालावधीतील सर्व पावत्या व व्हाउचर एकाच वेळी प्रिंट करा">📑 सर्व पावती/व्हाउचर एकत्रित प्रिंट (Bulk)</button>
@@ -1288,9 +1292,10 @@
                             <h3 id="mViewerTitle" style="color:#0d2b44; font-size:16px;">📅 महिना कॅश बुक</h3>
                             <span id="mViewerSub" style="font-size:12px; color:#555;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</span>
                         </div>
-                        <div>
+                        <div style="display:flex; gap:6px; align-items:center;">
                             <button class="btn btn-warning btn-sm" onclick="printCurrentScreenMonth()">🖨️ या निवडीची प्रिंट / PDF</button>
                             <button class="btn btn-success btn-sm" onclick="exportCurrentScreenMonthToExcel()">📊 Export Excel</button>
+                            <button class="btn btn-secondary btn-sm" onclick="closeMonthlyViewer()">✖ बंद करा</button>
                         </div>
                     </div>
 
@@ -3177,21 +3182,8 @@
         let carryCash = 0;
         let carryBank = 0;
 
-        const dropdown = document.getElementById('screenMonthSelect');
-        const selectedPrevValue = dropdown ? dropdown.value : '';
-        if (dropdown) dropdown.innerHTML = '';
-        let latestMonthKey = '';
-
-        if (dropdown) {
-            const allOpt = document.createElement('option');
-            allOpt.value = 'all';
-            allOpt.textContent = '🌟 सर्व महिने (All Months / संपूर्ण)';
-            dropdown.appendChild(allOpt);
-        }
-
         while (curY < endYear || (curY === endYear && curM <= endMonth)) {
             const mKey = `${curY}-${String(curM).padStart(2, '0')}`;
-            latestMonthKey = mKey;
             const mLabel = `${monthNamesMarathi[curM - 1]} ${curY}`;
 
             const openCash = roundMoney(carryCash);
@@ -3230,13 +3222,6 @@
                 isNil: (items.length === 0)
             };
 
-            if (dropdown) {
-                const opt = document.createElement('option');
-                opt.value = mKey;
-                opt.textContent = `${mLabel} ${items.length === 0 ? '(NIL)' : `(${items.length} नोंदी)`}`;
-                dropdown.appendChild(opt);
-            }
-
             curM++;
             if (curM > 12) {
                 curM = 1;
@@ -3244,12 +3229,118 @@
             }
         }
 
-        if (dropdown) {
-            if (selectedPrevValue && (selectedPrevValue === 'all' || monthlyContinuousMap[selectedPrevValue])) {
-                dropdown.value = selectedPrevValue;
-            } else if (latestMonthKey) {
-                dropdown.value = latestMonthKey;
+        populateScreenYearAndMonthDropdowns();
+    }
+
+    // ============================================================
+    //  YEAR & MONTH DROPDOWNS POPULATION (LIKE BANK STATEMENTS)
+    // ============================================================
+    function populateScreenYearAndMonthDropdowns() {
+        const yearSelect = document.getElementById('screenYearSelect');
+        const monthSelect = document.getElementById('screenMonthSelect');
+        if (!yearSelect || !monthSelect) return;
+
+        const fySet = new Set();
+        Object.keys(monthlyContinuousMap).forEach(mKey => {
+            const [y, m] = mKey.split('-').map(Number);
+            const fy = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
+            fySet.add(fy);
+        });
+
+        const sortedFYs = Array.from(fySet).sort().reverse();
+        const prevYearVal = yearSelect.value || '2026-27';
+
+        yearSelect.innerHTML = '';
+        const allYearsOpt = document.createElement('option');
+        allYearsOpt.value = 'all';
+        allYearsOpt.textContent = 'सर्व वर्षे (All Years)';
+        yearSelect.appendChild(allYearsOpt);
+
+        sortedFYs.forEach(fy => {
+            const opt = document.createElement('option');
+            opt.value = fy;
+            opt.textContent = `FY ${fy}`;
+            yearSelect.appendChild(opt);
+        });
+
+        if (Array.from(yearSelect.options).some(o => o.value === prevYearVal)) {
+            yearSelect.value = prevYearVal;
+        } else if (sortedFYs.includes('2026-27')) {
+            yearSelect.value = '2026-27';
+        } else if (sortedFYs.length > 0) {
+            yearSelect.value = sortedFYs[0];
+        } else {
+            yearSelect.value = 'all';
+        }
+
+        const pdfPeriod = document.getElementById('pdfPeriodSelect');
+        if (pdfPeriod) pdfPeriod.value = yearSelect.value;
+
+        updateScreenMonthDropdown();
+    }
+
+    function onScreenYearChange() {
+        const yearSelect = document.getElementById('screenYearSelect');
+        const pdfPeriod = document.getElementById('pdfPeriodSelect');
+        if (yearSelect && pdfPeriod) {
+            pdfPeriod.value = yearSelect.value;
+        }
+        updateScreenMonthDropdown();
+    }
+
+    function updateScreenMonthDropdown() {
+        const yearSelect = document.getElementById('screenYearSelect');
+        const monthSelect = document.getElementById('screenMonthSelect');
+        if (!monthSelect) return;
+
+        const selectedYear = yearSelect ? yearSelect.value : 'all';
+        const prevMonthVal = monthSelect.value;
+        monthSelect.innerHTML = '';
+
+        const allOpt = document.createElement('option');
+        allOpt.value = 'all';
+        allOpt.textContent = (selectedYear === 'all') 
+            ? 'सर्व महिने (All Months / अखंड)' 
+            : `सर्व महिने (All Months - FY ${selectedYear})`;
+        monthSelect.appendChild(allOpt);
+
+        const allMonthKeys = Object.keys(monthlyContinuousMap).sort();
+        let filteredKeys = [];
+
+        if (selectedYear === 'all') {
+            filteredKeys = allMonthKeys.slice().reverse();
+        } else {
+            filteredKeys = allMonthKeys.filter(mKey => {
+                const [y, m] = mKey.split('-').map(Number);
+                const fy = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
+                return fy === selectedYear;
+            });
+        }
+
+        let latestWithEntries = '';
+
+        filteredKeys.forEach(mKey => {
+            const mData = monthlyContinuousMap[mKey];
+            if (!mData) return;
+            const opt = document.createElement('option');
+            opt.value = mKey;
+            const countStr = mData.items.length === 0 ? '(NIL)' : `(${mData.items.length} नोंदी)`;
+            opt.textContent = `${mData.label} ${countStr}`;
+            monthSelect.appendChild(opt);
+
+            if (mData.items.length > 0) {
+                latestWithEntries = mKey;
             }
+        });
+
+        if (prevMonthVal && Array.from(monthSelect.options).some(o => o.value === prevMonthVal)) {
+            monthSelect.value = prevMonthVal;
+        } else if (latestWithEntries) {
+            monthSelect.value = latestWithEntries;
+        } else if (monthSelect.options.length > 1) {
+            monthSelect.selectedIndex = 1;
+        } else {
+            monthSelect.value = 'all';
         }
     }
 
@@ -3329,7 +3420,9 @@
     //  MONTH-WISE SCREEN VIEWER
     // ============================================================
     function viewSelectedMonthOnScreen() {
+        const yearSelect = document.getElementById('screenYearSelect');
         const selectElem = document.getElementById('screenMonthSelect');
+        const selectedYear = yearSelect ? yearSelect.value : 'all';
         const selectedVal = selectElem ? selectElem.value : 'all';
         const box = document.getElementById('monthlyViewerBox');
         const title = document.getElementById('mViewerTitle');
@@ -3347,25 +3440,49 @@
         }
 
         if (selectedVal === 'all') {
-            title.innerHTML = `📅 संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)`;
-            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | सर्व महिन्यांचा अखंड ताळेबंद`;
+            let targetItems = [];
+            let periodText = '';
+
+            if (selectedYear === 'all') {
+                targetItems = transactionsData;
+                periodText = 'सर्व अखंड नोंदी (सुरुवातीपासून आजपर्यंत)';
+            } else {
+                targetItems = transactionsData.filter(t => t.fy === selectedYear);
+                periodText = `आर्थिक वर्ष FY ${selectedYear}`;
+            }
+
+            title.innerHTML = `📅 कॅश बुक नोंदी: <strong>${periodText}</strong>`;
+            sub.textContent = `स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था | एकूण ${targetItems.length} व्यवहार`;
 
             let grandCashIn = 0, grandCashOut = 0;
             let grandBankIn = 0, grandBankOut = 0;
 
-            transactionsData.forEach(t => {
+            targetItems.forEach(t => {
                 grandCashIn += (t.cashIn || 0);
                 grandCashOut += (t.cashOut || 0);
                 grandBankIn += (t.bankIn || 0);
                 grandBankOut += (t.bankOut || 0);
             });
 
-            const finalCash = grandCashIn - grandCashOut;
-            const finalBank = grandBankIn - grandBankOut;
+            let openCash = 0, openBank = 0;
+            if (selectedYear !== 'all') {
+                const fyKeys = Object.keys(monthlyContinuousMap).sort().filter(mKey => {
+                    const [y, m] = mKey.split('-').map(Number);
+                    const fy = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
+                    return fy === selectedYear;
+                });
+                if (fyKeys.length > 0 && monthlyContinuousMap[fyKeys[0]]) {
+                    openCash = monthlyContinuousMap[fyKeys[0]].openCash;
+                    openBank = monthlyContinuousMap[fyKeys[0]].openBank;
+                }
+            }
 
-            document.getElementById('mViewOpenCash').textContent = '₹ 0.00';
-            document.getElementById('mViewOpenBank').textContent = '₹ 0.00';
-            document.getElementById('mViewOpenTotal').textContent = '₹ 0.00';
+            const finalCash = openCash + grandCashIn - grandCashOut;
+            const finalBank = openBank + grandBankIn - grandBankOut;
+
+            document.getElementById('mViewOpenCash').textContent = formatIndianNum(openCash);
+            document.getElementById('mViewOpenBank').textContent = formatIndianNum(openBank);
+            document.getElementById('mViewOpenTotal').textContent = formatIndianNum(openCash + openBank);
 
             document.getElementById('mViewSumCashIn').textContent = formatIndianNum(grandCashIn);
             document.getElementById('mViewSumCashOut').textContent = formatIndianNum(grandCashOut);
@@ -3377,7 +3494,7 @@
             document.getElementById('mViewCloseTotal').textContent = formatIndianNum(finalCash + finalBank);
 
             tbody.innerHTML = '';
-            transactionsData.forEach((item, idx) => {
+            targetItems.forEach((item, idx) => {
                 const tr = document.createElement('tr');
                 const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
 
@@ -3470,7 +3587,9 @@
     }
 
     function printCurrentScreenMonth() {
+        const yearSelect = document.getElementById('screenYearSelect');
         const selectElem = document.getElementById('screenMonthSelect');
+        const selectedYear = yearSelect ? yearSelect.value : 'all';
         const selectedVal = selectElem ? selectElem.value : 'all';
 
         if (!transactionsData || transactionsData.length === 0) {
@@ -3484,11 +3603,23 @@
 
         if (selectedVal === 'all') {
             const allKeys = Object.keys(monthlyContinuousMap).sort();
-            if (allKeys.length === 0) {
+            let targetKeys = allKeys;
+            let titleText = '📒 टू-कॉलम कॅश बुक (सर्व महिने - संपूर्ण ताळेबंद)';
+
+            if (selectedYear !== 'all') {
+                targetKeys = allKeys.filter(mKey => {
+                    const [y, m] = mKey.split('-').map(Number);
+                    const itemFY = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
+                    return itemFY === selectedYear;
+                });
+                titleText = `📒 टू-कॉलम कॅश बुक (आर्थिक वर्ष FY ${selectedYear})`;
+            }
+
+            if (targetKeys.length === 0) {
                 alert('प्रिंट करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
                 return;
             }
-            generateCustomMonthsPDF(allKeys, '📒 टू-कॉलम कॅश बुक (सर्व महिने - संपूर्ण ताळेबंद)', false);
+            generateCustomMonthsPDF(targetKeys, titleText, false);
         } else {
             const mData = monthlyContinuousMap[selectedVal];
             if (!mData) {
@@ -3500,7 +3631,9 @@
     }
 
     function exportCurrentScreenMonthToExcel() {
+        const yearSelect = document.getElementById('screenYearSelect');
         const selectElem = document.getElementById('screenMonthSelect');
+        const selectedYear = yearSelect ? yearSelect.value : 'all';
         const selectedVal = selectElem ? selectElem.value : 'all';
 
         if (!transactionsData || transactionsData.length === 0) {
@@ -3513,10 +3646,20 @@
         }
 
         if (selectedVal === 'all') {
+            let targetData = transactionsData;
+            let filename = 'SwamiGopalTirth_CashBook_All_Months.xls';
+            let titleText = 'संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)';
+
+            if (selectedYear !== 'all') {
+                targetData = transactionsData.filter(t => t.fy === selectedYear);
+                filename = `SwamiGopalTirth_CashBook_FY_${selectedYear}.xls`;
+                titleText = `कॅश बुक नोंदी: आर्थिक वर्ष FY ${selectedYear}`;
+            }
+
             exportDataToExcelSheet(
-                transactionsData,
-                'संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)',
-                'SwamiGopalTirth_CashBook_All_Months.xls',
+                targetData,
+                titleText,
+                filename,
                 null
             );
         } else {
@@ -3538,7 +3681,10 @@
     //  SMART UNIFIED PDF GENERATION
     // ============================================================
     function generateTwoColumnPDF(type = 'all') {
-        const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
+        const yearSelect = document.getElementById('screenYearSelect');
+        const monthSelect = document.getElementById('screenMonthSelect');
+        const selectedYear = yearSelect ? yearSelect.value : (document.getElementById('pdfPeriodSelect') ? document.getElementById('pdfPeriodSelect').value : 'all');
+        const selectedMonth = monthSelect ? monthSelect.value : 'all';
         const allKeys = Object.keys(monthlyContinuousMap).sort();
 
         if (allKeys.length === 0) {
@@ -3549,16 +3695,20 @@
         let targetMonthKeys = [];
         let periodHeading = '';
 
-        if (selectedPeriod === 'all') {
+        if (selectedMonth !== 'all') {
+            const mData = monthlyContinuousMap[selectedMonth];
+            targetMonthKeys = [selectedMonth];
+            periodHeading = mData ? mData.label : selectedMonth;
+        } else if (selectedYear === 'all') {
             targetMonthKeys = allKeys;
             periodHeading = 'सर्व अखंड नोंदी (सुरुवातीपासून आजपर्यंत)';
         } else {
             targetMonthKeys = allKeys.filter(mKey => {
                 const [y, m] = mKey.split('-').map(Number);
                 const itemFY = (m >= 4) ? `${y}-${String(y + 1).slice(-2)}` : `${y - 1}-${String(y).slice(-2)}`;
-                return itemFY === selectedPeriod;
+                return itemFY === selectedYear;
             });
-            periodHeading = `आर्थिक वर्ष FY ${selectedPeriod}`;
+            periodHeading = `आर्थिक वर्ष FY ${selectedYear}`;
         }
 
         if (targetMonthKeys.length === 0) {
@@ -3846,7 +3996,10 @@
     //  BULK RECEIPTS & VOUCHERS PRINT
     // ============================================================
     function generateBulkReceiptsPDF() {
-        const selectedPeriod = document.getElementById('pdfPeriodSelect').value;
+        const yearSelect = document.getElementById('screenYearSelect');
+        const monthSelect = document.getElementById('screenMonthSelect');
+        const selectedYear = yearSelect ? yearSelect.value : (document.getElementById('pdfPeriodSelect') ? document.getElementById('pdfPeriodSelect').value : 'all');
+        const selectedMonth = monthSelect ? monthSelect.value : 'all';
         const allKeys = Object.keys(monthlyContinuousMap).sort();
 
         if (allKeys.length === 0 || !transactionsData || transactionsData.length === 0) {
@@ -3855,14 +4008,16 @@
         }
 
         let targetItems = [];
-        if (selectedPeriod === 'all') {
+        if (selectedMonth !== 'all') {
+            targetItems = transactionsData.filter(t => (t.rawDate || '').startsWith(selectedMonth));
+        } else if (selectedYear === 'all') {
             targetItems = transactionsData;
         } else {
-            targetItems = transactionsData.filter(t => t.fy === selectedPeriod);
+            targetItems = transactionsData.filter(t => t.fy === selectedYear);
         }
 
         if (targetItems.length === 0) {
-            alert(`निवडलेल्या कालावधीसाठी (${selectedPeriod}) कोणत्याही नोंदी उपलब्ध नाहीत.`);
+            alert(`निवडलेल्या कालावधीसाठी कोणत्याही नोंदी उपलब्ध नाहीत.`);
             return;
         }
 
