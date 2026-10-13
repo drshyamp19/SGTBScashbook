@@ -1018,6 +1018,7 @@
                                 <option value="PN">पावती (Receipt - PN)</option>
                                 <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
                                 <option value="VN">व्हाउचर (Voucher - VN)</option>
+                                <option value="VN - CD">VN - CD (Cash to Bank बँक भरणा)</option>
                                 <option value="VN - FD">VN - FD (Bank to FD मुदत ठेव)</option>
                                 <option value="VN FDM">VN FDM (FD to Bank मुदत ठेव परत)</option>
                                 <option value="VN_IBT">Internal Banking Transaction</option>
@@ -1040,17 +1041,17 @@
                     
                     <!-- DIRECT PRE-UPLOAD TO GOOGLE DRIVE -->
                     <div class="field">
-                        <label>📁 Upload File <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
+                        <label>📁 Upload File <span style="font-weight:400; color:#888;">(Direct Drive - Auto PDF)</span></label>
                         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                            <input type="file" id="newDocFile" accept="image/*,.pdf" style="padding:4px 0; max-width:180px;" onchange="handleFileSelectionChange()">
-                            <button type="button" class="btn btn-primary btn-sm" id="btnUploadDrive" onclick="startManualDriveUpload()" style="display:none; margin:0;">📤 Upload</button>
+                            <input type="file" id="newDocFile" accept="image/*,.pdf" multiple style="padding:4px 0; max-width:180px;" onchange="handleFileSelectionChange()">
+                            <button type="button" class="btn btn-primary btn-sm" id="btnUploadDrive" onclick="startManualDriveUpload()" style="display:none; margin:0;">📤 Upload PDF</button>
                         </div>
                         <div id="fileUploadStatus" style="font-size:11.5px; font-weight:700; margin-top:3px;"></div>
                     </div>
 
                     <div class="field">
                         <label>🔗 OR Drive Link <span style="font-weight:400; color:#888;">(File Link)</span></label>
-                        <input type="url" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:180px;">
+                        <input type="text" id="newDocUrlInput" placeholder="https://drive.google.com/..." style="min-width:180px;">
                     </div>
 
                     <div class="field">
@@ -1110,6 +1111,7 @@
                                 <option value="PN">पावती (Receipt - PN)</option>
                                 <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
                                 <option value="VN">व्हाउचर (Voucher - VN)</option>
+                                <option value="VN - CD">VN - CD (बँक भरणा)</option>
                                 <option value="VN - FD">VN - FD (मुदत ठेव)</option>
                                 <option value="VN FDM">VN FDM (मुदत ठेव परत)</option>
                                 <option value="VN_IBT">Internal Banking Transaction</option>
@@ -1142,6 +1144,7 @@
                         <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="filterTable()">
                         <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
                         <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨 Print</button>
+                        <button class="btn btn-success btn-sm" onclick="exportFilteredTransactionsToExcel()" title="फिल्टर केलेला टेबल Excel मध्ये डाऊनलोड करा">📊 Export Excel</button>
                     </div>
                 </div>
 
@@ -1291,6 +1294,7 @@
                         </div>
                         <div>
                             <button class="btn btn-warning btn-sm" onclick="printCurrentScreenMonth()">🖨️ या निवडीची प्रिंट / PDF</button>
+                            <button class="btn btn-success btn-sm" onclick="exportCurrentScreenMonthToExcel()">📊 Export Excel</button>
                         </div>
                     </div>
 
@@ -1441,6 +1445,7 @@
                     <option value="PN">पावती (Receipt - PN)</option>
                     <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
                     <option value="VN">व्हाउचर (Voucher - VN)</option>
+                    <option value="VN - CD">VN - CD (Cash to Bank बँक भरणा)</option>
                     <option value="VN - FD">VN - FD (Bank to FD मुदत ठेव)</option>
                     <option value="VN FDM">VN FDM (FD to Bank मुदत ठेव परत)</option>
                     <option value="VN_IBT">Internal Banking Transaction</option>
@@ -1486,17 +1491,17 @@
             </div>
 
             <div>
-                <label>📁 Upload New File <span style="font-weight:400; color:#888;">(Direct Drive)</span></label>
+                <label>📁 Upload New File <span style="font-weight:400; color:#888;">(Direct Drive - Auto PDF)</span></label>
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                    <input type="file" id="editDocFile" accept="image/*,.pdf" style="padding:5px 0; max-width:180px; margin-bottom:0;" onchange="handleEditFileSelectionChange()">
-                    <button type="button" class="btn btn-primary btn-sm" id="btnEditUploadDrive" onclick="startEditManualDriveUpload()" style="display:none; margin:0;">📤 Upload</button>
+                    <input type="file" id="editDocFile" accept="image/*,.pdf" multiple style="padding:5px 0; max-width:180px; margin-bottom:0;" onchange="handleEditFileSelectionChange()">
+                    <button type="button" class="btn btn-primary btn-sm" id="btnEditUploadDrive" onclick="startEditManualDriveUpload()" style="display:none; margin:0;">📤 Upload PDF</button>
                 </div>
                 <div id="editFileUploadStatus" style="font-size:11.5px; font-weight:700; margin-top:3px;"></div>
             </div>
 
             <div>
                 <label>🔗 Drive Link <span style="font-weight:400; color:#888;">(File Link)</span></label>
-                <input type="url" id="editDocUrl" placeholder="https://drive.google.com/..." style="margin-bottom:2px;">
+                <input type="text" id="editDocUrl" placeholder="https://drive.google.com/..." style="margin-bottom:2px;">
                 <div id="editDocExistingLinkBox" style="font-size:11.5px; font-weight:600; margin-top:3px;"></div>
             </div>
         </div>
@@ -1705,45 +1710,239 @@
     }
 
     // ============================================================
-    //  FILE SELECTION & IMMEDIATE DRIVE UPLOAD HANDLER (ADD ENTRY)
+    //  MULTI-PHOTO TO A4 PDF CONVERTER & DRIVE UPLOAD HANDLERS
     // ============================================================
-    function handleFileSelectionChange() {
-        const fileInput = document.getElementById('newDocFile');
-        const uploadBtn = document.getElementById('btnUploadDrive');
-        const statusText = document.getElementById('fileUploadStatus');
+    let pendingAddFiles = [];
+    let pendingEditFiles = [];
 
-        if (fileInput.files && fileInput.files[0]) {
-            uploadBtn.style.display = 'inline-flex';
-            statusText.innerHTML = `📁 फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट सेव्ह करा)</span>`;
-            startManualDriveUpload();
-        } else {
-            uploadBtn.style.display = 'none';
-            statusText.textContent = '';
-        }
+    function parseDocUrls(docUrlStr) {
+        if (!docUrlStr) return [];
+        return String(docUrlStr)
+            .split(/\s*,\s*|\s*\|\s*|\r?\n/)
+            .map(u => u.trim())
+            .filter(u => /^https?:\/\//i.test(u));
     }
 
-    async function startManualDriveUpload() {
+    function loadImageAsJpegPage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const maxDim = 1600;
+                    let w = img.naturalWidth || img.width || 800;
+                    let h = img.naturalHeight || img.height || 1000;
+                    if (w > maxDim || h > maxDim) {
+                        const ratio = Math.min(maxDim / w, maxDim / h);
+                        w = Math.round(w * ratio);
+                        h = Math.round(h * ratio);
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    const b64 = dataUrl.split(',')[1];
+                    const binStr = atob(b64);
+                    const bytes = new Uint8Array(binStr.length);
+                    for (let i = 0; i < binStr.length; i++) {
+                        bytes[i] = binStr.charCodeAt(i);
+                    }
+                    resolve({ jpegBytes: bytes, width: w, height: h });
+                };
+                img.onerror = () => reject(new Error('Image load failed: ' + file.name));
+                img.src = e.target.result;
+            };
+            reader.onerror = () => reject(new Error('File read failed: ' + file.name));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function convertImagesToA4PdfFile(imageFiles, pdfFilename) {
+        const pages = [];
+        for (const f of imageFiles) {
+            const pageData = await loadImageAsJpegPage(f);
+            pages.push(pageData);
+        }
+
+        const encoder = new TextEncoder();
+        const chunks = [];
+        let totalLen = 0;
+        const offsets = {};
+
+        function pushStr(str) {
+            const bytes = encoder.encode(str);
+            chunks.push(bytes);
+            totalLen += bytes.length;
+        }
+        function pushBytes(bytes) {
+            chunks.push(bytes);
+            totalLen += bytes.length;
+        }
+
+        pushStr("%PDF-1.4\n");
+        pushBytes(new Uint8Array([0x25, 0xE2, 0xE3, 0xCF, 0xD3, 0x0A]));
+
+        const pageObjIds = pages.map((_, idx) => 3 + idx * 3);
+
+        offsets[1] = totalLen;
+        pushStr("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+
+        offsets[2] = totalLen;
+        pushStr(`2 0 obj\n<< /Type /Pages /Kids [${pageObjIds.map(id => id + ' 0 R').join(' ')}] /Count ${pages.length} >>\nendobj\n`);
+
+        const pageW = 595.28;
+        const pageH = 841.89;
+        const margin = 20;
+        const availW = pageW - margin * 2;
+        const availH = pageH - margin * 2;
+
+        pages.forEach((p, idx) => {
+            const pageObjId = 3 + idx * 3;
+            const contentObjId = 4 + idx * 3;
+            const imgObjId = 5 + idx * 3;
+
+            const scale = Math.min(availW / p.width, availH / p.height);
+            const drawW = (p.width * scale).toFixed(2);
+            const drawH = (p.height * scale).toFixed(2);
+            const posX = ((pageW - p.width * scale) / 2).toFixed(2);
+            const posY = ((pageH - p.height * scale) / 2).toFixed(2);
+
+            offsets[pageObjId] = totalLen;
+            pushStr(`${pageObjId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageW} ${pageH}] /Resources << /XObject << /Im0 ${imgObjId} 0 R >> >> /Contents ${contentObjId} 0 R >>\nendobj\n`);
+
+            const streamStr = `q ${drawW} 0 0 ${drawH} ${posX} ${posY} cm /Im0 Do Q`;
+            offsets[contentObjId] = totalLen;
+            pushStr(`${contentObjId} 0 obj\n<< /Length ${streamStr.length} >>\nstream\n${streamStr}\nendstream\nendobj\n`);
+
+            offsets[imgObjId] = totalLen;
+            pushStr(`${imgObjId} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${p.width} /Height ${p.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpegBytes.length} >>\nstream\n`);
+            pushBytes(p.jpegBytes);
+            pushStr("\nendstream\nendobj\n");
+        });
+
+        const maxObjId = 2 + pages.length * 3;
+        const xrefOffset = totalLen;
+        pushStr(`xref\n0 ${maxObjId + 1}\n0000000000 65535 f \n`);
+        for (let id = 1; id <= maxObjId; id++) {
+            pushStr(`${String(offsets[id]).padStart(10, '0')} 00000 n \n`);
+        }
+        pushStr(`trailer\n<< /Size ${maxObjId + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`);
+
+        return new File(chunks, pdfFilename, { type: 'application/pdf' });
+    }
+
+    function isImageFile(file) {
+        if (!file) return false;
+        if (file.type && file.type.startsWith('image/')) return true;
+        return /\.(jpe?g|png|webp|gif|bmp)$/i.test(file.name || '');
+    }
+
+    async function uploadFilesBatchAsPdf(filesList, voucherStr, dateStr) {
+        const imageFiles = filesList.filter(f => isImageFile(f));
+        const otherFiles = filesList.filter(f => !isImageFile(f));
+        const uploadedUrls = [];
+
+        const cleanV = (voucherStr || 'Doc').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const cleanD = (dateStr || new Date().toISOString().slice(0, 10)).replace(/[^0-9-]/g, '');
+
+        if (imageFiles.length > 0) {
+            const pdfName = `${cleanV}_${cleanD}.pdf`;
+            const pdfFile = await convertImagesToA4PdfFile(imageFiles, pdfName);
+            const url = await uploadFileToGoogleDrive(pdfFile);
+            uploadedUrls.push(url);
+        }
+
+        for (const f of otherFiles) {
+            const url = await uploadFileToGoogleDrive(f);
+            uploadedUrls.push(url);
+        }
+
+        return uploadedUrls;
+    }
+
+    // ---- TAB 1: ADD ENTRY FILE SELECTION & UPLOAD ----
+    function handleFileSelectionChange() {
         const fileInput = document.getElementById('newDocFile');
+        if (fileInput.files && fileInput.files.length > 0) {
+            for (let i = 0; i < fileInput.files.length; i++) {
+                pendingAddFiles.push(fileInput.files[i]);
+            }
+            fileInput.value = '';
+        }
+        renderPendingAddFiles();
+    }
+
+    function removePendingAddFile(index) {
+        pendingAddFiles.splice(index, 1);
+        renderPendingAddFiles();
+    }
+
+    function removeUploadedAddDocUrl(index) {
+        const docUrlInput = document.getElementById('newDocUrlInput');
+        const urls = parseDocUrls(docUrlInput.value);
+        urls.splice(index, 1);
+        docUrlInput.value = urls.join(', ');
+        renderPendingAddFiles();
+    }
+
+    function renderPendingAddFiles() {
         const uploadBtn = document.getElementById('btnUploadDrive');
         const statusText = document.getElementById('fileUploadStatus');
         const docUrlInput = document.getElementById('newDocUrlInput');
+        const uploadedUrls = parseDocUrls(docUrlInput ? docUrlInput.value : '');
 
-        if (!fileInput.files || !fileInput.files[0]) {
-            alert('कृपया आधी फाईल निवडा.');
+        let html = '';
+        if (uploadedUrls.length > 0) {
+            uploadedUrls.forEach((u, idx) => {
+                html += `<div style="color:#28a745; margin-bottom:2px;">✅ PDF फाईल ${idx + 1} सेव्ह (<a href="${sanitizeUrl(u)}" target="_blank" style="color:#28a745; text-decoration:underline;">पहा ↗</a>) <button type="button" onclick="removeUploadedAddDocUrl(${idx})" style="background:#dc3545; color:#fff; border:none; border-radius:4px; padding:1px 6px; font-size:10px; cursor:pointer; margin-left:4px;">🗑️ काढा</button></div>`;
+            });
+        }
+
+        if (pendingAddFiles.length > 0) {
+            uploadBtn.style.display = 'inline-flex';
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = `📤 Upload PDF (${pendingAddFiles.length})`;
+            html += `<div style="margin-top:2px; color:#0d2b44;">📁 निवडलेले फोटो/फाईल्स (${pendingAddFiles.length}):</div>`;
+            pendingAddFiles.forEach((f, idx) => {
+                html += `<div style="font-size:11px; color:#334155; padding:1px 0;">🖼️ ${idx + 1}) ${escapeHTML(f.name)} <button type="button" onclick="removePendingAddFile(${idx})" style="background:none; border:none; color:#dc3545; font-weight:bold; cursor:pointer; font-size:11px;" title="काढा">✖</button></div>`;
+            });
+            html += `<div style="color:#d9480f; font-size:10.5px; margin-top:2px;">(अजून फोटो जोडण्यासाठी पुन्हा 'Choose File' दाबा किंवा '📤 Upload PDF' दाबा)</div>`;
+        } else {
+            uploadBtn.style.display = 'none';
+        }
+
+        statusText.innerHTML = html;
+    }
+
+    async function startManualDriveUpload() {
+        const uploadBtn = document.getElementById('btnUploadDrive');
+        const statusText = document.getElementById('fileUploadStatus');
+        const docUrlInput = document.getElementById('newDocUrlInput');
+        const voucherVal = document.getElementById('newVoucher').value.trim();
+        const dateVal = document.getElementById('newDate').value;
+
+        if (pendingAddFiles.length === 0) {
+            alert('कृपया आधी फोटो किंवा फाईल निवडा.');
             return;
         }
 
-        const file = fileInput.files[0];
         uploadBtn.disabled = true;
-        uploadBtn.textContent = '⏳ Uploading...';
-        statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे... कृपया थांबा.</span>`;
+        uploadBtn.textContent = '⏳ PDF तयार करून अपलोड होत आहे...';
+        statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ ${pendingAddFiles.length} फोटो/फाईलची A4 PDF तयार करून Google Drive वर सेव्ह होत आहे... कृपया थांबा.</span>`;
 
         try {
-            const uploadedUrl = await uploadFileToGoogleDrive(file);
-            docUrlInput.value = uploadedUrl;
-            statusText.innerHTML = `<span style="color:#28a745;">✅ फाईल Drive वर सेव्ह झाली! (<a href="${escapeHTML(uploadedUrl)}" target="_blank" style="color:#28a745; text-decoration:underline;">पहा ↗</a>)</span>`;
-            uploadBtn.style.display = 'none';
-            showToast('✅ फाईल Google Drive वर यशस्वीरीत्या अपलोड झाली!');
+            const newUrls = await uploadFilesBatchAsPdf(pendingAddFiles, voucherVal, dateVal);
+            const existingUrls = parseDocUrls(docUrlInput.value);
+            const combined = existingUrls.concat(newUrls);
+            docUrlInput.value = combined.join(', ');
+            pendingAddFiles = [];
+            renderPendingAddFiles();
+            showToast('✅ सर्व फोटो एकाच A4 PDF मध्ये Google Drive वर सेव्ह झाले!');
         } catch(err) {
             console.error("Upload error:", err);
             statusText.innerHTML = `<span style="color:#dc3545;">❌ फाईल अपलोड अयशस्वी: ${escapeHTML(err.message)}</span>`;
@@ -1752,46 +1951,99 @@
         }
     }
 
-    // ============================================================
-    //  FILE SELECTION & DRIVE UPLOAD HANDLER (EDIT POPUP MODAL)
-    // ============================================================
+    // ---- EDIT POPUP MODAL FILE SELECTION, UPLOAD & DELETE ----
     function handleEditFileSelectionChange() {
         const fileInput = document.getElementById('editDocFile');
+        if (fileInput.files && fileInput.files.length > 0) {
+            for (let i = 0; i < fileInput.files.length; i++) {
+                pendingEditFiles.push(fileInput.files[i]);
+            }
+            fileInput.value = '';
+        }
+        renderPendingEditFiles();
+    }
+
+    function removePendingEditFile(index) {
+        pendingEditFiles.splice(index, 1);
+        renderPendingEditFiles();
+    }
+
+    function renderPendingEditFiles() {
         const uploadBtn = document.getElementById('btnEditUploadDrive');
         const statusText = document.getElementById('editFileUploadStatus');
 
-        if (fileInput.files && fileInput.files[0]) {
+        if (pendingEditFiles.length > 0) {
             uploadBtn.style.display = 'inline-flex';
-            statusText.innerHTML = `📁 नवीन फाईल निवडली: <strong>${escapeHTML(fileInput.files[0].name)}</strong><br><span style="color:#d9480f;">(कृपया 'Upload' बटण दाबा किंवा थेट सेव्ह करा)</span>`;
-            startEditManualDriveUpload();
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = `📤 Upload PDF (${pendingEditFiles.length})`;
+            let html = `<div style="color:#0d2b44;">📁 नवीन निवडलेले फोटो/फाईल्स (${pendingEditFiles.length}):</div>`;
+            pendingEditFiles.forEach((f, idx) => {
+                html += `<div style="font-size:11px; color:#334155; padding:1px 0;">🖼️ ${idx + 1}) ${escapeHTML(f.name)} <button type="button" onclick="removePendingEditFile(${idx})" style="background:none; border:none; color:#dc3545; font-weight:bold; cursor:pointer; font-size:11px;" title="काढा">✖</button></div>`;
+            });
+            html += `<div style="color:#d9480f; font-size:10.5px; margin-top:2px;">(अजून फोटो जोडण्यासाठी पुन्हा 'Choose File' दाबा किंवा '📤 Upload PDF' / '💾 बदल सेव्ह करा' दाबा)</div>`;
+            statusText.innerHTML = html;
         } else {
             uploadBtn.style.display = 'none';
-            statusText.textContent = '';
+            statusText.innerHTML = '';
         }
     }
 
-    async function startEditManualDriveUpload() {
-        const fileInput = document.getElementById('editDocFile');
-        const uploadBtn = document.getElementById('btnEditUploadDrive');
-        const statusText = document.getElementById('editFileUploadStatus');
+    function renderExistingEditDocLinks() {
+        const existingLinkBox = document.getElementById('editDocExistingLinkBox');
         const docUrlInput = document.getElementById('editDocUrl');
+        if (!existingLinkBox || !docUrlInput) return;
 
-        if (!fileInput.files || !fileInput.files[0]) {
-            alert('कृपया आधी फाईल निवडा.');
+        const urls = parseDocUrls(docUrlInput.value);
+        if (urls.length === 0) {
+            existingLinkBox.innerHTML = `<span style="color:#888;">कोणतीही जुनी फाईल जोडलेली नाही</span>`;
             return;
         }
 
-        const file = fileInput.files[0];
+        let html = '';
+        urls.forEach((u, idx) => {
+            html += `<div style="margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+                <span>📄 <a href="${sanitizeUrl(u)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">फाईल ${idx + 1} पहा ↗</a></span>
+                <button type="button" onclick="removeExistingEditDocUrl(${idx})" style="background:#dc3545; color:white; border:none; border-radius:4px; padding:2px 7px; font-size:11px; cursor:pointer; font-weight:600;" title="ही फाईल डिलीट करा">🗑️ काढा</button>
+            </div>`;
+        });
+        existingLinkBox.innerHTML = html;
+    }
+
+    function removeExistingEditDocUrl(index) {
+        if (!confirm('ही जोडलेली फाईल या नोंदीतून काढून टाकायची (Delete) आहे का?')) return;
+        const docUrlInput = document.getElementById('editDocUrl');
+        const urls = parseDocUrls(docUrlInput.value);
+        urls.splice(index, 1);
+        docUrlInput.value = urls.join(', ');
+        renderExistingEditDocLinks();
+        showToast('🗑️ फाईल काढून टाकली. आता "बदल सेव्ह करा" दाबा.');
+    }
+
+    async function startEditManualDriveUpload() {
+        const uploadBtn = document.getElementById('btnEditUploadDrive');
+        const statusText = document.getElementById('editFileUploadStatus');
+        const docUrlInput = document.getElementById('editDocUrl');
+        const voucherVal = document.getElementById('editVoucher').value.trim();
+        const dateVal = document.getElementById('editDate').value;
+
+        if (pendingEditFiles.length === 0) {
+            alert('कृपया आधी फोटो किंवा फाईल निवडा.');
+            return;
+        }
+
         uploadBtn.disabled = true;
         uploadBtn.textContent = '⏳ Uploading...';
-        statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे... कृपया थांबा.</span>`;
+        statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ ${pendingEditFiles.length} फोटो/फाईलची A4 PDF तयार करून Google Drive वर सेव्ह होत आहे... कृपया थांबा.</span>`;
 
         try {
-            const uploadedUrl = await uploadFileToGoogleDrive(file);
-            docUrlInput.value = uploadedUrl;
-            statusText.innerHTML = `<span style="color:#28a745;">✅ नवीन फाईल Drive वर सेव्ह झाली! (<a href="${escapeHTML(uploadedUrl)}" target="_blank" style="color:#28a745; text-decoration:underline;">पहा ↗</a>)</span>`;
-            uploadBtn.style.display = 'none';
-            showToast('✅ फाईल Google Drive वर यशस्वीरीत्या अपलोड झाली!');
+            const newUrls = await uploadFilesBatchAsPdf(pendingEditFiles, voucherVal, dateVal);
+            const existingUrls = parseDocUrls(docUrlInput.value);
+            const combined = existingUrls.concat(newUrls);
+            docUrlInput.value = combined.join(', ');
+            pendingEditFiles = [];
+            renderPendingEditFiles();
+            renderExistingEditDocLinks();
+            showToast('✅ नवीन PDF फाईल Google Drive वर सेव्ह होऊन जोडली गेली!');
         } catch(err) {
             console.error("Edit Upload error:", err);
             statusText.innerHTML = `<span style="color:#dc3545;">❌ फाईल अपलोड अयशस्वी: ${escapeHTML(err.message)}</span>`;
@@ -1807,7 +2059,7 @@
                 const base64Data = e.target.result.split(',')[1];
                 const payload = {
                     filename: `${Date.now()}_${file.name}`,
-                    mimeType: file.type || 'application/octet-stream',
+                    mimeType: file.type || 'application/pdf',
                     base64: base64Data
                 };
 
@@ -2453,7 +2705,7 @@
         datalist.innerHTML = defaultOptions;
     }
 
-    function getNextVoucherString(selectedType) {
+    function getNextVoucherString(selectedType, existingVNNum = null) {
         const pad = (num, size = 2) => String(num).padStart(size, '0');
 
         if (selectedType === 'PN') {
@@ -2480,62 +2732,69 @@
             return `A/VSN ${pad(maxAVSN + 1, 2)}`;
         }
 
-        if (selectedType === 'VN - FD') {
-            let maxVNFD = 0;
+        // एकच व्हाउचर बुक असल्यामुळे सर्व VN प्रकारांसाठी मुख्य VN नंबर सलग (Continuous) राहील
+        let maxVN = 0;
+        (transactionsData || []).forEach(t => {
+            const v = t.voucher || '';
+            const vnMatch = v.match(/(?:^|\b)(?:VN|व्हाउचर)\s*(\d+)/i);
+            if (vnMatch) {
+                const n = parseInt(vnMatch[1], 10);
+                if (n > maxVN) maxVN = n;
+            }
+        });
+
+        const nextVN = (existingVNNum !== null && !isNaN(existingVNNum) && existingVNNum > 0) ? existingVNNum : (maxVN + 1);
+
+        if (selectedType === 'VN - CD' || selectedType === 'VN_CD') {
+            let maxCD = 0;
             (transactionsData || []).forEach(t => {
-                const match = (t.voucher || '').match(/VN\s*-\s*FD\s*(\d+)/i);
+                const match = (t.voucher || '').match(/\bCD\s*[-]?\s*(\d+)/i);
                 if (match) {
                     const n = parseInt(match[1], 10);
-                    if (n > maxVNFD) maxVNFD = n;
+                    if (n > maxCD) maxCD = n;
                 }
             });
-            return `VN - FD ${pad(maxVNFD + 1, 2)}`;
+            return `VN ${pad(nextVN, 2)} - CD ${pad(maxCD + 1, 2)}`;
+        }
+
+        if (selectedType === 'VN - FD' || selectedType === 'VN_FD') {
+            let maxFD = 0;
+            (transactionsData || []).forEach(t => {
+                const match = (t.voucher || '').match(/\bFD\s*[-]?\s*(\d+)/i);
+                if (match) {
+                    const n = parseInt(match[1], 10);
+                    if (n > maxFD) maxFD = n;
+                }
+            });
+            return `VN ${pad(nextVN, 2)} - FD ${pad(maxFD + 1, 2)}`;
         }
 
         if (selectedType === 'VN FDM' || selectedType === 'VN_FDM') {
-            let maxVNFDM = 0;
+            let maxFDM = 0;
             (transactionsData || []).forEach(t => {
-                const match = (t.voucher || '').match(/VN\s*FDM\s*(\d+)/i);
+                const match = (t.voucher || '').match(/\bFDM\s*[-]?\s*(\d+)/i);
                 if (match) {
                     const n = parseInt(match[1], 10);
-                    if (n > maxVNFDM) maxVNFDM = n;
+                    if (n > maxFDM) maxFDM = n;
                 }
             });
-            return `VN FDM ${pad(maxVNFDM + 1, 2)}`;
-        }
-
-        if (selectedType === 'VN') {
-            let maxVN = 0;
-            (transactionsData || []).forEach(t => {
-                const v = (t.voucher || '').toUpperCase();
-                if (!v.includes('IBT') && !v.includes('FD')) {
-                    const match = (t.voucher || '').match(/(?:VN|व्हाउचर)\s*(\d+)/i);
-                    if (match) {
-                        const n = parseInt(match[1], 10);
-                        if (n > maxVN) maxVN = n;
-                    }
-                }
-            });
-            return `VN ${pad(maxVN + 1, 2)}`;
+            return `VN ${pad(nextVN, 2)} - FDM ${pad(maxFDM + 1, 2)}`;
         }
 
         if (selectedType === 'VN_IBT' || selectedType === 'IBT') {
-            let maxVN = 0;
             let maxIBT = 0;
             (transactionsData || []).forEach(t => {
-                const v = t.voucher || '';
-                const vnMatch = v.match(/(?:VN|व्हाउचर)\s*(\d+)/i);
-                if (vnMatch) {
-                    const n = parseInt(vnMatch[1], 10);
-                    if (n > maxVN) maxVN = n;
-                }
-                const ibtMatch = v.match(/IBT\s*[-]?\s*(\d+)/i);
-                if (ibtMatch) {
-                    const n = parseInt(ibtMatch[1], 10);
+                const match = (t.voucher || '').match(/\bIBT\s*[-]?\s*(\d+)/i);
+                if (match) {
+                    const n = parseInt(match[1], 10);
                     if (n > maxIBT) maxIBT = n;
                 }
             });
-            return `VN ${pad(maxVN + 1, 2)} - IBT ${pad(maxIBT + 1, 2)}`;
+            return `VN ${pad(nextVN, 2)} - IBT ${pad(maxIBT + 1, 2)}`;
+        }
+
+        if (selectedType === 'VN') {
+            return `VN ${pad(nextVN, 2)}`;
         }
 
         return '';
@@ -2545,6 +2804,7 @@
         const typeSelect = document.getElementById('voucherTypeSelect').value;
         const voucherInput = document.getElementById('newVoucher');
         const descInput = document.getElementById('newDesc');
+        const nameInput = document.getElementById('newName');
         const typeField = document.getElementById('newType');
         const modeSelect = document.getElementById('newPaymentMode');
 
@@ -2556,16 +2816,28 @@
             voucherInput.value = getNextVoucherString('A/VSN');
             if (!descInput.value) descInput.value = 'आजीवन सभासद नोंदणी (Ajivan Sabhasad Nondni)';
             typeField.value = 'credit';
+        } else if (typeSelect === 'VN - CD') {
+            voucherInput.value = getNextVoucherString('VN - CD');
+            typeField.value = 'credit';
+            modeSelect.value = 'contra_c2b';
+            if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
+            if (!descInput.value) descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
         } else if (typeSelect === 'VN - FD') {
             voucherInput.value = getNextVoucherString('VN - FD');
             typeField.value = 'debit';
             modeSelect.value = 'contra_b2fd';
+            if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
             if (!descInput.value) descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
         } else if (typeSelect === 'VN FDM') {
             voucherInput.value = getNextVoucherString('VN FDM');
             typeField.value = 'credit';
             modeSelect.value = 'contra_fd2b';
+            if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
             if (!descInput.value) descInput.value = 'मुदत ठेव (FD) मोडून/परिपक्व होऊन बँकेत जमा (FD Matured to Bank)';
+        } else if (typeSelect === 'VN_IBT') {
+            voucherInput.value = getNextVoucherString('VN_IBT');
+            typeField.value = 'debit';
+            modeSelect.value = 'bank';
         } else {
             voucherInput.value = getNextVoucherString(typeSelect);
         }
@@ -2580,7 +2852,7 @@
                 vSelect.value = 'PN';
             }
         } else if (entryType === 'debit') {
-            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN' || vSelect.value === 'VN FDM') {
+            if (vSelect.value === 'PN' || vSelect.value === 'A/VSN' || vSelect.value === 'VN FDM' || vSelect.value === 'VN - CD') {
                 vSelect.value = 'VN';
             }
         }
@@ -2600,11 +2872,15 @@
             if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
             typeField.style.opacity = '0.5';
             typeSelect.value = 'credit';
+            vSelect.value = 'VN - CD';
+            handleVoucherTypeChange();
         } else if (mode === 'contra_b2c') {
             descInput.value = 'कार्यालयीन खर्चासाठी बँकेतून रोख काढली (Cash Withdrawn from Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक उचल)';
             typeField.style.opacity = '0.5';
             typeSelect.value = 'credit';
+            vSelect.value = 'VN';
+            handleVoucherTypeChange();
         } else if (mode === 'contra_b2fd') {
             descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
             if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
@@ -2630,9 +2906,10 @@
     function detectVoucherType(voucherStr) {
         if (!voucherStr) return 'OTHER';
         const v = voucherStr.trim().toUpperCase();
-        if (v.includes('FDM')) return 'VN FDM';
-        if (v.includes('FD')) return 'VN - FD';
-        if (v.includes('IBT')) return 'VN_IBT';
+        if (/\bFDM\b/.test(v)) return 'VN FDM';
+        if (/\bFD\b/.test(v)) return 'VN - FD';
+        if (/\bCD\b/.test(v)) return 'VN - CD';
+        if (/\bIBT\b/.test(v)) return 'VN_IBT';
         if (v.startsWith('A/VSN') || v.includes('सभासद')) return 'A/VSN';
         if (v.startsWith('PN') || v.includes('पावती')) return 'PN';
         if (v.startsWith('VN') || v.includes('व्हाउचर')) return 'VN';
@@ -2642,11 +2919,19 @@
     function handleEditVoucherTypeChange() {
         const typeSelect = document.getElementById('editVoucherTypeSelect').value;
         const voucherInput = document.getElementById('editVoucher');
+        const editId = document.getElementById('editEntryId').value;
+        const origItem = (transactionsData || []).find(t => t.id === editId);
+
+        let existingVN = null;
+        if (origItem && origItem.voucher) {
+            const m = origItem.voucher.match(/(?:^|\b)(?:VN|व्हाउचर)\s*(\d+)/i);
+            if (m) existingVN = parseInt(m[1], 10);
+        }
 
         if (typeSelect === 'OTHER') {
             voucherInput.placeholder = 'उदा. UTR / Cheque / पावती नंबर टाका';
         } else {
-            voucherInput.value = getNextVoucherString(typeSelect);
+            voucherInput.value = getNextVoucherString(typeSelect, existingVN);
         }
     }
 
@@ -2678,10 +2963,14 @@
             if (!descInput.value) descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
             typeSelect.value = 'credit';
+            vSelect.value = 'VN - CD';
+            handleEditVoucherTypeChange();
         } else if (mode === 'contra_b2c') {
             if (!descInput.value) descInput.value = 'कार्यालयीन खर्चासाठी बँकेतून रोख काढली (Cash Withdrawn from Bank)';
             if (!nameInput.value) nameInput.value = 'Self (बँक उचल)';
             typeSelect.value = 'credit';
+            vSelect.value = 'VN';
+            handleEditVoucherTypeChange();
         } else if (mode === 'contra_b2fd') {
             if (!descInput.value) descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
             if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
@@ -3062,6 +3351,71 @@
         const closeBtn = document.getElementById('closeMonthlyViewBtn');
         if (box) box.style.display = 'none';
         if (closeBtn) closeBtn.style.display = 'none';
+    }
+
+    function printCurrentScreenMonth() {
+        const selectElem = document.getElementById('screenMonthSelect');
+        const selectedVal = selectElem ? selectElem.value : 'all';
+
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('प्रिंट करण्यासाठी कोणताही डेटा उपलब्ध नाही.');
+            return;
+        }
+
+        if (Object.keys(monthlyContinuousMap).length === 0) {
+            calculateTwoColumnBalances(transactionsData);
+        }
+
+        if (selectedVal === 'all') {
+            const allKeys = Object.keys(monthlyContinuousMap).sort();
+            if (allKeys.length === 0) {
+                alert('प्रिंट करण्यासाठी कोणत्याही नोंदी उपलब्ध नाहीत.');
+                return;
+            }
+            generateCustomMonthsPDF(allKeys, '📒 टू-कॉलम कॅश बुक (सर्व महिने - संपूर्ण ताळेबंद)', false);
+        } else {
+            const mData = monthlyContinuousMap[selectedVal];
+            if (!mData) {
+                alert('या महिन्याची माहिती उपलब्ध नाही.');
+                return;
+            }
+            generateCustomMonthsPDF([selectedVal], `📒 टू-कॉलम कॅश बुक (${mData.label})`, false);
+        }
+    }
+
+    function exportCurrentScreenMonthToExcel() {
+        const selectElem = document.getElementById('screenMonthSelect');
+        const selectedVal = selectElem ? selectElem.value : 'all';
+
+        if (!transactionsData || transactionsData.length === 0) {
+            alert('Export करण्यासाठी कोणताही डेटा उपलब्ध नाही.');
+            return;
+        }
+
+        if (Object.keys(monthlyContinuousMap).length === 0) {
+            calculateTwoColumnBalances(transactionsData);
+        }
+
+        if (selectedVal === 'all') {
+            exportDataToExcelSheet(
+                transactionsData,
+                'संपूर्ण कॅश बुक नोंदी (All Continuous Ledger)',
+                'SwamiGopalTirth_CashBook_All_Months.xls',
+                null
+            );
+        } else {
+            const mData = monthlyContinuousMap[selectedVal];
+            if (!mData) {
+                alert('या महिन्याची माहिती उपलब्ध नाही.');
+                return;
+            }
+            exportDataToExcelSheet(
+                mData.items || [],
+                `महिना कॅश बुक: ${mData.label}`,
+                `SwamiGopalTirth_CashBook_${selectedVal}.xls`,
+                mData
+            );
+        }
     }
 
     // ============================================================
@@ -3514,8 +3868,13 @@
             const row = document.createElement('tr');
             
             let voucherDisplay = escapeHTML(item.voucher || '-');
-            if (item.docUrl) {
-                voucherDisplay += ` <a href="${escapeHTML(item.docUrl)}" target="_blank" class="drive-doc-badge" title="दस्तऐवज पहा">📎</a>`;
+            const docUrls = parseDocUrls(item.docUrl);
+            if (docUrls.length === 1) {
+                voucherDisplay += ` <a href="${escapeHTML(sanitizeUrl(docUrls[0]))}" target="_blank" class="drive-doc-badge" title="दस्तऐवज पहा (PDF/File)">📎</a>`;
+            } else if (docUrls.length > 1) {
+                docUrls.forEach((u, idx) => {
+                    voucherDisplay += ` <a href="${escapeHTML(sanitizeUrl(u))}" target="_blank" class="drive-doc-badge" title="दस्तऐवज ${idx + 1} पहा">📎${idx + 1}</a>`;
+                });
             }
 
             let modeHtml = '<span class="mode-badge mode-bank">🏦 Bank</span>';
@@ -3579,7 +3938,7 @@
     }
 
     // ============================================================
-    //  PRINT FILTERED TRANSACTIONS TABLE
+    //  PRINT & EXCEL EXPORT FILTERED TRANSACTIONS TABLE
     // ============================================================
     function printFilteredTransactionsTable() {
         const dataToPrint = (currentFilteredData && currentFilteredData.length > 0) ? currentFilteredData : transactionsData;
@@ -3715,6 +4074,169 @@
         printWin.document.open();
         printWin.document.write(printHtml);
         printWin.document.close();
+    }
+
+    function exportFilteredTransactionsToExcel() {
+        const dataToExport = (currentFilteredData && currentFilteredData.length > 0) ? currentFilteredData : transactionsData;
+        if (!dataToExport || dataToExport.length === 0) {
+            alert('Excel एक्सपोर्ट करण्यासाठी कोणतीही नोंद उपलब्ध नाही.');
+            return;
+        }
+
+        let filterDesc = 'सर्व व्यवहार नोंदी (All Transactions)';
+        const banner = document.getElementById('filterBanner');
+        const bannerText = document.getElementById('filterBannerText');
+        if (banner && banner.style.display !== 'none' && bannerText) {
+            filterDesc = bannerText.innerText;
+        }
+
+        const dateStr = new Date().toISOString().split('T')[0];
+        exportDataToExcelSheet(dataToExport, filterDesc, `SGTB_Transactions_${dateStr}.xls`, null);
+    }
+
+    function exportDataToExcelSheet(dataToExport, reportTitle, filename, monthSummary = null) {
+        let rowsHtml = '';
+        let totCashIn = 0, totCashOut = 0, totBankIn = 0, totBankOut = 0;
+
+        dataToExport.forEach((item, index) => {
+            const cIn = Number(item.cashIn || 0);
+            const cOut = Number(item.cashOut || 0);
+            const bIn = Number(item.bankIn || 0);
+            const bOut = Number(item.bankOut || 0);
+            const cBal = Number(item.cashBal || 0);
+            const bBal = Number(item.bankBal || 0);
+
+            totCashIn += cIn;
+            totCashOut += cOut;
+            totBankIn += bIn;
+            totBankOut += bOut;
+
+            let modeLabel = (item.paymentMode || 'bank').toUpperCase();
+            if (item.paymentMode === 'contra_b2fd') modeLabel = 'Bank->FD';
+            else if (item.paymentMode === 'contra_fd2b') modeLabel = 'FD->Bank';
+            else if (item.paymentMode === 'contra_b2c') modeLabel = 'Bank->Cash';
+            else if (item.paymentMode === 'contra_c2b') modeLabel = 'Cash->Bank';
+
+            const docUrls = parseDocUrls(item.docUrl);
+            let docCellHtml = '-';
+            if (docUrls.length === 1) {
+                docCellHtml = `<a href="${escapeHTML(sanitizeUrl(docUrls[0]))}">फाईल पहा</a>`;
+            } else if (docUrls.length > 1) {
+                docCellHtml = docUrls.map((u, idx) => `<a href="${escapeHTML(sanitizeUrl(u))}">फाईल ${idx + 1}</a>`).join(' | ');
+            }
+
+            rowsHtml += `
+            <tr>
+                <td style="text-align:center;">${index + 1}</td>
+                <td style="mso-number-format:'\\@'; text-align:center;">${escapeHTML(item.date || '')}</td>
+                <td style="mso-number-format:'\\@'; font-weight:bold;">${escapeHTML(item.voucher || '-')}</td>
+                <td style="text-align:center;">${escapeHTML(modeLabel)}</td>
+                <td>${escapeHTML(item.name || '-')}</td>
+                <td>${escapeHTML(item.description || '-')}</td>
+                <td style="text-align:right; color:#198754;">${cIn > 0 ? cIn : ''}</td>
+                <td style="text-align:right; color:#dc3545;">${cOut > 0 ? cOut : ''}</td>
+                <td style="text-align:right; color:#0b5ed7;">${bIn > 0 ? bIn : ''}</td>
+                <td style="text-align:right; color:#d63384;">${bOut > 0 ? bOut : ''}</td>
+                <td style="text-align:right; font-weight:bold;">${cBal}</td>
+                <td style="text-align:right; font-weight:bold;">${bBal}</td>
+                <td style="text-align:center;">${docCellHtml}</td>
+            </tr>`;
+        });
+
+        let openingRowHtml = '';
+        let closingRowHtml = '';
+        if (monthSummary) {
+            openingRowHtml = `
+            <tr style="background:#eef4fb; font-weight:bold;">
+                <td colspan="6" style="text-align:right;">मागील महिन्याची शिल्लक (Opening Balance B/F):</td>
+                <td colspan="2" style="text-align:right;">रोख: ₹ ${monthSummary.openCash}</td>
+                <td colspan="2" style="text-align:right;">बँक: ₹ ${monthSummary.openBank}</td>
+                <td style="text-align:right;">${monthSummary.openCash}</td>
+                <td style="text-align:right;">${monthSummary.openBank}</td>
+                <td></td>
+            </tr>`;
+            closingRowHtml = `
+            <tr style="background:#e8f5e9; font-weight:bold;">
+                <td colspan="6" style="text-align:right;">महिन्याअखेर शिल्लक (Closing Balance C/F):</td>
+                <td colspan="2" style="text-align:right;">रोख शिल्लक: ₹ ${monthSummary.closeCash}</td>
+                <td colspan="2" style="text-align:right;">बँक शिल्लक: ₹ ${monthSummary.closeBank}</td>
+                <td style="text-align:right;">${monthSummary.closeCash}</td>
+                <td style="text-align:right;">${monthSummary.closeBank}</td>
+                <td>एकूण: ₹ ${monthSummary.closeCash + monthSummary.closeBank}</td>
+            </tr>`;
+        }
+
+        const excelHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="UTF-8">
+            <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>CashBook</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+            <style>
+                table { border-collapse: collapse; width: 100%; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; font-size: 11pt; }
+                th, td { border: 1px solid #666666; padding: 5px 8px; }
+                th { background-color: #0d2b44; color: #ffffff; font-weight: bold; text-align: center; }
+            </style>
+        </head>
+        <body>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="13" style="background-color:#0d2b44; color:#ffffff; font-size:14pt; text-align:center; height:30px;">
+                            स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था, श्रीराम नगर भद्रावती (Reg. No.: F-0016068(CDP))
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="13" style="background-color:#eef4fb; color:#0d2b44; font-size:11pt; text-align:left;">
+                            📋 ${escapeHTML(reportTitle)} | एकूण नोंदी: ${dataToExport.length} | दिनांक: ${new Date().toLocaleDateString('mr-IN')}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">#</th>
+                        <th rowspan="2">दिनांक</th>
+                        <th rowspan="2">व्हाउचर क्र.</th>
+                        <th rowspan="2">मोड</th>
+                        <th rowspan="2">नाव / देणगीदार</th>
+                        <th rowspan="2">तपशील / कारण</th>
+                        <th colspan="2" style="background-color:#d9480f; color:#ffffff;">रोख रकाना (Cash ₹)</th>
+                        <th colspan="2" style="background-color:#0b5ed7; color:#ffffff;">बँक रकाना (Bank ₹)</th>
+                        <th colspan="2" style="background-color:#1e3a5f; color:#ffffff;">अखेर शिल्लक (Balance ₹)</th>
+                        <th rowspan="2">दस्तऐवज लिंक</th>
+                    </tr>
+                    <tr>
+                        <th style="background-color:#d9480f; color:#ffffff;">In (जमा)</th>
+                        <th style="background-color:#d9480f; color:#ffffff;">Out (खर्च)</th>
+                        <th style="background-color:#0b5ed7; color:#ffffff;">In (जमा)</th>
+                        <th style="background-color:#0b5ed7; color:#ffffff;">Out (खर्च)</th>
+                        <th style="background-color:#1e3a5f; color:#ffffff;">Cash Bal</th>
+                        <th style="background-color:#1e3a5f; color:#ffffff;">Bank Bal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${openingRowHtml}
+                    ${rowsHtml}
+                    <tr style="background-color:#f8f9fa; font-weight:bold;">
+                        <td colspan="6" style="text-align:right; font-weight:bold;">एकूण बेरीज (Totals):</td>
+                        <td style="text-align:right; color:#198754; font-weight:bold;">${totCashIn}</td>
+                        <td style="text-align:right; color:#dc3545; font-weight:bold;">${totCashOut}</td>
+                        <td style="text-align:right; color:#0b5ed7; font-weight:bold;">${totBankIn}</td>
+                        <td style="text-align:right; color:#d63384; font-weight:bold;">${totBankOut}</td>
+                        <td style="text-align:right;">-</td>
+                        <td style="text-align:right;">-</td>
+                        <td></td>
+                    </tr>
+                    ${closingRowHtml}
+                </tbody>
+            </table>
+        </body>
+        </html>`;
+
+        const blob = new Blob(['\uFEFF' + excelHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename || 'SGTB_CashBook.xls';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('📊 Excel फाईल यशस्वीरीत्या डाउनलोड झाली!');
     }
 
     function updateStats(allData, filteredData, isFiltered) {
@@ -3858,14 +4380,17 @@
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
 
-        if (fileInput.files && fileInput.files[0] && !docUrl) {
+        if (pendingAddFiles.length > 0) {
             submitBtn.disabled = true;
-            submitBtn.textContent = '⏳ Uploading File...';
-            statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे...</span>`;
-
+            submitBtn.textContent = '⏳ Uploading PDF...';
+            if (statusText) statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ ${pendingAddFiles.length} फोटो/फाईलची A4 PDF तयार करून Google Drive वर सेव्ह होत आहे...</span>`;
             try {
-                docUrl = await uploadFileToGoogleDrive(fileInput.files[0]);
+                const newUrls = await uploadFilesBatchAsPdf(pendingAddFiles, voucher || 'Receipt', rawDate);
+                const existingUrls = parseDocUrls(docUrl);
+                const combined = existingUrls.concat(newUrls);
+                docUrl = combined.join(', ');
                 document.getElementById('newDocUrlInput').value = docUrl;
+                pendingAddFiles = [];
             } catch(driveErr) {
                 console.warn("Drive upload error:", driveErr);
                 const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद फाईल लिंकशिवाय सेव्ह करायची आहे का?");
@@ -3899,7 +4424,8 @@
                 showToast('✅ Transaction added successfully!');
             }
 
-            document.getElementById('newDocFile').value = '';
+            pendingAddFiles = [];
+            if (fileInput) fileInput.value = '';
             document.getElementById('newDocUrlInput').value = '';
             document.getElementById('newName').value = '';
             document.getElementById('newDesc').value = '';
@@ -3943,6 +4469,7 @@
         document.getElementById('editDesc').value = item.description || '';
         document.getElementById('editDocUrl').value = item.docUrl || '';
 
+        pendingEditFiles = [];
         const editFileInput = document.getElementById('editDocFile');
         if (editFileInput) editFileInput.value = '';
         const editUploadBtn = document.getElementById('btnEditUploadDrive');
@@ -3951,14 +4478,7 @@
         const editStatusText = document.getElementById('editFileUploadStatus');
         if (editStatusText) editStatusText.textContent = '';
 
-        const existingLinkBox = document.getElementById('editDocExistingLinkBox');
-        if (existingLinkBox) {
-            if (item.docUrl) {
-                existingLinkBox.innerHTML = `📄 <a href="${sanitizeUrl(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">विद्यमान फाईल/बिल पहा ↗</a>`;
-            } else {
-                existingLinkBox.innerHTML = `<span style="color:#888;">कोणतीही जुनी फाईल जोडलेली नाही</span>`;
-            }
-        }
+        renderExistingEditDocLinks();
 
         document.getElementById('editModalOverlay').style.display = 'flex';
     }
@@ -3966,6 +4486,7 @@
     function closeEditModal() {
         document.getElementById('editModalOverlay').style.display = 'none';
         document.getElementById('editEntryId').value = '';
+        pendingEditFiles = [];
         const editFileInput = document.getElementById('editDocFile');
         if (editFileInput) editFileInput.value = '';
         const editUploadBtn = document.getElementById('btnEditUploadDrive');
@@ -3987,7 +4508,6 @@
         const name = document.getElementById('editName').value.trim();
         const desc = document.getElementById('editDesc').value.trim();
         let docUrl = document.getElementById('editDocUrl').value.trim();
-        const editFileInput = document.getElementById('editDocFile');
         const saveBtn = document.getElementById('editSubmitBtn');
         const statusText = document.getElementById('editFileUploadStatus');
 
@@ -3996,21 +4516,26 @@
             return;
         }
 
-        if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c') {
+        if (modeVal === 'contra_c2b' || modeVal === 'contra_b2c' || modeVal === 'contra_fd2b') {
             typeVal = 'credit';
+        } else if (modeVal === 'contra_b2fd') {
+            typeVal = 'debit';
         }
 
         const rawDate = parseToIsoDate(dateVal);
         const formattedDate = formatDateToDisplay(rawDate);
 
-        if (editFileInput && editFileInput.files && editFileInput.files[0]) {
+        if (pendingEditFiles.length > 0) {
             saveBtn.disabled = true;
-            saveBtn.textContent = '⏳ Uploading File...';
-            if (statusText) statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ Google Drive वर फाईल अपलोड होत आहे... कृपया थांबा.</span>`;
-
+            saveBtn.textContent = '⏳ Uploading PDF...';
+            if (statusText) statusText.innerHTML = `<span style="color:#0b5ed7;">⏳ ${pendingEditFiles.length} फोटो/फाईलची A4 PDF तयार करून Google Drive वर सेव्ह होत आहे...</span>`;
             try {
-                docUrl = await uploadFileToGoogleDrive(editFileInput.files[0]);
+                const newUrls = await uploadFilesBatchAsPdf(pendingEditFiles, voucher || 'Voucher', rawDate);
+                const existingUrls = parseDocUrls(docUrl);
+                const combined = existingUrls.concat(newUrls);
+                docUrl = combined.join(', ');
                 document.getElementById('editDocUrl').value = docUrl;
+                pendingEditFiles = [];
             } catch(driveErr) {
                 console.warn("Edit drive upload error:", driveErr);
                 const proceed = confirm("⚠️ फाईल Google Drive वर अपलोड होऊ शकली नाही.\n\nतरीही ही नोंद विद्यमान लिंकसह सेव्ह करायची आहे का?");
