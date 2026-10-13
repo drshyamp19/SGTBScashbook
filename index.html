@@ -3582,40 +3582,80 @@
             <meta charset="UTF-8">
             <title>${customTitle} - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
             <style>
-                @page { size: A4 landscape; margin: 8mm; }
+                @page { 
+                    size: A4 landscape; 
+                    margin: 6mm 8mm; 
+                    @bottom-right { 
+                        content: "पान क्र. " counter(page); 
+                        font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif;
+                        font-size: 8.5px; 
+                        color: #555; 
+                    } 
+                }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10.5px; }
-                .month-page { page-break-after: always; break-after: page; padding: 4px 0 10px 0; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10px; }
+                
+                .month-page { 
+                    page-break-after: always; 
+                    break-after: page; 
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                    padding: 0 0 4px 0; 
+                    position: relative;
+                }
                 .month-page:last-child { page-break-after: avoid; break-after: avoid; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #999; padding: 4px 5px; text-align: left; }
+                
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 3px; margin-bottom: 4px; }
+                .org-title h1 { margin: 0 0 1px 0; font-size: 15px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 10.5px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 1.5px 8px; border-radius: 10px; margin-top: 1px; border: 1px solid #d0dbe5; font-size: 9.5px; }
+                
+                .month-bar { display: flex; justify-content: space-between; align-items: center; background: #eef4fb; padding: 4px 8px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 4px; font-size: 10.5px; }
+                
+                table { width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px; }
+                th, td { border: 1px solid #888; padding: 3px 4px; text-align: left; }
                 th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
                 th.cash-sub { background-color: #d9480f !important; }
                 th.bank-sub { background-color: #0b5ed7 !important; }
                 tr { page-break-inside: avoid; }
                 .text-right { text-align: right; }
-                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 6px; }
-                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 10.5px; margin-bottom: 0; }
-                .summary-table td { padding: 5px 8px; font-weight: 600; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; }
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
+                
+                .bottom-section { page-break-inside: avoid; break-inside: avoid; margin-top: 4px; }
+                .summary-table { width: 100%; border: 1.5px solid #0d2b44; background: #fdfdfd; font-size: 9.5px; margin-bottom: 0; }
+                .summary-table td { padding: 3.5px 6px; font-weight: 600; }
+                
+                .signatures { display: flex; justify-content: space-between; margin-top: 14px; padding: 0 25px; font-weight: bold; font-size: 10.5px; }
+                .sig-box { text-align: center; border-top: 1px dashed #333; width: 150px; padding-top: 3px; }
+                
+                .page-footer-bar { display: flex; justify-content: space-between; font-size: 8.5px; color: #666; margin-top: 5px; border-top: 0.5px solid #e0e0e0; padding-top: 2px; }
+
+                /* DENSE MONTH STYLES (> 12 transactions): Auto-fit perfectly onto single page */
+                .month-page.dense-month .org-title { padding-bottom: 1px; margin-bottom: 2px; }
+                .month-page.dense-month .org-title h1 { font-size: 13.5px; }
+                .month-page.dense-month .org-title p { font-size: 9.5px; }
+                .month-page.dense-month .org-title .reg-no { font-size: 8.5px; padding: 1px 6px; }
+                .month-page.dense-month .month-bar { padding: 2.5px 6px; margin-bottom: 3px; font-size: 9.5px; }
+                .month-page.dense-month table { font-size: 8.5px; margin-bottom: 3px; }
+                .month-page.dense-month th, .month-page.dense-month td { padding: 1.8px 3px; line-height: 1.2; }
+                .month-page.dense-month .bottom-section { margin-top: 3px; }
+                .month-page.dense-month .summary-table { font-size: 8.8px; }
+                .month-page.dense-month .summary-table td { padding: 2.2px 5px; }
+                .month-page.dense-month .signatures { margin-top: 7px; padding: 0 20px; font-size: 9.5px; }
+                .month-page.dense-month .sig-box { width: 135px; padding-top: 2px; }
+                .month-page.dense-month .page-footer-bar { margin-top: 3px; font-size: 8px; }
             </style>
         </head>
         <body>
         `;
 
-        monthKeys.forEach((mKey) => {
+        monthKeys.forEach((mKey, monthIndex) => {
             const mData = monthlyContinuousMap[mKey];
             let rowsHtml = '';
             let monthTotalDebit = 0;
 
             if (isDebitOnly) {
                 const pureExpenses = (mData.items || []).filter(t => !t.paymentMode.startsWith('contra') && (t.debit > 0 || (t.paymentMode === 'cash' && t.cashOut > 0) || (t.paymentMode === 'bank' && t.bankOut > 0)));
+                const isDense = pureExpenses.length > 12;
 
                 if (pureExpenses.length === 0) {
                     rowsHtml = `
@@ -3635,7 +3675,7 @@
                             <td style="text-align:center; width:30px;">${index + 1}</td>
                             <td style="white-space:nowrap; width:75px;">${escapeHTML(item.date)}</td>
                             <td style="width:90px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                            <td style="width:65px; text-align:center; font-size:10px;">${mLabel}</td>
+                            <td style="width:65px; text-align:center; font-size:9.5px;">${mLabel}</td>
                             <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                             <td>${escapeHTML(item.description || '-')}</td>
                             <td class="text-right" style="width:110px; color:#dc3545; font-weight:700;">${formatIndianNum(amt)}</td>
@@ -3644,7 +3684,7 @@
                 }
 
                 printHtml += `
-                <div class="month-page">
+                <div class="month-page ${isDense ? 'dense-month' : ''}">
                     <div class="org-title">
                         <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
                         <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
@@ -3671,9 +3711,9 @@
                     <div class="bottom-section">
                         <table class="summary-table">
                             <tr>
-                                <td style="text-align:right; font-size:11px;">
+                                <td style="text-align:right; font-size:10.5px;">
                                     महिना (${mData.label}) एकूण खर्च: 
-                                    <strong style="color:#dc3545; font-size:13px; margin-left:10px;">${formatIndianNum(monthTotalDebit)}</strong>
+                                    <strong style="color:#dc3545; font-size:12px; margin-left:10px;">${formatIndianNum(monthTotalDebit)}</strong>
                                 </td>
                             </tr>
                         </table>
@@ -3683,9 +3723,16 @@
                             <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
                         </div>
                     </div>
+                    <div class="page-footer-bar">
+                        <span>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था • ${escapeHTML(customTitle)}</span>
+                        <span>📅 महिना: ${escapeHTML(mData.label)} (क्र. ${monthIndex + 1} / ${monthKeys.length}) • पान क्र. ${monthIndex + 1}</span>
+                    </div>
                 </div>`;
             } else {
-                if (mData.isNil || mData.items.length === 0) {
+                const itemCount = (mData.items || []).length;
+                const isDense = itemCount > 12;
+
+                if (mData.isNil || itemCount === 0) {
                     rowsHtml = `
                     <tr>
                         <td colspan="12" style="text-align:center; padding:35px; color:#555; font-size:11px; font-weight:bold; background:#fafafa;">
@@ -3705,7 +3752,7 @@
                             <td style="text-align:center; width:25px;">${index + 1}</td>
                             <td style="white-space:nowrap; width:65px;">${escapeHTML(item.date)}</td>
                             <td style="width:80px;"><strong>${escapeHTML(item.voucher || '-')}</strong></td>
-                            <td style="width:55px; text-align:center; font-size:9.5px;">${mLabel}</td>
+                            <td style="width:55px; text-align:center; font-size:9px;">${mLabel}</td>
                             <td><strong>${escapeHTML(item.name || '-')}</strong></td>
                             <td>${escapeHTML(item.description || '-')}</td>
                             <td class="text-right" style="width:75px; color:#28a745;">${item.cashIn > 0 ? formatIndianNum(item.cashIn) : '-'}</td>
@@ -3719,14 +3766,14 @@
                 }
 
                 printHtml += `
-                <div class="month-page">
+                <div class="month-page ${isDense ? 'dense-month' : ''}">
                     <div class="org-title">
                         <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
                         <p>श्रीराम नगर भद्रावती | ${customTitle}</p>
                         <span class="reg-no">📜 Registration No.: F-0016068(CDP)</span>
                     </div>
                     <div class="month-bar">
-                        <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : ''}</span>
+                        <span>📅 महिना: <strong>${mData.label}</strong> ${mData.isNil ? '(NIL)' : `(${itemCount} नोंदी)`}</span>
                         <span>Opening: Cash: <strong>${formatIndianNum(mData.openCash)}</strong> | Bank: <strong>${formatIndianNum(mData.openBank)}</strong></span>
                     </div>
                     <table>
@@ -3766,7 +3813,7 @@
                                 <td colspan="2">अखेर बँक शिल्लक: <strong>${formatIndianNum(mData.closeBank)}</strong></td>
                             </tr>
                             <tr style="background:#fff3cd; text-align:center;">
-                                <td colspan="4" style="font-size:12px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
+                                <td colspan="4" style="font-size:11px;">💰 एकूण संस्था निधी: <strong>${formatIndianNum(mData.closeTotal)}</strong></td>
                             </tr>
                         </table>
                         <div class="signatures">
@@ -3774,6 +3821,10 @@
                             <div class="sig-box">सचिव (Secretary)</div>
                             <div class="sig-box">अध्यक्ष / कोषाध्यक्ष (President)</div>
                         </div>
+                    </div>
+                    <div class="page-footer-bar">
+                        <span>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था • ${escapeHTML(customTitle)}</span>
+                        <span>📅 महिना: ${escapeHTML(mData.label)} (क्र. ${monthIndex + 1} / ${monthKeys.length}) • पान क्र. ${monthIndex + 1}</span>
                     </div>
                 </div>`;
             }
@@ -4109,23 +4160,32 @@
             <meta charset="UTF-8">
             <title>व्यवहार नोंदवही प्रिंट - स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</title>
             <style>
-                @page { size: A4 landscape; margin: 8mm; }
+                @page { 
+                    size: A4 landscape; 
+                    margin: 6mm 8mm; 
+                    @bottom-right { 
+                        content: "पान क्र. " counter(page); 
+                        font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif;
+                        font-size: 8.5px; 
+                        color: #555; 
+                    } 
+                }
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 10px; }
-                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 4px; margin-bottom: 6px; }
-                .org-title h1 { margin: 0 0 2px 0; font-size: 16px; color: #0d2b44; }
-                .org-title p { margin: 1px 0; font-size: 11px; color: #333; }
-                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 2px 10px; border-radius: 12px; margin-top: 2px; border: 1px solid #d0dbe5; font-size: 10px; }
-                .filter-info-bar { background: #eef4fb; padding: 5px 10px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 6px; font-size: 11px; font-weight: bold; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; }
-                th, td { border: 1px solid #888; padding: 4px 5px; text-align: left; }
+                body { color: #111; margin: 0; padding: 0; background: #fff; font-size: 9.5px; }
+                .org-title { text-align: center; border-bottom: 2px solid #0d2b44; padding-bottom: 3px; margin-bottom: 5px; }
+                .org-title h1 { margin: 0 0 2px 0; font-size: 15px; color: #0d2b44; }
+                .org-title p { margin: 1px 0; font-size: 10.5px; color: #333; }
+                .org-title .reg-no { font-weight: bold; background: #f0f4f9; display: inline-block; padding: 1.5px 8px; border-radius: 10px; margin-top: 1px; border: 1px solid #d0dbe5; font-size: 9.5px; }
+                .filter-info-bar { background: #eef4fb; padding: 4px 8px; border: 1px solid #bdd5ea; border-radius: 4px; margin-bottom: 5px; font-size: 10px; font-weight: bold; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 5px; font-size: 9.2px; }
+                th, td { border: 1px solid #888; padding: 2.8px 4px; text-align: left; }
                 th { background-color: #0d2b44 !important; color: white !important; font-weight: 600; text-align: center; }
                 th.cash-sub { background-color: #d9480f !important; }
                 th.bank-sub { background-color: #0b5ed7 !important; }
                 tr { page-break-inside: avoid; }
                 .text-right { text-align: right; }
                 .tot-row { background: #f8f9fa; font-weight: bold; }
-                .signatures { display: flex; justify-content: space-between; margin-top: 25px; padding: 0 30px; font-weight: bold; font-size: 11px; page-break-inside: avoid; }
+                .signatures { display: flex; justify-content: space-between; margin-top: 18px; padding: 0 30px; font-weight: bold; font-size: 10.5px; page-break-inside: avoid; }
                 .sig-box { text-align: center; border-top: 1px dashed #333; width: 160px; padding-top: 4px; }
             </style>
         </head>
