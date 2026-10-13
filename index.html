@@ -34,104 +34,94 @@
             color: #212529;
         }
 
-        /* ===== FRONT / LANDING PAGE (GRAND HERO BANNER & PREMIUM CARD) ===== */
+        /* ===== FRONT / LANDING PAGE (CLEAR FULL BANNER & TRANSPARENT LOGIN CARD) ===== */
         #frontPageSection {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 24px 16px;
-            background: linear-gradient(135deg, rgba(13, 43, 68, 0.92), rgba(24, 76, 120, 0.88)), url('banner.jpg') no-repeat center center fixed;
+            padding: 20px 16px;
+            background: url('banner.jpg') no-repeat center center fixed;
             background-size: cover;
         }
         .front-card {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
             border-radius: 24px;
-            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.45);
-            max-width: 550px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+            max-width: 490px;
             width: 100%;
             overflow: hidden;
             animation: fadeIn 0.4s ease-in-out;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.65);
             text-align: center;
         }
-        .front-banner-wrapper {
-            width: 100%;
-            height: 270px;
-            position: relative;
-            overflow: hidden;
-            background: #0d2b44;
-            border-bottom: 4px solid #ffc107;
-        }
-        .front-banner-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center 20%;
-            display: block;
-        }
         .front-content {
-            padding: 0 28px 28px 28px;
+            padding: 24px 28px 26px 28px;
             position: relative;
-            background: #ffffff;
+            background: transparent;
         }
         .front-logo-overlap {
-            margin-top: -55px;
-            margin-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 10px;
             position: relative;
             z-index: 10;
             display: inline-block;
         }
         .front-logo-img {
-            width: 110px;
-            height: 110px;
+            width: 105px;
+            height: 105px;
             border-radius: 50%;
-            border: 4px solid #ffffff;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 3.5px solid #ffc107;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
             background: #ffffff;
             object-fit: cover;
         }
         .front-card h1 {
             color: #0d2b44;
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             font-weight: 800;
             line-height: 1.3;
             margin-bottom: 4px;
+            text-shadow: 0 1px 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.9);
         }
         .front-card p.sub {
-            font-size: 1.08rem;
-            color: #334155;
-            font-weight: 700;
+            font-size: 1.05rem;
+            color: #0f172a;
+            font-weight: 800;
             margin-bottom: 8px;
+            text-shadow: 0 1px 5px rgba(255, 255, 255, 0.95), 0 0 10px rgba(255, 255, 255, 0.9);
         }
         .front-reg {
-            background: #fff3cd;
-            color: #856404;
-            padding: 6px 18px;
+            background: rgba(255, 243, 205, 0.92);
+            color: #7c2d12;
+            padding: 5px 16px;
             border-radius: 30px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
             display: inline-block;
-            margin-bottom: 20px;
-            border: 1px solid #ffeeba;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            margin-bottom: 16px;
+            border: 1.5px solid #f59e0b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .login-tabs {
             display: flex;
-            background: rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.72);
             border-radius: 12px;
             padding: 5px;
-            margin-bottom: 18px;
-            gap: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-bottom: 16px;
+            gap: 6px;
+            border: 1.5px solid rgba(13, 43, 68, 0.4);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         .login-tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 9px 10px;
             border: none;
             background: none;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 13.5px;
             color: #0d2b44;
             border-radius: 8px;
@@ -146,31 +136,38 @@
         .login-form-box { text-align: left; }
         .login-form-box label {
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             color: #0d2b44;
             display: block;
             margin-bottom: 5px;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 4px rgba(255, 255, 255, 0.95), 0 0 8px rgba(255, 255, 255, 0.9);
         }
         .login-form-box input[type="email"],
         .login-form-box input[type="text"] {
             width: 100%;
             padding: 11px 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border: 2px solid #0d2b44;
             border-radius: 8px;
             font-size: 14px;
-            margin-bottom: 14px;
-            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.85);
             color: #0f172a;
+            font-weight: 700;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+        .login-form-box input[type="email"]::placeholder,
+        .login-form-box input[type="text"]::placeholder,
+        .password-field-wrapper input::placeholder {
+            color: #475569;
             font-weight: 600;
-            backdrop-filter: blur(4px);
         }
         .login-form-box input[type="email"]:focus,
         .login-form-box input[type="text"]:focus,
         .password-field-wrapper input:focus {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.97);
             outline: none;
-            border-color: #0d2b44;
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.35);
         }
 
         .password-field-wrapper {
@@ -181,14 +178,14 @@
         .password-field-wrapper input {
             width: 100%;
             padding: 11px 42px 11px 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border: 2px solid #0d2b44;
             border-radius: 8px;
             font-size: 14px;
             margin-bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             color: #0f172a;
-            font-weight: 600;
-            backdrop-filter: blur(4px);
+            font-weight: 700;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.12);
         }
         .pwd-toggle-btn {
             position: absolute;
@@ -198,7 +195,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #334155;
+            color: #0d2b44;
             padding: 4px;
             display: flex;
             align-items: center;
@@ -206,7 +203,7 @@
             outline: none;
         }
         .pwd-toggle-btn:hover {
-            color: #0d2b44;
+            color: #d97706;
         }
         .pwd-toggle-btn svg {
             width: 18px;
@@ -219,11 +216,11 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 14px;
-            font-size: 12.5px;
+            font-size: 13px;
             color: #0d2b44;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 4px rgba(255, 255, 255, 0.95), 0 0 8px rgba(255, 255, 255, 0.9);
         }
         .remember-me-row input[type="checkbox"] {
             cursor: pointer;
@@ -236,16 +233,16 @@
             width: 100%;
             padding: 12px;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 800;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-        .login-submit-btn.admin-btn { background: #ffc107; color: #212529; }
+        .login-submit-btn.admin-btn { background: #ffc107; color: #0d2b44; border: 1.5px solid #0d2b44; }
         .login-submit-btn.admin-btn:hover { background: #e0a800; transform: translateY(-1px); }
-        .login-submit-btn.viewer-btn { background: #28a745; color: white; }
+        .login-submit-btn.viewer-btn { background: #28a745; color: white; border: 1.5px solid #ffffff; }
         .login-submit-btn.viewer-btn:hover { background: #1e7e34; transform: translateY(-1px); }
 
         .forgot-pass-link {
@@ -257,8 +254,8 @@
             margin-top: 12px;
             text-align: center;
             width: 100%;
-            font-weight: 700;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+            font-weight: 800;
+            text-shadow: 0 1px 4px rgba(255, 255, 255, 0.95), 0 0 8px rgba(255, 255, 255, 0.9);
         }
 
         /* ===== MAIN DASHBOARD ===== */
@@ -839,10 +836,9 @@
                 white-space: nowrap;
             }
             
-            .front-banner-wrapper { height: 220px; }
-            .front-logo-overlap { margin-top: -45px; }
-            .front-logo-img { width: 95px; height: 95px; }
-            .front-content { padding: 0 16px 22px 16px; }
+            .front-logo-overlap { margin-top: 0; }
+            .front-logo-img { width: 92px; height: 92px; }
+            .front-content { padding: 18px 16px 22px 16px; }
             .front-card { border-radius: 20px; }
             .front-card h1 { font-size: 1.35rem; }
         }
@@ -850,15 +846,11 @@
 </head>
 <body>
 
-<!-- FRONT PAGE (GRAND HERO BANNER & LOGIN CARD) -->
+<!-- FRONT PAGE (CLEAR BACKGROUND BANNER & TRANSPARENT LOGIN CARD) -->
 <div id="frontPageSection">
     <div class="front-card">
-        <!-- PROMINENT LARGE HERO BANNER -->
-        <div class="front-banner-wrapper">
-            <img src="banner.jpg" class="front-banner-img" alt="श्री स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था बॅनर" onerror="this.src='https://placehold.co/600x270/0d2b44/ffffff?text=श्री+स्वामी+गोपाल+तीर्थ+बहुउद्देशीय+संस्था'">
-        </div>
         <div class="front-content">
-            <!-- CIRCULAR LOGO OVERLAPPING BANNER -->
+            <!-- CIRCULAR LOGO -->
             <div class="front-logo-overlap">
                 <img src="logo.jpg" class="front-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/110x110/ffc107/0d2b44?text=LOGO'">
             </div>
@@ -873,10 +865,10 @@
             </div>
 
             <div id="adminLoginForm" class="login-form-box">
-                <label>Admin Email (फायरबेस ईमेल):</label>
+                <label>📧 Admin Email (फायरबेस ईमेल):</label>
                 <input type="email" id="adminEmailInput" placeholder="उदा. shyam.mauli@gmail.com" onkeydown="if(event.key==='Enter') document.getElementById('adminPasswordInput').focus()">
                 
-                <label>Admin Password:</label>
+                <label>🔑 Admin Password (पासवर्ड):</label>
                 <div class="password-field-wrapper">
                     <input type="password" id="adminPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsAdmin()">
                     <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('adminPasswordInput', this)" title="पासवर्ड पहा/लपवा">
@@ -893,16 +885,20 @@
             </div>
 
             <div id="viewerLoginForm" class="login-form-box" style="display:none;">
-                <label>Viewer Username (युझरनेम):</label>
+                <label>👤 Viewer Username (युझरनेम):</label>
                 <input type="text" id="viewerUsernameInput" placeholder="उदा. trustee1" onkeydown="if(event.key==='Enter') document.getElementById('viewerPasswordInput').focus()">
                 
-                <label>Viewer Password (पासवर्ड):</label>
+                <label>🔑 Viewer Password (पासवर्ड):</label>
                 <div class="password-field-wrapper">
                     <input type="password" id="viewerPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') loginAsViewer()">
                     <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('viewerPasswordInput', this)" title="पासवर्ड पहा/लपवा">
                         <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     </button>
                 </div>
+
+                <label class="remember-me-row">
+                    <input type="checkbox" id="rememberViewerUserCheckbox"> युझरनेम लक्षात ठेवा (Remember Username)
+                </label>
 
                 <button class="login-submit-btn viewer-btn" onclick="loginAsViewer()">👁️ Viewer Login (पहा)</button>
             </div>
@@ -2179,6 +2175,14 @@
             if (emailInput) emailInput.value = savedEmail;
             if (chkBox) chkBox.checked = true;
         }
+
+        const savedViewerUser = localStorage.getItem('sgtb_viewer_saved_username');
+        if (savedViewerUser) {
+            const viewerInput = document.getElementById('viewerUsernameInput');
+            const viewerChkBox = document.getElementById('rememberViewerUserCheckbox');
+            if (viewerInput) viewerInput.value = savedViewerUser;
+            if (viewerChkBox) viewerChkBox.checked = true;
+        }
     }
 
     async function sha256(message) {
@@ -2277,6 +2281,11 @@
 
             if (isLocal && isDomainOrEnvError) {
                 console.log("Local Desktop environment detected. Enabling Local Admin Mode.");
+                if (rememberMe) {
+                    localStorage.setItem('sgtb_admin_saved_email', email);
+                } else {
+                    localStorage.removeItem('sgtb_admin_saved_email');
+                }
                 currentRole = 'admin';
                 document.body.className = 'admin-mode';
                 document.getElementById('userRoleBadge').textContent = `Admin (${email}) [Desktop]`;
@@ -2305,6 +2314,7 @@
     async function loginAsViewer() {
         const u = document.getElementById('viewerUsernameInput').value.trim();
         const p = document.getElementById('viewerPasswordInput').value.trim();
+        const rememberViewer = document.getElementById('rememberViewerUserCheckbox') ? document.getElementById('rememberViewerUserCheckbox').checked : false;
 
         if (!u || !p) {
             alert('कृपया युझरनेम आणि पासवर्ड दोन्ही भरा.');
@@ -2321,6 +2331,12 @@
             if (!snap.empty) {
                 const viewer = snap.docs[0].data();
                 currentRole = 'viewer';
+
+                if (rememberViewer) {
+                    localStorage.setItem('sgtb_viewer_saved_username', u);
+                } else {
+                    localStorage.removeItem('sgtb_viewer_saved_username');
+                }
                 
                 // टॅब पुरता सेशन सेव्ह ठेवा
                 sessionStorage.setItem('sgtb_viewer_session', JSON.stringify({ name: viewer.name || viewer.username }));
