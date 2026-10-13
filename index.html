@@ -3003,10 +3003,85 @@
     }
 
     // ============================================================
+    //  DATA NORMALIZATION & AUTO-CLEANUP HELPER
+    // ============================================================
+    function normalizeTransactionRecord(item) {
+        if (!item) return {};
+        const updates = {};
+
+        let v = (item.voucher || '').trim();
+        let n = (item.name || '').trim();
+        let d = (item.description || '').trim();
+
+        // 1. Voucher Number Standardization
+        if (v === 'VN 04- IBT- 02') {
+            v = 'VN 04 - IBT 02';
+            updates.voucher = v;
+        } else if (v === 'VN 05 FDM 01') {
+            v = 'VN 05 - FDM 01';
+            updates.voucher = v;
+        }
+
+        // 2. Entry #27 (PN 15) Special Fix
+        if (v === 'PN 15' && n.includes('SWAMI MADHAVANAND TIRTH') && n.includes('9435')) {
+            n = 'SWAMI MADHAVANAND TIRTH';
+            d = 'AC/TRF - 9435';
+            updates.name = n;
+            updates.description = d;
+        }
+
+        // 3. Donor / Payee Name Standardization & Typo Fixes
+        const nameFixMap = {
+            'SWAMI MADHAVANAND TIRTH (AC/TRF - 9435': 'SWAMI MADHAVANAND TIRTH',
+            'SWAMI MADHAVANADJI TIRTH': 'SWAMI MADHAVANAND TIRTH',
+            'SWAMI MADHAVAND TIRTH': 'SWAMI MADHAVANAND TIRTH',
+            'SWAMI MADHAVNAND TIRTH': 'SWAMI MADHAVANAND TIRTH',
+            'JIJAYSHREE VITHHALSHEN': 'VIJAYSHREE VITHHAL SHENDE',
+            'JIJAYSHREE VITHHAL SHENDE': 'VIJAYSHREE VITHHAL SHENDE',
+            'GUPTADAN': 'GUPTDAN',
+            'GUPT DAN': 'GUPTDAN',
+            'ANANDRAO GANPAT PIMPALKA': 'ANANDRAO GANPAT PIMPALKAR',
+            'PRASHHANT BALAWANT RAINCHWAR': 'PRASHANT BALWANT RAINCHWAR',
+            'ISHWARSINGH GOUTAM9604435240': 'ISHWARSINGH GOUTAM',
+            'APURVA AVASTHI': 'APURVA AWASTHI',
+            'SAGAR RATKANTIWAR': 'SAGAR JAYANT RATKANTHIWAR',
+            'MAHESH LANDAGE': 'MAHESH LANDGE',
+            'HEMANT RAMEKAR': 'HEMANT PADMAKAR RAMEKAR',
+            'ROSHAN THAKARE': 'ROSHAN VASANTRAO THAKARE'
+        };
+
+        if (nameFixMap[n]) {
+            n = nameFixMap[n];
+            updates.name = n;
+        }
+
+        // 4. Description Standardization & Missing Reason Fix
+        if (v === 'VN 28 - CD 02' && (d === '' || d === '-')) {
+            d = 'PN 185 to PN 186 रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
+            updates.description = d;
+        } else if (d === 'upi') {
+            d = 'UPI';
+            updates.description = d;
+        }
+
+        if (updates.voucher) item.voucher = updates.voucher;
+        if (updates.name) item.name = updates.name;
+        if (updates.description) item.description = updates.description;
+
+        return updates;
+    }
+
+    function roundMoney(val) {
+        return Math.round((Number(val) || 0) * 100) / 100;
+    }
+
+    // ============================================================
     //  TWO-COLUMN ENGINE & MONTH MAP
     // ============================================================
     function calculateTwoColumnBalances(data) {
         if (!data || !Array.isArray(data)) return [];
+        data.forEach(item => normalizeTransactionRecord(item));
+
         data.sort((a, b) => {
             const dateA = a.rawDate || parseToIsoDate(a.date);
             const dateB = b.rawDate || parseToIsoDate(b.date);
@@ -3029,8 +3104,8 @@
             item.fy = item.fy || getFinancialYear(item.rawDate);
             item.paymentMode = inferPaymentMode(item);
 
-            const cr = parseIndianNum(item.credit);
-            const dr = parseIndianNum(item.debit);
+            const cr = roundMoney(parseIndianNum(item.credit));
+            const dr = roundMoney(parseIndianNum(item.debit));
 
             let cashIn = 0, cashOut = 0;
             let bankIn = 0, bankOut = 0;
@@ -3063,17 +3138,17 @@
                 item.paymentMode = 'contra_fd2b';
             }
 
-            item.cashIn = cashIn;
-            item.cashOut = cashOut;
-            item.bankIn = bankIn;
-            item.bankOut = bankOut;
+            item.cashIn = roundMoney(cashIn);
+            item.cashOut = roundMoney(cashOut);
+            item.bankIn = roundMoney(bankIn);
+            item.bankOut = roundMoney(bankOut);
 
-            runningCashBal += (cashIn - cashOut);
-            runningBankBal += (bankIn - bankOut);
+            runningCashBal = roundMoney(runningCashBal + (item.cashIn - item.cashOut));
+            runningBankBal = roundMoney(runningBankBal + (item.bankIn - item.bankOut));
 
             item.cashBal = runningCashBal;
             item.bankBal = runningBankBal;
-            item.totalBal = runningCashBal + runningBankBal;
+            item.totalBal = roundMoney(runningCashBal + runningBankBal);
         });
 
         buildContinuousMonthlyMap(data);
@@ -3119,24 +3194,24 @@
             latestMonthKey = mKey;
             const mLabel = `${monthNamesMarathi[curM - 1]} ${curY}`;
 
-            const openCash = carryCash;
-            const openBank = carryBank;
+            const openCash = roundMoney(carryCash);
+            const openBank = roundMoney(carryBank);
             const items = rawGroups[mKey] || [];
 
             let mCashIn = 0, mCashOut = 0;
             let mBankIn = 0, mBankOut = 0;
 
             items.forEach(it => {
-                mCashIn += it.cashIn;
-                mCashOut += it.cashOut;
-                mBankIn += it.bankIn;
-                mBankOut += it.bankOut;
+                mCashIn = roundMoney(mCashIn + it.cashIn);
+                mCashOut = roundMoney(mCashOut + it.cashOut);
+                mBankIn = roundMoney(mBankIn + it.bankIn);
+                mBankOut = roundMoney(mBankOut + it.bankOut);
                 carryCash = it.cashBal;
                 carryBank = it.bankBal;
             });
 
-            const closeCash = openCash + mCashIn - mCashOut;
-            const closeBank = openBank + mBankIn - mBankOut;
+            const closeCash = roundMoney(openCash + mCashIn - mCashOut);
+            const closeBank = roundMoney(openBank + mBankIn - mBankOut);
 
             monthlyContinuousMap[mKey] = {
                 key: mKey,
@@ -3144,14 +3219,14 @@
                 items: items,
                 openCash: openCash,
                 openBank: openBank,
-                openTotal: openCash + openBank,
+                openTotal: roundMoney(openCash + openBank),
                 cashIn: mCashIn,
                 cashOut: mCashOut,
                 bankIn: mBankIn,
                 bankOut: mBankOut,
                 closeCash: closeCash,
                 closeBank: closeBank,
-                closeTotal: closeCash + closeBank,
+                closeTotal: roundMoney(closeCash + closeBank),
                 isNil: (items.length === 0)
             };
 
@@ -3178,6 +3253,7 @@
         }
     }
 
+    let isAutoCleanupRunning = false;
     function initRealtimeSync() {
         const badge = document.getElementById('dbStatusBadge');
         if (db) {
@@ -3186,9 +3262,33 @@
                 badge.style.background = '#28a745';
 
                 let list = [];
+                const pendingCloudFixes = [];
+
                 snapshot.forEach(doc => {
-                    list.push({ id: doc.id, ...doc.data() });
+                    const rec = { id: doc.id, ...doc.data() };
+                    const updates = normalizeTransactionRecord(rec);
+                    if (Object.keys(updates).length > 0) {
+                        pendingCloudFixes.push({ id: doc.id, updates });
+                    }
+                    list.push(rec);
                 });
+
+                if (pendingCloudFixes.length > 0 && currentRole === 'admin' && !isAutoCleanupRunning) {
+                    isAutoCleanupRunning = true;
+                    const batch = db.batch();
+                    pendingCloudFixes.forEach(fix => {
+                        const ref = db.collection('transactions').doc(fix.id);
+                        batch.update(ref, fix.updates);
+                    });
+                    batch.commit().then(() => {
+                        console.log(`Auto-cleaned ${pendingCloudFixes.length} records in Cloud Firestore.`);
+                        isAutoCleanupRunning = false;
+                    }).catch(err => {
+                        console.warn('Auto-cleanup cloud commit warning:', err);
+                        isAutoCleanupRunning = false;
+                    });
+                }
+
                 transactionsData = calculateTwoColumnBalances(list);
                 updateDonorNamesDatalist();
                 updateDescriptionDatalist();
@@ -4115,17 +4215,17 @@
         let totCashIn = 0, totCashOut = 0, totBankIn = 0, totBankOut = 0;
 
         dataToExport.forEach((item, index) => {
-            const cIn = Number(item.cashIn || 0);
-            const cOut = Number(item.cashOut || 0);
-            const bIn = Number(item.bankIn || 0);
-            const bOut = Number(item.bankOut || 0);
-            const cBal = Number(item.cashBal || 0);
-            const bBal = Number(item.bankBal || 0);
+            const cIn = roundMoney(item.cashIn || 0);
+            const cOut = roundMoney(item.cashOut || 0);
+            const bIn = roundMoney(item.bankIn || 0);
+            const bOut = roundMoney(item.bankOut || 0);
+            const cBal = roundMoney(item.cashBal || 0);
+            const bBal = roundMoney(item.bankBal || 0);
 
-            totCashIn += cIn;
-            totCashOut += cOut;
-            totBankIn += bIn;
-            totBankOut += bOut;
+            totCashIn = roundMoney(totCashIn + cIn);
+            totCashOut = roundMoney(totCashOut + cOut);
+            totBankIn = roundMoney(totBankIn + bIn);
+            totBankOut = roundMoney(totBankOut + bOut);
 
             let modeLabel = (item.paymentMode || 'bank').toUpperCase();
             if (item.paymentMode === 'contra_b2fd') modeLabel = 'Bank->FD';
@@ -4162,23 +4262,28 @@
         let openingRowHtml = '';
         let closingRowHtml = '';
         if (monthSummary) {
+            const oCash = roundMoney(monthSummary.openCash);
+            const oBank = roundMoney(monthSummary.openBank);
+            const clCash = roundMoney(monthSummary.closeCash);
+            const clBank = roundMoney(monthSummary.closeBank);
+            const clTotal = roundMoney(clCash + clBank);
             openingRowHtml = `
             <tr style="background:#eef4fb; font-weight:bold;">
                 <td colspan="6" style="text-align:right;">मागील महिन्याची शिल्लक (Opening Balance B/F):</td>
-                <td colspan="2" style="text-align:right;">रोख: ₹ ${monthSummary.openCash}</td>
-                <td colspan="2" style="text-align:right;">बँक: ₹ ${monthSummary.openBank}</td>
-                <td style="text-align:right;">${monthSummary.openCash}</td>
-                <td style="text-align:right;">${monthSummary.openBank}</td>
+                <td colspan="2" style="text-align:right;">रोख: ₹ ${oCash}</td>
+                <td colspan="2" style="text-align:right;">बँक: ₹ ${oBank}</td>
+                <td style="text-align:right;">${oCash}</td>
+                <td style="text-align:right;">${oBank}</td>
                 <td></td>
             </tr>`;
             closingRowHtml = `
             <tr style="background:#e8f5e9; font-weight:bold;">
                 <td colspan="6" style="text-align:right;">महिन्याअखेर शिल्लक (Closing Balance C/F):</td>
-                <td colspan="2" style="text-align:right;">रोख शिल्लक: ₹ ${monthSummary.closeCash}</td>
-                <td colspan="2" style="text-align:right;">बँक शिल्लक: ₹ ${monthSummary.closeBank}</td>
-                <td style="text-align:right;">${monthSummary.closeCash}</td>
-                <td style="text-align:right;">${monthSummary.closeBank}</td>
-                <td>एकूण: ₹ ${monthSummary.closeCash + monthSummary.closeBank}</td>
+                <td colspan="2" style="text-align:right;">रोख शिल्लक: ₹ ${clCash}</td>
+                <td colspan="2" style="text-align:right;">बँक शिल्लक: ₹ ${clBank}</td>
+                <td style="text-align:right;">${clCash}</td>
+                <td style="text-align:right;">${clBank}</td>
+                <td>एकूण: ₹ ${clTotal}</td>
             </tr>`;
         }
 
