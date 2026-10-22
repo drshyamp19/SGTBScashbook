@@ -5316,6 +5316,7 @@
                 await db.collection('transactions').doc(id).update(payload);
                 showToast('✅ नोंद यशस्वीरीत्या अपडेट केली!');
                 closeEditModal();
+                if (typeof syncAllToGoogleSheet === 'function') { syncAllToGoogleSheet(true); }
             }
         } catch(err) {
             alert('अपडेट करताना त्रुटी आली: ' + err.message);
@@ -5332,6 +5333,7 @@
         try {
             await db.collection('transactions').doc(id).delete();
             showToast('🗑️ Entry deleted from Cloud.');
+            if (typeof syncAllToGoogleSheet === 'function') { syncAllToGoogleSheet(true); }
         } catch(err) {
             alert('Error deleting: ' + err.message);
         }
