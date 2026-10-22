@@ -1392,6 +1392,7 @@
                         <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">✖ Reset</button>
                         <button class="btn btn-print-filter btn-sm" onclick="printFilteredTransactionsTable()" title="फिल्टर केलेला टेबल प्रिंट करा">🖨 Print</button>
                         <button class="btn btn-success btn-sm" onclick="exportFilteredTransactionsToExcel()" title="फिल्टर केलेला टेबल Excel मध्ये डाऊनलोड करा">📊 Export Excel</button>
+                        <button class="btn btn-sm" style="background:#0f9d58; color:#ffffff; font-weight:bold; border:none;" onclick="syncAllToGoogleSheet(false)" title="सर्व १३ रकाने थेट Google Sheet मध्ये सिंक करा">🟢 Google Sheet Sync</button>
                     </div>
                 </div>
 
@@ -2714,7 +2715,69 @@
     // ============================================================
     //  PERFORM LOGOUT
     // ============================================================
+    const GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxyLmUMTajA19jvzuwUzgBgVB-4yjxR704nSqi_YDQW9ynE-5uNOLOpF1t4QA17sINrkQ/exec';
+
+    async function syncAllToGoogleSheet(silent = false) {
+        if (!GOOGLE_SHEET_WEBHOOK_URL) return;
+        const data = (transactionsData && transactionsData.length > 0) ? transactionsData : [];
+        if (data.length === 0) {
+            if (!silent) showToast('सिंक करण्यासाठी कोणतीही नोंद उपलब्ध नाही.');
+            return;
+        }
+
+        if (!silent) showToast('⏳ Google Sheet मध्ये सिंक होत आहे...');
+
+        try {
+            const payload = {
+                action: 'sync_all',
+                entries: data.map((item) => {
+                    let modeLabel = (item.paymentMode || 'cash').toUpperCase();
+                    if (item.paymentMode === 'contra_b2fd') modeLabel = 'Bank->FD';
+                    else if (item.paymentMode === 'contra_fd2b') modeLabel = 'FD->Bank';
+                    else if (item.paymentMode === 'contra_b2c') modeLabel = 'Bank->Cash';
+                    else if (item.paymentMode === 'contra_c2b') modeLabel = 'Cash->Bank';
+
+                    const docUrls = (typeof parseDocUrls === 'function' ? parseDocUrls(item.docUrl) : []);
+
+                    return {
+                        date: item.date || '',
+                        voucher: item.voucher || '-',
+                        mode: modeLabel,
+                        name: item.name || '-',
+                        description: item.description || '-',
+                        cashIn: Number(item.cashIn) || 0,
+                        cashOut: Number(item.cashOut) || 0,
+                        bankIn: Number(item.bankIn) || 0,
+                        bankOut: Number(item.bankOut) || 0,
+                        cashBal: Number(item.cashBal) || 0,
+                        bankBal: Number(item.bankBal) || 0,
+                        docUrl: docUrls[0] || ''
+                    };
+                })
+            };
+
+            await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!silent) showToast('✅ Google Sheet सिंक पूर्ण झाले!');
+        } catch (err) {
+            console.error('Google Sheet Sync Error:', err);
+            if (!silent) showToast('⚠️ Google Sheet सिंक करताना त्रुटी आली.');
+        }
+    }
+
     async function performLogout() {
+        try {
+            if (typeof syncAllToGoogleSheet === 'function') {
+                await syncAllToGoogleSheet(true);
+            }
+        } catch (e) {
+            console.error('Logout sync error:', e);
+        }
         if (currentRole === 'admin' && auth) {
             await auth.signOut();
         }
@@ -2723,7 +2786,7 @@
         showFrontPage();
         document.getElementById('adminPasswordInput').value = '';
         document.getElementById('viewerPasswordInput').value = '';
-        showToast('👋 Logged out successfully.');
+        showToast('👋 Logged out successfully & Google Sheet synced.');
     }
 
     function openForgotModal() {
@@ -5106,6 +5169,7 @@
             if (db) {
                 await db.collection('transactions').add(payload);
                 showToast('✅ Transaction added successfully!');
+            if (typeof syncAllToGoogleSheet === 'function') { syncAllToGoogleSheet(true); }
             }
 
             pendingAddFiles = [];
