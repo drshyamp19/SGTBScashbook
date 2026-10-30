@@ -2554,7 +2554,7 @@
 
                                 <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
 
-                                <option value="VN">व्हाउचर (Voucher - VN ०१ ते ११)</option>
+                                <option value="VN">व्हाउचर (Voucher - VN)</option>
 
                                 <option value="CD">CD (बँक भरणा - Contra)</option>
 
@@ -2743,7 +2743,7 @@
                                 <option value="all">सर्व व्हाउचर / पावत्या (All Types)</option>
                                 <option value="PN">पावती (Receipt - PN)</option>
                                 <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद)</option>
-                                <option value="VN">व्हाउचर (Voucher - VN ०१ ते ११)</option>
+                                <option value="VN">व्हाउचर (Voucher - VN)</option>
                                 <option value="CD">CD (बँक भरणा - Contra)</option>
                                 <option value="FD">FD (मुदत ठेव)</option>
                                 <option value="FDM">FDM (मुदत ठेव परत)</option>
@@ -3433,7 +3433,7 @@
                     <select id="editVoucherTypeSelect" onchange="handleEditVoucherTypeChange()">
                             <option value="PN">पावती (Receipt - PN)</option>
                             <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
-                            <option value="VN">व्हाउचर (Voucher - VN ०१ ते ११)</option>
+                            <option value="VN">व्हाउचर (Voucher - VN)</option>
                             <option value="CD">CD (बँक भरणा - Contra)</option>
                             <option value="FD">FD (मुदत ठेव)</option>
                             <option value="FDM">FDM (मुदत ठेव परत)</option>
@@ -6738,12 +6738,17 @@ function populateStatementYearsDynamically(data) {
 
         // 1. CA AUDIT MASTER 11 VOUCHERS & FINANCIAL STATEMENTS NORMALIZATION
         if (debit === 600000 && /CHANDRAKALA/i.test(n)) {
-            if (v !== 'VN 01') { v = 'VN 01'; updates.voucher = v; }
-            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; }
+            if (v !== 'VN 01') { v = 'VN 01'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
         } else if (debit === 700000 && /CHANDRAKALA/i.test(n)) {
-            if (v !== 'VN 02') { v = 'VN 02'; updates.voucher = v; }
-            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; }
-        } else if (debit === 91800 && (/मत्ते/i.test(n) || /मत्ते/i.test(d) || /08A/i.test(v))) {
+            if (v !== 'VN 02') { v = 'VN 02'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+        } else if ((debit === 1300000 || debit === 1300000.0) || (debit >= 1200000 && (/CHANDRAKALA/i.test(n) || /PLOT/i.test(d)))) {
+            if (v !== 'VN 01 - VN 02') { v = 'VN 01 - VN 02'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+        } else if (debit === 91800 && (/मत्ते/i.test(n) || /मत्ते/i.test(d) || /08A/i.test(v) || /मुद्रांक/i.test(d) || /चलन/i.test(d) || /नोंदणी/i.test(d))) {
+            if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
             if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; }
         } else if (debit === 33500 && (/PRABHAKAR/i.test(n) || /KALEKAR/i.test(n))) {
@@ -10319,6 +10324,8 @@ tr.innerHTML = `
         let detectedType = detectVoucherType(item.voucher);
         if (item.voucher && (item.voucher.includes('CD 01') || item.voucher.includes('CD 02') || (item.paymentMode || '').startsWith('contra_c2b') || /रोख.*बँक/i.test(item.description || ''))) {
             detectedType = 'CD';
+        } else if (item.voucher && (item.voucher.includes('VN 01') || item.voucher.includes('VN 02') || item.voucher.startsWith('VN'))) {
+            detectedType = 'VN';
         }
         document.getElementById('editVoucherTypeSelect').value = detectedType;
         document.getElementById('editVoucher').value = item.voucher || '';
@@ -10337,6 +10344,9 @@ tr.innerHTML = `
             else if (detectedType === 'FD') editHeadVal = 'बँक मुदत ठेव (FD)';
             else if (detectedType === 'FDM') editHeadVal = 'मुदत ठेव परतावा व व्याज';
             else if (detectedType === 'IBT') editHeadVal = 'बँक चार्जेस व सेवा शुल्क';
+        }
+        if ((item.debit >= 1200000 || /CHANDRAKALA/i.test(item.name || '') || /Plot Purchase/i.test(item.description || '')) && editHeadVal === 'कार्यालयीन व इतर खर्च') {
+            editHeadVal = 'स्थावर मालमत्ता / प्लॉट खरेदी';
         }
         populateAccountHeadOptions(editFlowType, editHeadSelect, editHeadVal);
 
