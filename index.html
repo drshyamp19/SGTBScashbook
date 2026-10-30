@@ -2554,15 +2554,15 @@
 
                                 <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
 
-                                <option value="VN">व्हाउचर (Voucher - VN)</option>
+                                <option value="VN">व्हाउचर (Voucher - VN ०१ ते ११)</option>
 
-                                <option value="VN - CD">VN - CD (Cash to Bank बँक भरणा)</option>
+                                <option value="CD">CD (बँक भरणा - Contra)</option>
 
-                                <option value="VN - FD">VN - FD (Bank to FD मुदत ठेव)</option>
+                                <option value="FD">FD (मुदत ठेव)</option>
 
-                                <option value="VN FDM">VN FDM (FD to Bank मुदत ठेव परत)</option>
+                                <option value="FDM">FDM (मुदत ठेव परत)</option>
 
-                                <option value="VN_IBT">Internal Banking Transaction</option>
+                                <option value="IBT">IBT (बँक चार्जेस व सेवा)</option>
 
                                 <option value="OTHER">other (इतर)</option>
 
@@ -3251,6 +3251,20 @@
         <!-- TAB 4: MANAGEMENT -->
 
         <div id="tabPanelMgmt" class="tab-panel-section admin-item-block">
+
+        <!-- 29 OCT 2026 TRUSTEE RESOLUTION ACTION -->
+        <div class="card" style="border-left: 4px solid #198754; background: #f8fff9; margin-bottom: 20px;">
+            <div class="flex-between">
+                <div>
+                    <h2 style="color: #198754; margin-bottom: 4px;">📜 विश्वस्त उसनवार समर्पण (२९ ऑक्टो २०२६ ठराव)</h2>
+                    <div style="font-size: 13px; color: #555;">श्री. पांडुरंग सखारामजी मांडवकर यांची ₹९१,८०० उसनवार रक्कम कायम देणगी खाती समर्पित करणे (पावती क्र. PN 220)</div>
+                </div>
+                <div>
+                    <button class="btn btn-success btn-sm" onclick="recordPandurangMandavkarDonation()">✍️ समर्पण पावती (PN 220) नोंदवा</button>
+                </div>
+            </div>
+        </div>
+
 
             <div class="card">
 
@@ -5899,13 +5913,7 @@
         list.forEach((v, idx) => {
 
             const row = document.createElement('tr');
-            let headBadgeHtml = '';
-            if (item.accountHead) {
-                let badgeClass = 'head-badge';
-                if (isDebit) badgeClass += ' expense-head';
-                else if (isContra) badgeClass += ' contra-head';
-                headBadgeHtml = `<div><span class="${badgeClass}">${escapeHTML(item.accountHead)}</span></div>`;
-            }
+            
 
             row.innerHTML = `
 
@@ -6500,29 +6508,29 @@
             if (!descInput.value) descInput.value = 'आजीवन सभासद नोंदणी (Ajivan Sabhasad Nondni)';
             typeField.value = 'credit';
             populateAccountHeadOptions('credit', headSelect, 'आजीवन सभासद फी');
-        } else if (typeSelect === 'VN - CD') {
-            voucherInput.value = getNextVoucherString('VN - CD');
+        } else if ((typeSelect === 'CD' || typeSelect === 'VN - CD')) {
+            voucherInput.value = getNextVoucherString('CD');
             typeField.value = 'credit';
             modeSelect.value = 'contra_c2b';
             if (!nameInput.value) nameInput.value = 'Self (बँक भरणा)';
             if (!descInput.value) descInput.value = 'रोख रक्कम बँकेत जमा केली (Cash Deposited into Bank)';
             populateAccountHeadOptions('credit', headSelect, 'बँक भरणा (Cash to Bank)');
-        } else if (typeSelect === 'VN - FD') {
-            voucherInput.value = getNextVoucherString('VN - FD');
+        } else if ((typeSelect === 'FD' || typeSelect === 'VN - FD')) {
+            voucherInput.value = getNextVoucherString('FD');
             typeField.value = 'debit';
             modeSelect.value = 'contra_b2fd';
             if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
             if (!descInput.value) descInput.value = 'बँकेतून मुदत ठेव (FD) केली (Bank to Fixed Deposit)';
             populateAccountHeadOptions('debit', headSelect, 'बँक मुदत ठेव (FD)');
-        } else if (typeSelect === 'VN FDM') {
-            voucherInput.value = getNextVoucherString('VN FDM');
+        } else if ((typeSelect === 'FDM' || typeSelect === 'VN FDM')) {
+            voucherInput.value = getNextVoucherString('FDM');
             typeField.value = 'credit';
             modeSelect.value = 'contra_fd2b';
             if (!nameInput.value) nameInput.value = 'Bank of Baroda FDR (मुदत ठेव)';
             if (!descInput.value) descInput.value = 'मुदत ठेव (FD) मोडून/परिपक्व होऊन बँकेत जमा (FD Matured to Bank)';
             populateAccountHeadOptions('credit', headSelect, 'मुदत ठेव परतावा व व्याज');
-        } else if (typeSelect === 'VN_IBT') {
-            voucherInput.value = getNextVoucherString('VN_IBT');
+        } else if ((typeSelect === 'IBT' || typeSelect === 'VN_IBT')) {
+            voucherInput.value = getNextVoucherString('IBT');
             typeField.value = 'debit';
             modeSelect.value = 'bank';
             populateAccountHeadOptions('debit', headSelect, 'बँक चार्जेस व सेवा शुल्क');
@@ -7783,14 +7791,17 @@
             tbody.innerHTML = '';
 
             targetItems.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
 
-                const tr = document.createElement('tr');
-
-                const mLabel = item.paymentMode && item.paymentMode.startsWith('contra') ? 'CONTRA' : (item.paymentMode || 'bank').toUpperCase();
-
-
-
-                tr.innerHTML = `
+        let headBadgeHtml = '';
+        if (item.accountHead) {
+            let badgeClass = 'head-badge';
+            if (item.debit > 0 || item.cashOut > 0 || item.bankOut > 0) badgeClass += ' expense-head';
+            else if ((item.paymentMode || '').startsWith('contra')) badgeClass += ' contra-head';
+            headBadgeHtml = `<div><span class="${badgeClass}">${escapeHTML(item.accountHead)}</span></div>`;
+        }
+tr.innerHTML = `
 
                     <td style="text-align:center;">${idx + 1}</td>
 
@@ -9224,6 +9235,14 @@
 
             const isContra = (item.paymentMode || '').startsWith('contra');
 
+        let headBadgeHtml = '';
+        if (item.accountHead) {
+            let badgeClass = 'head-badge';
+            if (isDebit) badgeClass += ' expense-head';
+            else if (isContra) badgeClass += ' contra-head';
+            headBadgeHtml = `<div><span class="${badgeClass}">${escapeHTML(item.accountHead)}</span></div>`;
+        }
+
 
 
             // WhatsApp Share Button
@@ -9266,7 +9285,7 @@
 
                 <td style="text-align:center;">${modeHtml}</td>
 
-                <td><strong>${escapeHTML(item.name || '-')}</strong></td>
+                <td><strong>${escapeHTML(item.name || '-')}</strong>${headBadgeHtml}</td>
 
                 <td>${escapeHTML(item.description || '-')}</td>
 
@@ -11722,11 +11741,6 @@ ${modeText}${descText}💰 *रक्कम:* ${formatIndianNum(receiptAmount)}
 
     };
 
-</script>
-
-</body>
-
-</html>
 
     // ============================================================
     //  29 OCT 2026 RESOLUTION: PANDURANG MANDAVKAR USANWAR TO DONATION
@@ -11779,9 +11793,22 @@ ${modeText}${descText}💰 *रक्कम:* ${formatIndianNum(receiptAmount)}
             if (db) {
                 await db.collection('transactions').add(payload);
                 showToast('✅ श्री. पांडुरंग मांडवकर देणगी पावती (' + vNum + ') यशस्वीरीत्या नोंदवली!');
-                if (typeof syncAllToGoogleSheet === 'function') { syncAllToGoogleSheet(true); }
+                if (typeof syncAllToGoogleSheet === 'function') {
+                    syncAllToGoogleSheet(true);
+                }
+            } else {
+                transactionsData.push(payload);
+                calculateTwoColumnBalances(transactionsData);
+                renderTable(transactionsData);
+                showToast('✅ श्री. पांडुरंग मांडवकर देणगी पावती (' + vNum + ') ऑफलाइन नोंदवली!');
             }
-        } catch(err) {
-            alert('त्रुटी: ' + err.message);
+        } catch (err) {
+            alert('त्रुटी : ' + err.message);
         }
     }
+
+</script>
+
+</body>
+
+</html>
