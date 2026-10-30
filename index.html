@@ -6775,7 +6775,7 @@ function populateStatementYearsDynamically(data) {
             updates.description = 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)';
             updates.paymentMode = 'bank';
             item._needsVN02Creation = true;
-        } else if (debit === 91800 && (/मत्ते/i.test(n) || /मत्ते/i.test(d) || /08A/i.test(v) || /मुद्रांक/i.test(d) || /चलन/i.test(d) || /नोंदणी/i.test(d))) {
+        } else if (debit === 91800) {
             if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
             updates.name = 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)';
@@ -7513,6 +7513,30 @@ function populateStatementYearsDynamically(data) {
                         db.collection('transactions').add(pn220Payload).then(() => {
                             window._isAddingPN220 = false;
                         }).catch(() => { window._isAddingPN220 = false; });
+                    }
+                }
+
+                // Auto-create VN 03 if missing
+                const hasVN03 = list.some(t => t.voucher === 'VN 03' || Number(t.debit) === 91800);
+                if (!hasVN03) {
+                    const vn3Payload = {
+                        voucher: 'VN 03',
+                        debit: 91800,
+                        credit: 0,
+                        name: 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)',
+                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                        description: 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)',
+                        paymentMode: 'Cash',
+                        date: '22-Nov-2023',
+                        rawDate: '2023-11-22',
+                        fy: '2023-24'
+                    };
+                    list.push({ id: 'LOCAL_VN_03', ...vn3Payload });
+                    if (currentRole === 'admin' && !window._isAddingVN03 && db) {
+                        window._isAddingVN03 = true;
+                        db.collection('transactions').add(vn3Payload).then(() => {
+                            window._isAddingVN03 = false;
+                        }).catch(() => { window._isAddingVN03 = false; });
                     }
                 }
 
