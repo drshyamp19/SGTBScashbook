@@ -1,0 +1,10 @@
+# Local temporary backups
+index_backup_*.html
+*.tmp
+backups/*Pre_AuditFix*
+
+# Temporary logs & excel exports & pdfs
+*.log
+*.xls
+*.pdf
+banner SAMAPL.png
