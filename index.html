@@ -2740,25 +2740,15 @@
                         <label>Voucher:
 
                             <select id="filterVoucherTypeSelect" onchange="filterTable()">
-
                                 <option value="all">सर्व व्हाउचर / पावत्या (All Types)</option>
-
                                 <option value="PN">पावती (Receipt - PN)</option>
-
-                                <option value="A/VSN">A/VSN (सभासद नोंदणी)</option>
-
-                                <option value="VN">व्हाउचर (Voucher - VN)</option>
-
-                                <option value="VN - CD">VN - CD (बँक भरणा)</option>
-
-                                <option value="VN - FD">VN - FD (मुदत ठेव)</option>
-
-                                <option value="VN FDM">VN FDM (मुदत ठेव परत)</option>
-
-                                <option value="VN_IBT">Internal Banking Transaction</option>
-
-                                <option value="OTHER">other (इतर)</option>
-
+                                <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद)</option>
+                                <option value="VN">व्हाउचर (Voucher - VN ०१ ते ११)</option>
+                                <option value="CD">CD (बँक भरणा - Contra)</option>
+                                <option value="FD">FD (मुदत ठेव)</option>
+                                <option value="FDM">FDM (मुदत ठेव परत)</option>
+                                <option value="IBT">IBT (बँक चार्जेस व सेवा)</option>
+                                <option value="OTHER">इतर (Other)</option>
                             </select>
 
                         </label>
@@ -3019,23 +3009,11 @@
                             <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 वर्ष (Year):</label>
 
                             <select id="statementYearSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
-
-                                <option value="all">सर्व वर्षे (All Years)</option>
-
-                                <option value="2029">2029</option>
-
-                                <option value="2028">2028</option>
-
-                                <option value="2027">2027</option>
-
+                                <option value="all" selected>सर्व वर्षे (All Years)</option>
                                 <option value="2026">2026</option>
-
                                 <option value="2025">2025</option>
-
                                 <option value="2024">2024</option>
-
                                 <option value="2023">2023</option>
-
                             </select>
 
                         </div>
@@ -3453,24 +3431,15 @@
                 <div class="voucher-input-group">
 
                     <select id="editVoucherTypeSelect" onchange="handleEditVoucherTypeChange()">
-
-                    <option value="PN">पावती (Receipt - PN)</option>
-
-                    <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
-
-                    <option value="VN">व्हाउचर (Voucher - VN)</option>
-
-                    <option value="VN - CD">VN - CD (Cash to Bank बँक भरणा)</option>
-
-                    <option value="VN - FD">VN - FD (Bank to FD मुदत ठेव)</option>
-
-                    <option value="VN FDM">VN FDM (FD to Bank मुदत ठेव परत)</option>
-
-                    <option value="VN_IBT">Internal Banking Transaction</option>
-
-                    <option value="OTHER">other (इतर)</option>
-
-                </select>
+                            <option value="PN">पावती (Receipt - PN)</option>
+                            <option value="A/VSN">A/VSN (आजीवन / वार्षिक सभासद नोंद)</option>
+                            <option value="VN">व्हाउचर (Voucher - VN ०१ ते ११)</option>
+                            <option value="CD">CD (बँक भरणा - Contra)</option>
+                            <option value="FD">FD (मुदत ठेव)</option>
+                            <option value="FDM">FDM (मुदत ठेव परत)</option>
+                            <option value="IBT">IBT (बँक चार्जेस व सेवा)</option>
+                            <option value="OTHER">इतर (Other)</option>
+                        </select>
 
                     <input type="text" id="editVoucher" placeholder="उदा. PN 216">
 
@@ -3805,100 +3774,56 @@
 
 
     function loadStatements() {
-
         const tbody = document.getElementById("statementsTableBody");
-
         tbody.innerHTML = `<tr><td colspan="3" class="text-center" style="text-align:center; padding:20px; color:#0d2b44; font-weight:600;">⏳ Google Drive वरून बँक स्टेटमेंट फायली लोड होत आहेत...</td></tr>`;
 
-
-
         fetch(WEB_APP_URL)
-
             .then(response => response.json())
-
             .then(data => {
-
                 if (data.error) {
-
                     throw new Error(data.error);
-
                 }
-
                 allStatementsData = data;
-
                 populateStatementYearsDynamically(allStatementsData);
-
+                const mSelect = document.getElementById("statementMonthSelect");
+                if (mSelect) mSelect.value = "all";
+                const ySelect = document.getElementById("statementYearSelect");
+                if (ySelect) ySelect.value = "all";
                 filterStatementsByDropdown();
-
             })
-
             .catch(error => {
-
                 console.error("Error:", error);
-
                 tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger" style="text-align:center; padding:20px; color:#dc3545; font-weight:600;">❌ स्टेटमेंट लोड करताना त्रुटी आली. कृपया Google Drive वरील फोल्डर Permission तपासणे.</td></tr>`;
-
             });
-
     }
 
-
-
-    function populateStatementYearsDynamically(data) {
-
+function populateStatementYearsDynamically(data) {
         const yearSelect = document.getElementById("statementYearSelect");
-
         if (!yearSelect || !data) return;
 
-
-
         const currentVal = yearSelect.value;
-
-        const yearsSet = new Set(["2023", "2024", "2025", "2026", "2027", "2028", "2029"]);
-
+        const yearsSet = new Set(["2023", "2024", "2025", "2026"]);
         
-
         data.forEach(item => {
-
-            if (item.year && item.year !== 'Other' && !isNaN(item.year)) {
-
+            if (item.year && item.year !== 'Other' && !isNaN(item.year) && Number(item.year) <= 2026) {
                 yearsSet.add(String(item.year));
-
             }
-
         });
-
-
 
         const sortedYears = Array.from(yearsSet).sort((a,b) => b.localeCompare(a));
 
-
-
         let html = '<option value="all">सर्व वर्षे (All Years)</option>';
-
         sortedYears.forEach(y => {
-
             html += `<option value="${y}">${y}</option>`;
-
         });
-
         yearSelect.innerHTML = html;
 
-
-
-        if (currentVal && (currentVal === 'all' || yearsSet.has(currentVal))) {
-
+        if (currentVal && yearsSet.has(currentVal)) {
             yearSelect.value = currentVal;
-
         } else {
-
             yearSelect.value = 'all';
-
         }
-
     }
-
-
 
     function displayStatements(statements) {
 
@@ -6660,68 +6585,49 @@
     // ============================================================
 
     function detectVoucherType(voucherStr) {
-
         if (!voucherStr) return 'OTHER';
-
         const v = voucherStr.trim().toUpperCase();
-
-        if (/\bFDM\b/.test(v)) return 'VN FDM';
-
-        if (/\bFD\b/.test(v)) return 'VN - FD';
-
-        if (/\bCD\b/.test(v)) return 'VN - CD';
-
-        if (/\bIBT\b/.test(v)) return 'VN_IBT';
-
+        if (/(?:^|[\s\-])FDM\b/i.test(v)) return 'FDM';
+        if (/(?:^|[\s\-])FD\b/i.test(v)) return 'FD';
+        if (/(?:^|[\s\-])CD\b/i.test(v)) return 'CD';
+        if (/(?:^|[\s\-])IBT\b/i.test(v)) return 'IBT';
         if (v.startsWith('A/VSN') || v.includes('सभासद')) return 'A/VSN';
-
         if (v.startsWith('PN') || v.includes('पावती')) return 'PN';
-
         if (v.startsWith('VN') || v.includes('व्हाउचर')) return 'VN';
-
         return 'OTHER';
-
     }
-
-
 
     function handleEditVoucherTypeChange() {
-
         const typeSelect = document.getElementById('editVoucherTypeSelect').value;
-
         const voucherInput = document.getElementById('editVoucher');
-
         const editId = document.getElementById('editEntryId').value;
-
+        const editHeadSelect = document.getElementById('editAccountHead');
         const origItem = (transactionsData || []).find(t => t.id === editId);
 
-
-
         let existingVN = null;
-
         if (origItem && origItem.voucher) {
-
             const m = origItem.voucher.match(/(?:^|\b)(?:VN|व्हाउचर)\s*(\d+)/i);
-
             if (m) existingVN = parseInt(m[1], 10);
-
         }
-
-
 
         if (typeSelect === 'OTHER') {
-
             voucherInput.placeholder = 'उदा. UTR / Cheque / पावती नंबर टाका';
-
         } else {
-
             voucherInput.value = getNextVoucherString(typeSelect, existingVN);
-
         }
 
+        if (editHeadSelect) {
+            if (typeSelect === 'CD') {
+                populateAccountHeadOptions('credit', editHeadSelect, 'बँक भरणा (Cash to Bank)');
+            } else if (typeSelect === 'FD') {
+                populateAccountHeadOptions('debit', editHeadSelect, 'बँक मुदत ठेव (FD)');
+            } else if (typeSelect === 'FDM') {
+                populateAccountHeadOptions('credit', editHeadSelect, 'मुदत ठेव परतावा व व्याज');
+            } else if (typeSelect === 'IBT') {
+                populateAccountHeadOptions('debit', editHeadSelect, 'बँक चार्जेस व सेवा शुल्क');
+            }
+        }
     }
-
-
 
     function handleEditTypeChange() {
         const entryType = document.getElementById('editType').value;
@@ -6870,12 +6776,12 @@
         } else if (/FDM/i.test(v) || /FDM/i.test(d)) {
             if (v !== 'FDM 01') { v = 'FDM 01'; updates.voucher = v; }
             if (head !== 'मुदत ठेव परतावा व व्याज') { head = 'मुदत ठेव परतावा व व्याज'; updates.accountHead = head; }
-        } else if (/CD\s*0?1/i.test(v)) {
-            if (v !== 'CD 01') { v = 'CD 01'; updates.voucher = v; }
-            if (head !== 'आजीवन सभासद फी (बँक भरणा)') { head = 'आजीवन सभासद फी (बँक भरणा)'; updates.accountHead = head; }
-        } else if (/CD\s*0?2/i.test(v)) {
-            if (v !== 'CD 02') { v = 'CD 02'; updates.voucher = v; }
-            if (head !== 'सामान्य देणगी (बँक भरणा)') { head = 'सामान्य देणगी (बँक भरणा)'; updates.accountHead = head; }
+        } else if (/CD\s*0?1\b/i.test(v) || /VN\s*0?1\s*-\s*CD\s*0?1/i.test(v) || (credit === 11000 && (/BARODA/i.test(n) || /A\/VSN/i.test(d)))) {
+            if (v !== 'CD 01') { v = 'CD 01'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'बँक भरणा (Cash to Bank)') { head = 'बँक भरणा (Cash to Bank)'; updates.accountHead = head; item.accountHead = head; }
+        } else if (/CD\s*0?2\b/i.test(v) || /VN\s*0?2\s*-\s*CD\s*0?2/i.test(v) || (credit === 33500 && /BARODA/i.test(n))) {
+            if (v !== 'CD 02') { v = 'CD 02'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'बँक भरणा (Cash to Bank)') { head = 'बँक भरणा (Cash to Bank)'; updates.accountHead = head; item.accountHead = head; }
         } else if (/IBT/i.test(v) || /SMS/i.test(d) || /PORD/i.test(d)) {
             const ibtMatch = v.match(/IBT\s*[-]?\s*(\d+)/i);
             const ibtNum = ibtMatch ? ibtMatch[1].padStart(2, '0') : '01';
@@ -10410,26 +10316,29 @@ tr.innerHTML = `
 
         
 
-        const detectedType = detectVoucherType(item.voucher);
-
+        let detectedType = detectVoucherType(item.voucher);
+        if (item.voucher && (item.voucher.includes('CD 01') || item.voucher.includes('CD 02') || (item.paymentMode || '').startsWith('contra_c2b') || /रोख.*बँक/i.test(item.description || ''))) {
+            detectedType = 'CD';
+        }
         document.getElementById('editVoucherTypeSelect').value = detectedType;
-
         document.getElementById('editVoucher').value = item.voucher || '';
 
-        
-
         document.getElementById('editPaymentMode').value = item.paymentMode || 'bank';
-
         document.getElementById('editType').value = (item.credit > 0) ? 'credit' : 'debit';
 
-        
-
         const amt = item.credit > 0 ? item.credit : item.debit;
-
         document.getElementById('editAmount').value = amt || 0;
         const editHeadSelect = document.getElementById('editAccountHead');
         const editFlowType = (item.credit > 0) ? 'credit' : 'debit';
-        populateAccountHeadOptions(editFlowType, editHeadSelect, item.accountHead);
+
+        let editHeadVal = item.accountHead;
+        if (!editHeadVal || (detectedType === 'CD' && editHeadVal === 'सामान्य देणगी')) {
+            if (detectedType === 'CD') editHeadVal = 'बँक भरणा (Cash to Bank)';
+            else if (detectedType === 'FD') editHeadVal = 'बँक मुदत ठेव (FD)';
+            else if (detectedType === 'FDM') editHeadVal = 'मुदत ठेव परतावा व व्याज';
+            else if (detectedType === 'IBT') editHeadVal = 'बँक चार्जेस व सेवा शुल्क';
+        }
+        populateAccountHeadOptions(editFlowType, editHeadSelect, editHeadVal);
 
         document.getElementById('editName').value = item.name || '';
 
