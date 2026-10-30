@@ -3230,6 +3230,23 @@
 
         <div id="tabPanelMgmt" class="tab-panel-section admin-item-block">
 
+        <!-- CA AUDIT SYNC & AUTO CORRECTION ACTION -->
+        <div class="card" style="border-left: 4px solid #0d6efd; background: #f0f6ff; margin-bottom: 20px;">
+            <div class="flex-between">
+                <div>
+                    <h2 style="color: #0d6efd; margin-bottom: 4px;">🎯 CA ऑडिटनुसार व्हाउचर्स व नोंदी थेट दुरुस्त करा (Audit Auto Sync)</h2>
+                    <div style="font-size: 13px; color: #475569;">
+                        • प्लॉट खरेदी व्हाउचर्स विभाजन (VN 01: ₹६,००,००० व VN 02: ₹७,००,०००)<br>
+                        • चालान नोंद (VN 03: ₹९१,८००) व विश्वस्त समर्पण देणगी (PN 220: ₹९१,८००)<br>
+                        • Contra बँक भरणा (CD 01: ₹११,०००), मुदत ठेव परत (FDM 01: ₹१०,०७,६७१) व VN 11 (₹८७,५००) दुरुस्ती
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary btn-sm" onclick="syncAllAuditFixesToCloud()">🔄 सर्व व्हाउचर्स दुरुस्त करा</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 29 OCT 2026 TRUSTEE RESOLUTION ACTION -->
         <div class="card" style="border-left: 4px solid #198754; background: #f8fff9; margin-bottom: 20px;">
             <div class="flex-between">
@@ -6740,47 +6757,63 @@ function populateStatementYearsDynamically(data) {
         if (debit === 600000 && /CHANDRAKALA/i.test(n)) {
             if (v !== 'VN 01') { v = 'VN 01'; updates.voucher = v; item.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+            updates.name = 'सौ. चंद्रकला नारायण गोडे';
+            updates.description = 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)';
+            updates.paymentMode = 'bank';
         } else if (debit === 700000 && /CHANDRAKALA/i.test(n)) {
             if (v !== 'VN 02') { v = 'VN 02'; updates.voucher = v; item.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+            updates.name = 'सौ. चंद्रकला नारायण गोडे';
+            updates.description = 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)';
+            updates.paymentMode = 'bank';
         } else if ((debit === 1300000 || debit === 1300000.0) || (debit >= 1200000 && (/CHANDRAKALA/i.test(n) || /PLOT/i.test(d)))) {
-            if (v !== 'VN 01 - VN 02') { v = 'VN 01 - VN 02'; updates.voucher = v; item.voucher = v; }
+            // Split 13L combined record into VN 01 (600,000) and trigger VN 02 (700,000)
+            if (v !== 'VN 01') { v = 'VN 01'; updates.voucher = v; item.voucher = v; }
+            if (debit !== 600000) { updates.debit = 600000; item.debit = 600000; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+            updates.name = 'सौ. चंद्रकला नारायण गोडे';
+            updates.description = 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)';
+            updates.paymentMode = 'bank';
+            item._needsVN02Creation = true;
         } else if (debit === 91800 && (/मत्ते/i.test(n) || /मत्ते/i.test(d) || /08A/i.test(v) || /मुद्रांक/i.test(d) || /चलन/i.test(d) || /नोंदणी/i.test(d))) {
             if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
-            if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; }
-            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; }
+            updates.name = 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)';
+            updates.description = 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)';
+            updates.paymentMode = 'Cash';
         } else if (debit === 33500 && (/PRABHAKAR/i.test(n) || /KALEKAR/i.test(n))) {
-            if (v !== 'VN 04') { v = 'VN 04'; updates.voucher = v; }
-            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
+            if (v !== 'VN 04') { v = 'VN 04'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
         } else if (debit === 30000 && (/ANANDRAO/i.test(n) || /PIMPALKAR/i.test(n) || /PIMPALKA/i.test(n))) {
-            if (v !== 'VN 05') { v = 'VN 05'; updates.voucher = v; }
-            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
+            if (v !== 'VN 05') { v = 'VN 05'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
         } else if (debit === 52000 && (/GEETESH/i.test(n) || /SATPUTE/i.test(n))) {
-            if (v !== 'VN 06') { v = 'VN 06'; updates.voucher = v; }
-            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
+            if (v !== 'VN 06') { v = 'VN 06'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
         } else if (debit === 63500 && (/KUNAL/i.test(n) || /PARDHI/i.test(n))) {
-            if (v !== 'VN 07') { v = 'VN 07'; updates.voucher = v; }
-            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
+            if (v !== 'VN 07') { v = 'VN 07'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
         } else if (debit === 21000 && (/NOORIE/i.test(n) || /BRICKS/i.test(d))) {
-            if (v !== 'VN 08') { v = 'VN 08'; updates.voucher = v; }
-            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
+            if (v !== 'VN 08') { v = 'VN 08'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
         } else if (debit === 8665 && (/JAY BHAWANI/i.test(n) || /BHAWANI/i.test(n))) {
-            if (v !== 'VN 09') { v = 'VN 09'; updates.voucher = v; }
+            if (v !== 'VN 09') { v = 'VN 09'; updates.voucher = v; item.voucher = v; }
             if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
         } else if (debit === 21784 && (/GAJANAN/i.test(n))) {
-            if (v !== 'VN 10') { v = 'VN 10'; updates.voucher = v; }
+            if (v !== 'VN 10') { v = 'VN 10'; updates.voucher = v; item.voucher = v; }
             if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
         } else if (debit === 87500 && (/PANDURANG/i.test(n) || /MANDAVKAR/i.test(n) || /MANDAOKAR/i.test(n))) {
-            if (v !== 'VN 11') { v = 'VN 11'; updates.voucher = v; }
-            if (head !== 'खर्च परतफेड (विश्वस्त)') { head = 'खर्च परतफेड (विश्वस्त)'; updates.accountHead = head; }
+            if (v !== 'VN 11') { v = 'VN 11'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'खर्च परतफेड (विश्वस्त)') { head = 'खर्च परतफेड (विश्वस्त)'; updates.accountHead = head; item.accountHead = head; }
+            updates.name = 'श्री. पांडुरंग सखाराम मांडवकर (विश्वस्त)';
+            updates.paymentMode = 'bank';
+            updates.description = '1) मारोती वेल्डिंग & फॅब्रिकेशन (लोखंडी काम) ₹२७,२०० + 2) के. अँड के. अर्थ मूव्हर्स (मुरूम/जेसीबी) ₹६०,३०० - एकूण ₹८७,५०० (धनादेश क्र. 000013)';
         } else if (debit === 1000000 && (/FDR/i.test(d) || /FD/i.test(v) || /FD/i.test(d))) {
-            if (v !== 'FD 01') { v = 'FD 01'; updates.voucher = v; }
-            if (head !== 'बँक मुदत ठेव (FD)') { head = 'बँक मुदत ठेव (FD)'; updates.accountHead = head; }
-        } else if (/FDM/i.test(v) || /FDM/i.test(d)) {
-            if (v !== 'FDM 01') { v = 'FDM 01'; updates.voucher = v; }
-            if (head !== 'मुदत ठेव परतावा व व्याज') { head = 'मुदत ठेव परतावा व व्याज'; updates.accountHead = head; }
+            if (v !== 'FD 01') { v = 'FD 01'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'बँक मुदत ठेव (FD)') { head = 'बँक मुदत ठेव (FD)'; updates.accountHead = head; item.accountHead = head; }
+        } else if (credit === 1007671 || /FDM/i.test(v) || (credit >= 1000000 && /FD/i.test(n))) {
+            if (v !== 'FDM 01') { v = 'FDM 01'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'मुदत ठेव परतावा व व्याज') { head = 'मुदत ठेव परतावा व व्याज'; updates.accountHead = head; item.accountHead = head; }
         } else if (/CD\s*0?1\b/i.test(v) || /VN\s*0?1\s*-\s*CD\s*0?1/i.test(v) || (credit === 11000 && (/BARODA/i.test(n) || /A\/VSN/i.test(d)))) {
             if (v !== 'CD 01') { v = 'CD 01'; updates.voucher = v; item.voucher = v; }
             if (head !== 'बँक भरणा (Cash to Bank)') { head = 'बँक भरणा (Cash to Bank)'; updates.accountHead = head; item.accountHead = head; }
@@ -6793,6 +6826,12 @@ function populateStatementYearsDynamically(data) {
             const cleanV = `IBT ${ibtNum}`;
             if (v !== cleanV) { v = cleanV; updates.voucher = v; }
             if (head !== 'बँक चार्जेस व सेवा शुल्क') { head = 'बँक चार्जेस व सेवा शुल्क'; updates.accountHead = head; }
+        } else if (credit === 91800 && (v === 'PN 220' || (/उसनवार/i.test(v) && /2026/i.test(item.date || '')) || /समर्पण/i.test(d) || /समर्पण/i.test(head))) {
+            if (v !== 'PN 220') { v = 'PN 220'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; item.accountHead = head; }
+            updates.name = 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)';
+            updates.description = 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.';
+            updates.paymentMode = 'bank';
         } else if (credit === 91800 && (/उसनवार/i.test(v) || /उसनवार/i.test(d) || /मांडवकर/i.test(n))) {
             if (v.startsWith('PN')) {
                 if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; }
@@ -7418,60 +7457,80 @@ function populateStatementYearsDynamically(data) {
 
 
                 let list = [];
-
                 const pendingCloudFixes = [];
 
-
-
                 snapshot.forEach(doc => {
-
                     const rec = { id: doc.id, ...doc.data() };
-
                     const updates = normalizeTransactionRecord(rec);
-
                     if (Object.keys(updates).length > 0) {
-
                         pendingCloudFixes.push({ id: doc.id, updates });
-
                     }
-
                     list.push(rec);
-
                 });
 
-
-
-                if (pendingCloudFixes.length > 0 && currentRole === 'admin' && !isAutoCleanupRunning) {
-
-                    isAutoCleanupRunning = true;
-
-                    const batch = db.batch();
-
-                    pendingCloudFixes.forEach(fix => {
-
-                        const ref = db.collection('transactions').doc(fix.id);
-
-                        batch.update(ref, fix.updates);
-
-                    });
-
-                    batch.commit().then(() => {
-
-                        console.log(`Auto-cleaned ${pendingCloudFixes.length} records in Cloud Firestore.`);
-
-                        isAutoCleanupRunning = false;
-
-                    }).catch(err => {
-
-                        console.warn('Auto-cleanup cloud commit warning:', err);
-
-                        isAutoCleanupRunning = false;
-
-                    });
-
+                // Auto-create VN 02 if missing
+                const hasVN02 = list.some(t => t.voucher === 'VN 02' || (Number(t.debit) === 700000 && /CHANDRAKALA/i.test(t.name || '')));
+                if (!hasVN02) {
+                    const vn2Payload = {
+                        voucher: 'VN 02',
+                        debit: 700000,
+                        credit: 0,
+                        name: 'सौ. चंद्रकला नारायण गोडे',
+                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                        description: 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)',
+                        paymentMode: 'bank',
+                        date: '23-Nov-2023',
+                        rawDate: '2023-11-23',
+                        fy: '2023-24'
+                    };
+                    list.push({ id: 'LOCAL_VN_02', ...vn2Payload });
+                    if (currentRole === 'admin' && !window._isAddingVN02 && db) {
+                        window._isAddingVN02 = true;
+                        db.collection('transactions').add(vn2Payload).then(() => {
+                            window._isAddingVN02 = false;
+                        }).catch(() => { window._isAddingVN02 = false; });
+                    }
                 }
 
+                // Auto-create PN 220 if missing
+                const hasPN220 = list.some(t => t.voucher === 'PN 220' || (Number(t.credit) === 91800 && (t.date || '').includes('2026')));
+                if (!hasPN220) {
+                    const pn220Payload = {
+                        voucher: 'PN 220',
+                        credit: 91800,
+                        debit: 0,
+                        name: 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)',
+                        accountHead: 'उसनवार समर्पण देणगी',
+                        description: 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.',
+                        paymentMode: 'bank',
+                        date: '29-Oct-2026',
+                        rawDate: '2026-10-29',
+                        fy: '2026-27'
+                    };
+                    list.push({ id: 'LOCAL_PN_220', ...pn220Payload });
+                    if (currentRole === 'admin' && !window._isAddingPN220 && db) {
+                        window._isAddingPN220 = true;
+                        db.collection('transactions').add(pn220Payload).then(() => {
+                            window._isAddingPN220 = false;
+                        }).catch(() => { window._isAddingPN220 = false; });
+                    }
+                }
 
+                if (pendingCloudFixes.length > 0 && currentRole === 'admin' && !isAutoCleanupRunning) {
+                    isAutoCleanupRunning = true;
+                    const batch = db.batch();
+                    pendingCloudFixes.forEach(fix => {
+                        const ref = db.collection('transactions').doc(fix.id);
+                        batch.update(ref, fix.updates);
+                    });
+                    batch.commit().then(() => {
+                        console.log(`Auto-cleaned ${pendingCloudFixes.length} records in Cloud Firestore.`);
+                        isAutoCleanupRunning = false;
+                    }).catch(err => {
+                        console.warn('Auto-cleanup cloud commit warning:', err);
+                        isAutoCleanupRunning = false;
+                    });
+                }
 
                 transactionsData = calculateTwoColumnBalances(list);
 
@@ -11723,6 +11782,167 @@ ${modeText}${descText}💰 *रक्कम:* ${formatIndianNum(receiptAmount)}
             }
         } catch (err) {
             alert('त्रुटी : ' + err.message);
+        }
+    }
+
+    // ============================================================
+    //  CA AUDIT MASTER 11 VOUCHERS & SERIES FULL CLOUD SYNC
+    // ============================================================
+    async function syncAllAuditFixesToCloud() {
+        if (currentRole !== 'admin') {
+            alert('फक्त Admin ला हा अधिकार आहे.');
+            return;
+        }
+
+        const confirmRun = confirm(
+            "🎯 CA ऑडिटनुसार खालील सर्व व्हाउचर्स क्लाउड डेटाबेसमध्ये थेट दुरुस्त करायचे का?\n\n" +
+            "1. प्लॉट व्हाउचर्स विभाजन:\n   • VN 01: ₹6,00,000 (प्लॉट 37, चेक 000002)\n   • VN 02: ₹7,00,000 (प्लॉट 38, चेक 000003)\n" +
+            "2. नवीन देणगी नोंद:\n   • PN 220: ₹91,800 (श्री. पांडुरंग मांडवकर उसनवार समर्पण)\n" +
+            "3. दस्तलेखक चलन नोंद:\n   • VN 03: ₹91,800 (श्री. राजेश मत्ते)\n" +
+            "4. इतर व्हाउचर्स स्वच्छता:\n   • CD 01: ₹11,000 (Contra बँक भरणा)\n   • FDM 01: ₹10,07,671 (मुदत ठेव परतावा)\n   • VN 11: ₹87,500 (शेड व बांधकाम / विश्वस्त परतफेड)"
+        );
+        if (!confirmRun) return;
+
+        try {
+            if (!db) {
+                alert('क्लाउड डेटाबेसशी संपर्क नाही. इंटरनेट कनेक्शन तपासा.');
+                return;
+            }
+
+            showToast('🔄 CA ऑडिट सिंक सुरू आहे...');
+            const snapshot = await db.collection('transactions').get();
+            const batch = db.batch();
+            let updatedCount = 0;
+            let hasVN02InDb = false;
+            let hasPN220InDb = false;
+            let hasVN03InDb = false;
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const debit = Number(data.debit) || 0;
+                const credit = Number(data.credit) || 0;
+                const name = (data.name || '').trim();
+                const desc = (data.description || '').trim();
+                const voucher = (data.voucher || '').trim();
+
+                if (voucher === 'VN 02' || (debit === 700000 && /CHANDRAKALA/i.test(name))) hasVN02InDb = true;
+                if (voucher === 'PN 220' || (credit === 91800 && (data.date || '').includes('2026'))) hasPN220InDb = true;
+                if (voucher === 'VN 03' || (debit === 91800 && /मत्ते|राजेश/i.test(name))) hasVN03InDb = true;
+
+                // Split 13L
+                if ((debit === 1300000 || debit >= 1200000) && (/CHANDRAKALA/i.test(name) || /PLOT/i.test(desc))) {
+                    batch.update(doc.ref, {
+                        voucher: 'VN 01',
+                        debit: 600000,
+                        credit: 0,
+                        name: 'सौ. चंद्रकला नारायण गोडे',
+                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                        description: 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)',
+                        paymentMode: 'bank',
+                        date: '23-Nov-2023',
+                        rawDate: '2023-11-23',
+                        fy: '2023-24'
+                    });
+                    updatedCount++;
+                } else if (debit === 600000 && /CHANDRAKALA/i.test(name)) {
+                    batch.update(doc.ref, {
+                        voucher: 'VN 01',
+                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                        name: 'सौ. चंद्रकला नारायण गोडे',
+                        description: 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)',
+                        paymentMode: 'bank'
+                    });
+                    updatedCount++;
+                } else if (debit === 700000 && /CHANDRAKALA/i.test(name)) {
+                    batch.update(doc.ref, {
+                        voucher: 'VN 02',
+                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                        name: 'सौ. चंद्रकला नारायण गोडे',
+                        description: 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)',
+                        paymentMode: 'bank'
+                    });
+                    updatedCount++;
+                } else if (debit === 87500 && (/PANDURANG/i.test(name) || /MANDAVKAR/i.test(name))) {
+                    batch.update(doc.ref, {
+                        voucher: 'VN 11',
+                        name: 'श्री. पांडुरंग सखाराम मांडवकर (विश्वस्त)',
+                        accountHead: 'खर्च परतफेड (विश्वस्त)',
+                        paymentMode: 'bank',
+                        description: '1) मारोती वेल्डिंग & फॅब्रिकेशन (लोखंडी काम) ₹२७,२०० + 2) के. अँड के. अर्थ मूव्हर्स (मुरूम/जेसीबी) ₹६०,३०० - एकूण ₹८७,५०० (धनादेश क्र. 000013)'
+                    });
+                    updatedCount++;
+                } else if (credit === 11000 && (/BARODA/i.test(name) || /A\/VSN/i.test(desc))) {
+                    batch.update(doc.ref, {
+                        voucher: 'CD 01',
+                        accountHead: 'बँक भरणा (Cash to Bank)'
+                    });
+                    updatedCount++;
+                } else if (credit === 1007671 || (credit >= 1000000 && /FD/i.test(name))) {
+                    batch.update(doc.ref, {
+                        voucher: 'FDM 01',
+                        accountHead: 'मुदत ठेव परतावा व व्याज'
+                    });
+                    updatedCount++;
+                }
+            });
+
+            await batch.commit();
+
+            // Insert VN 02 if missing
+            if (!hasVN02InDb) {
+                await db.collection('transactions').add({
+                    voucher: 'VN 02',
+                    debit: 700000,
+                    credit: 0,
+                    name: 'सौ. चंद्रकला नारायण गोडे',
+                    accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                    description: 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)',
+                    paymentMode: 'bank',
+                    date: '23-Nov-2023',
+                    rawDate: '2023-11-23',
+                    fy: '2023-24'
+                });
+            }
+
+            // Insert PN 220 if missing
+            if (!hasPN220InDb) {
+                await db.collection('transactions').add({
+                    voucher: 'PN 220',
+                    credit: 91800,
+                    debit: 0,
+                    name: 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)',
+                    accountHead: 'उसनवार समर्पण देणगी',
+                    description: 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.',
+                    paymentMode: 'bank',
+                    date: '29-Oct-2026',
+                    rawDate: '2026-10-29',
+                    fy: '2026-27'
+                });
+            }
+
+            // Insert VN 03 if missing
+            if (!hasVN03InDb) {
+                await db.collection('transactions').add({
+                    voucher: 'VN 03',
+                    debit: 91800,
+                    credit: 0,
+                    name: 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)',
+                    accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
+                    description: 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)',
+                    paymentMode: 'Cash',
+                    date: '22-Nov-2023',
+                    rawDate: '2023-11-22',
+                    fy: '2023-24'
+                });
+            }
+
+            showToast('✅ CA ऑडिटनुसार सर्व व्हाउचर्स क्लाउडवर यशस्वीरीत्या सिंक झाले!');
+            alert('✅ यश आले! CA ऑडिटनुसार सर्व व्हाउचर्स (VN 01, VN 02, VN 03, CD 01, FDM 01, VN 11 आणि PN 220) डेटाबेसमध्ये यशस्वीरीत्या सिंक झाले आहेत.');
+            if (typeof syncAllToGoogleSheet === 'function') {
+                syncAllToGoogleSheet(true);
+            }
+        } catch(err) {
+            alert('त्रुटी: ' + err.message);
         }
     }
 

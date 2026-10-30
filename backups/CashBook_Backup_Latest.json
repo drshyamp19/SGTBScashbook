@@ -1,7 +1,7 @@
 [
   {
     "id": "7IbEARRBvaDgBXYjj8qN",
-    "voucher": "VN 01",
+    "voucher": "CD 01",
     "credit": 11000,
     "name": "SARV ASABHASAD",
     "description": "A/VSN 01 to 11 A/VSN Ajivan sabhasad nondni",
@@ -10,7 +10,7 @@
     "rawDate": "2023-07-27",
     "date": "27-Jul-2023",
     "balance": 11000,
-    "accountHead": "सामान्य देणगी"
+    "accountHead": "बँक भरणा (Cash to Bank)"
   },
   {
     "id": "VytBrHRPZ6TT5pRM6Rus",
@@ -682,13 +682,13 @@
     "date": "23-Nov-2023",
     "description": "Internal Banking Transaction",
     "credit": 1007671,
-    "voucher": "VN 05",
+    "voucher": "FDM 01",
     "name": "FD MATUCHER 03/3304 100000 + INTREST 7671",
     "rawDate": "2023-11-23",
     "docUrl": "",
     "debit": 0,
     "balance": 1306983.1099999999,
-    "accountHead": "सामान्य देणगी"
+    "accountHead": "मुदत ठेव परतावा व व्याज"
   },
   {
     "id": "ZGRgbWtr6l71WJDDuO6J",
@@ -705,29 +705,31 @@
   },
   {
     "id": "x1UScHejmREUxH8NwNXw",
-    "name": "CHANDRAKALA NARAYAN",
+    "name": "सौ. चंद्रकला नारायण गोडे",
     "credit": 0,
     "voucher": "VN 01",
     "rawDate": "2023-11-23",
     "docUrl": "",
     "date": "23-Nov-2023",
-    "description": "Plot Purchase Cheque 1",
+    "description": "मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)",
     "debit": 600000,
     "balance": 706925.1099999999,
-    "accountHead": "स्थावर मालमत्ता / प्लॉट खरेदी"
+    "accountHead": "स्थावर मालमत्ता / प्लॉट खरेदी",
+    "paymentMode": "bank"
   },
   {
     "id": "Sb23EBG8p5hsHG0xDOBk",
     "credit": 0,
-    "name": "CHANDRAKALA NARAYAN",
-    "description": "Plot Purchase Cheque 2",
+    "name": "सौ. चंद्रकला नारायण गोडे",
+    "description": "मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)",
     "voucher": "VN 02",
     "debit": 700000,
     "rawDate": "2023-11-23",
     "date": "23-Nov-2023",
     "docUrl": "",
     "balance": 6925.10999999987,
-    "accountHead": "स्थावर मालमत्ता / प्लॉट खरेदी"
+    "accountHead": "स्थावर मालमत्ता / प्लॉट खरेदी",
+    "paymentMode": "bank"
   },
   {
     "id": "z5yfxWSfOm2LCNqEDcQQ",
@@ -2201,15 +2203,16 @@
   {
     "id": "B1VkcqLezWfpPMcV56VW",
     "voucher": "VN 11",
-    "description": "8/2/25 |1551 7,125 RESIVE BILL  80,375 BILL PENDING",
+    "description": "1) मारोती वेल्डिंग & फॅब्रिकेशन (लोखंडी काम) ₹२७,२०० + 2) के. अँड के. अर्थ मूव्हर्स (मुरूम/जेसीबी) ₹६०,३०० - एकूण ₹८७,५०० (धनादेश क्र. 000013)",
     "debit": 87500,
-    "name": "PANDURANG S MANDAOKAR CHK NO 13",
+    "name": "श्री. पांडुरंग सखाराम मांडवकर (विश्वस्त)",
     "docUrl": "https://drive.google.com/file/d/1MvSSAhOWjpzRi8OzNDQMAmrdyGZkkQWq/view",
     "credit": 0,
     "date": "18-Feb-2026",
     "rawDate": "2026-02-18",
     "balance": 283719.1399999999,
-    "accountHead": "खर्च परतफेड (विश्वस्त)"
+    "accountHead": "खर्च परतफेड (विश्वस्त)",
+    "paymentMode": "bank"
   },
   {
     "id": "hBP254IG17iak78O6Cw4",
@@ -3172,5 +3175,19 @@
     "docUrl": "",
     "balance": 420141.6599999999,
     "accountHead": "सामान्य देणगी"
+  },
+  {
+    "id": "SGTB_PN_220_MANDAVKAR_DONATION",
+    "voucher": "PN 220",
+    "name": "श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)",
+    "credit": 91800,
+    "debit": 0,
+    "date": "29-Oct-2026",
+    "rawDate": "2026-10-29",
+    "paymentMode": "bank",
+    "accountHead": "उसनवार समर्पण देणगी",
+    "description": "मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.",
+    "docUrl": "",
+    "fy": "2026-27"
   }
 ]
