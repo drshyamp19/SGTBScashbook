@@ -8932,8 +8932,23 @@ tr.innerHTML = `
                 .doc-page:last-child { page-break-after: avoid; break-after: avoid; }
 
                 .receipt-box { border: 2px solid #0d2b44; border-radius: 8px; padding: 10px 14px; position: relative; background: #fff; }
-
-                .voucher-box { border: 2px solid #800020; border-radius: 8px; padding: 10px 14px; position: relative; background:#fff; }
+                .voucher-box { border: 2px solid #222; padding: 8px 12px; background: #fff; display: flex; flex-direction: column; justify-content: space-between; }
+                .voucher-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #222; padding-bottom: 3px; }
+                .org-name { font-size: 13.5px; font-weight: 800; color: #111; }
+                .reg-no { font-size: 10.5px; font-weight: 700; color: #333; }
+                .voucher-title { text-align: center; font-size: 13.5px; font-weight: 800; margin: 4px 0; text-decoration: underline; color: #111; letter-spacing: 0.5px; }
+                .voucher-meta { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-bottom: 4px; }
+                .voucher-recipient { font-size: 11.5px; margin-bottom: 4px; line-height: 1.4; }
+                .voucher-declaration { font-size: 11px; color: #222; margin-top: 1px; }
+                .voucher-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px; }
+                .voucher-table th, .voucher-table td { border: 1px solid #333; padding: 4px 6px; }
+                .voucher-table th { background: #f1f3f5; font-weight: 700; }
+                .total-row { font-weight: 800; background: #fafafa; }
+                .voucher-words { font-size: 11px; font-weight: 700; color: #111; margin: 3px 0 6px 0; }
+                .voucher-signatures { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; padding: 0 10px; }
+                .sig-col { text-align: center; font-size: 10.5px; font-weight: 700; }
+                .sig-line { border-top: 1px dashed #333; min-width: 165px; padding-top: 3px; }
+                .voucher-proof { margin-top: 5px; font-size: 9.5px; color: #444; border-top: 1px solid #ddd; padding-top: 3px; }
 
                 .header { text-align: center; border-bottom: 1.5px solid; padding-bottom: 4px; }
 
@@ -9078,106 +9093,121 @@ tr.innerHTML = `
                 </div>`;
 
             } else {
+                let voucherTitleText = 'खर्चाचे व्हाउचर';
+                const voucherStr = (item.voucher || '').trim();
+                const modeStr = (item.paymentMode || '').trim().toLowerCase();
+                const descLower = (item.description || '').toLowerCase();
+                const isSplitExpense = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashOut > 0 && item.bankOut > 0));
 
-                let vTitle = 'खर्च व्हाउचर (Expense Voucher)';
-
-                const vStr = (item.voucher || '').trim();
-
-                const mStr = (item.paymentMode || '').trim();
-
-                if (mStr === 'contra_b2fd' || /VN\s*-\s*FD/i.test(vStr)) {
-
-                    vTitle = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit)';
-
-                } else if (mStr === 'contra_fd2b' || /FDM/i.test(vStr)) {
-
-                    vTitle = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
-
-                } else if (mStr.startsWith('contra')) {
-
-                    vTitle = 'बँक व रोख अंतर्गत हस्तांतरण (Contra Transfer)';
-
-                } else if (/IBT/i.test(vStr)) {
-
-                    vTitle = 'Internal Banking Transaction';
-
+                if (modeStr === 'contra_b2fd' || /VN\s*-\s*FD/i.test(voucherStr)) {
+                    voucherTitleText = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit / FD)';
+                } else if (modeStr === 'contra_fd2b' || /FDM/i.test(voucherStr)) {
+                    voucherTitleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
+                } else if (modeStr.startsWith('contra') || /CD/i.test(voucherStr) || descLower.includes('बँक भरणा') || descLower.includes('cash to bank')) {
+                    voucherTitleText = 'बँक व रोख अंतर्गत हस्तांतरण (Contra Transfer)';
+                } else if (/IBT/i.test(voucherStr) || descLower.includes('बँक चार्जेस')) {
+                    voucherTitleText = 'बँक अंतर्गत व्यवहार (Internal Banking Transaction)';
                 }
 
+                let dateFormatted = item.date || '';
+                if (item.rawDate) {
+                    const dParts = item.rawDate.split('-');
+                    if (dParts.length === 3) {
+                        dateFormatted = `${dParts[2]} / ${dParts[1]} / ${dParts[0]}`;
+                    }
+                }
 
+                const totalNumber = Number(receiptAmount) || 0;
+                const parts = totalNumber.toFixed(2).split('.');
+                const rupeesFormatted = formatIndianNum(Number(parts[0])).replace('₹', '').trim();
+                const paiseFormatted = parts[1] || '००';
+
+                let payMethodText = 'धनादेशाद्वारे / बँकेद्वारे';
+                if (modeStr === 'cash' || (!modeStr && (descLower.includes('cash') || descLower.includes('रोख')))) {
+                    payMethodText = 'रोख (Cash)';
+                } else if (isSplitExpense) {
+                    payMethodText = 'रोख व बँक ट्रान्सफरद्वारे';
+                } else if (descLower.includes('चेक') || descLower.includes('धनादेश') || descLower.includes('cheque') || descLower.includes('chq')) {
+                    payMethodText = 'धनादेशाद्वारे (By Cheque)';
+                } else if (descLower.includes('upi') || descLower.includes('neft') || descLower.includes('rtgs') || descLower.includes('online') || descLower.includes('ऑनलाईन')) {
+                    payMethodText = 'ऑनलाईन बँक ट्रान्सफरद्वारे (Online / UPI / NEFT)';
+                }
+
+                let proofHtml = 'नोंदणीकृत खरेदीखत / मूळ व्हाऊचर / बिल प्रत';
+                if (item.docUrl) {
+                    proofHtml = `<a href="${escapeHTML(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">जोडलेला दस्तऐवज पहा (Click to View Proof)</a>`;
+                }
 
                 bulkHtml += `
-
                 <div class="doc-page">
-
-                    <div class="voucher-box" style="border-color:#800020;">
-
-                        <div class="header" style="border-color:#800020; color:#800020;">
-
-                            <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-
-                            <p>श्रीराम नगर भद्रावती</p>
-
-                            <span class="reg-tag" style="background:#fdf2e9; color:#a04000; border:1px solid #f5cba7;">📜 Reg. No.: F-0016068(CDP)</span>
-
-                        </div>
-
-                        <div class="doc-title" style="color:#800020;">${escapeHTML(vTitle)}</div>
-
-                        <table class="details-table">
-
-                            <tr>
-
-                                <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(item.voucher || '-')}</td>
-
-                                <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
-
-                            </tr>
-
-                            <tr><td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td></tr>
-
-                            <tr><td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td></tr>
-
-                            <tr><td colspan="2"><strong>पेमेंट मोड:</strong> ${(item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashOut > 0 && item.bankOut > 0)) ? `💵 रोख: ${formatIndianNum(item.cashOut)} + 🏦 बँक: ${formatIndianNum(item.bankOut)}` : escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
-
-                            <tr>
-
-                                <td colspan="2" style="padding-top:4px;">
-
-                                    <strong>रक्कम:</strong> 
-
-                                    <span class="amount-highlight" style="color:#800020; background:#fbf2f4; border:1px dashed #c0392b;">${formatIndianNum(receiptAmount)}</span>
-
-                                    <div class="words-text" style="color:#721c24;">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
-
-                                </td>
-
-                            </tr>
-
-                        </table>
-
-                        <div class="bottom-auth-section">
-
-                            <div class="sig-box"><div style="height:15px;"></div>स्वाक्षरी / सही</div>
-
-                            <div class="official-stamp" style="border:2.5px dashed #800020; color:#800020;">
-
-                                <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
-
-                                <span class="stamp-sub" style="border-color:#800020;">भद्रावती F-0016068</span>
-
-                                <span class="stamp-verified" style="color:#800020;">✓ पास / अदा</span>
-
+                    <div class="voucher-box">
+                        <div>
+                            <div class="voucher-header">
+                                <span class="org-name">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था, श्रीराम नगर, भद्रावती</span>
+                                <span class="reg-no">नोंदणी क्रमांक : F-0016068 (CDP)</span>
                             </div>
-
-                            <div class="sig-box"><div style="height:15px;"></div>सचिव / अध्यक्ष</div>
-
+                            <div class="voucher-title">${escapeHTML(voucherTitleText)}</div>
+                            <div class="voucher-meta">
+                                <div><strong>व्हाउचर नं. :</strong> &nbsp;${escapeHTML(item.voucher || '-')}</div>
+                                <div><strong>दिनांक :</strong> &nbsp;${escapeHTML(dateFormatted)}</div>
+                            </div>
+                            <div class="voucher-recipient">
+                                <div><strong>रक्कम घेणाऱ्याचे नांव :</strong> &nbsp;<span style="font-size:12.5px; font-weight:700;">${escapeHTML(item.name || '-')}</span></div>
+                                <div class="voucher-declaration">पावती लिहून देतो की, मला आज रोजी खालील तपशिलाप्रमाणे रक्कम <strong>${payMethodText}</strong> मिळाली.</div>
+                            </div>
+                            <table class="voucher-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:7%; text-align:center;">अ.क्र.</th>
+                                        <th style="width:73%; text-align:center;">तपशिल</th>
+                                        <th style="width:13%; text-align:center;">रुपये</th>
+                                        <th style="width:7%; text-align:center;">पैसे</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align:center; vertical-align:top;">१</td>
+                                        <td style="vertical-align:top;">
+                                            <div>${escapeHTML(item.description || '-')}</div>
+                                            ${item.accountHead ? `<div style="font-size:9.5px; color:#555; margin-top:2px;"><strong>खर्च शिर्षक:</strong> ${escapeHTML(item.accountHead)}</div>` : ''}
+                                            ${isSplitExpense ? `<div style="font-size:9.5px; color:#0b5ed7; font-weight:700; margin-top:2px;">(💵 रोख: ${formatIndianNum(item.cashOut)} &nbsp;|&nbsp; 🏦 बँक: ${formatIndianNum(item.bankOut)})</div>` : ''}
+                                        </td>
+                                        <td style="text-align:right; font-weight:700; vertical-align:top;">${rupeesFormatted}</td>
+                                        <td style="text-align:center; vertical-align:top;">${paiseFormatted}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <td colspan="2" style="text-align:right; padding-right:12px;">एकूण रुपये :</td>
+                                        <td style="text-align:right; font-size:12px;">${rupeesFormatted}</td>
+                                        <td style="text-align:center;">${paiseFormatted}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="voucher-words">
+                                (अक्षरी : &nbsp;<strong>${escapeHTML(amountWords)}</strong> मिळाले.)
+                            </div>
+                            <div class="voucher-signatures">
+                                <div class="sig-col">
+                                    <div class="sig-line">
+                                        ( अध्यक्ष / सचिव / कोषाध्यक्ष )<br>
+                                        <span style="font-size:9.5px; font-weight:600;">स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                                    </div>
+                                </div>
+                                <div class="sig-col">
+                                    <div class="sig-line">
+                                        ( ${escapeHTML(item.name || 'पैसे घेणारा')} )<br>
+                                        <span style="font-size:9.5px; font-weight:600;">पैसे घेणाऱ्याची स्वाक्षरी</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voucher-proof">
+                                <strong>सोबत जोडलेला पुरावा :</strong> &nbsp;${proofHtml}
+                            </div>
                         </div>
-
                     </div>
-
                 </div>`;
-
-            }
+            }            }
 
         });
 
@@ -11441,240 +11471,250 @@ tr.innerHTML = `
 
     // ============================================================
 
-    function printPaymentVoucher(id) {
-
+        function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
-
         if (!item) return;
 
-
-
         const voucherNum = item.voucher || '-';
-
         const isSplitMode = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashOut > 0 && item.bankOut > 0));
-
         const expenseAmount = (item.debit > 0) ? item.debit : ((item.cashOut || 0) + (item.bankOut || 0));
-
         const amountWords = numberToMarathiWords(expenseAmount);
 
-
-
-        let voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
-
-        const voucherStr = (item.voucher || '').trim();
-
-        const modeStr = (item.paymentMode || '').trim();
-
-
-
-        if (modeStr === 'contra_b2fd' || /VN\s*-\s*FD/i.test(voucherStr)) {
-
-            voucherTitleText = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit / FD Transfer)';
-
-        } else if (modeStr === 'contra_fd2b' || /FDM/i.test(voucherStr)) {
-
-            voucherTitleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
-
-        } else if (modeStr.startsWith('contra') || /contra/i.test(voucherStr) || /बँकेतून रोख काढली/i.test(item.description) || /रोख रक्कम बँकेत जमा केली/i.test(item.description)) {
-
-            voucherTitleText = 'Cash to Bank / Contra Transfer (बँक व रोख अंतर्गत हस्तांतरण)';
-
-        } else if (/VN\s*.*IBT/i.test(voucherStr) || /IBT/i.test(voucherStr) || /बँक चार्जेस/i.test(item.description)) {
-
-            voucherTitleText = 'Internal Banking Transaction (बँक अंतर्गत व्यवहार)';
-
-        } else if (/^VN/i.test(voucherStr)) {
-
-            voucherTitleText = 'खर्च व्हाउचर (Expense Voucher)';
-
-        } else {
-
-            voucherTitleText = 'व्यवहार व्हाउचर (Transaction Voucher)';
-
+        let dateStr = item.date || '';
+        if (item.rawDate) {
+            const dParts = item.rawDate.split('-');
+            if (dParts.length === 3) {
+                dateStr = `${dParts[2]} / ${dParts[1]} / ${dParts[0]}`;
+            }
         }
 
+        const totalNumber = Number(expenseAmount) || 0;
+        const parts = totalNumber.toFixed(2).split('.');
+        const rupeesFormatted = formatIndianNum(Number(parts[0])).replace('₹', '').trim();
+        const paiseFormatted = parts[1] || '००';
 
+        const mode = (item.paymentMode || '').toLowerCase();
+        const descLower = (item.description || '').toLowerCase();
+        let payMethodText = 'धनादेशाद्वारे / बँकेद्वारे';
+        if (mode === 'cash' || (!mode && (descLower.includes('cash') || descLower.includes('रोख')))) {
+            payMethodText = 'रोख (Cash)';
+        } else if (isSplitMode) {
+            payMethodText = 'रोख व बँक ट्रान्सफरद्वारे';
+        } else if (descLower.includes('चेक') || descLower.includes('धनादेश') || descLower.includes('cheque') || descLower.includes('chq')) {
+            payMethodText = 'धनादेशाद्वारे (By Cheque)';
+        } else if (descLower.includes('upi') || descLower.includes('neft') || descLower.includes('rtgs') || descLower.includes('online') || descLower.includes('ऑनलाईन')) {
+            payMethodText = 'ऑनलाईन बँक ट्रान्सफरद्वारे (Online / UPI / NEFT)';
+        }
+
+        let voucherTitleText = 'खर्चाचे व्हाउचर';
+        const voucherStr = (item.voucher || '').trim();
+        if (mode === 'contra_b2fd' || /VN\s*-\s*FD/i.test(voucherStr)) {
+            voucherTitleText = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit / FD)';
+        } else if (mode === 'contra_fd2b' || /FDM/i.test(voucherStr)) {
+            voucherTitleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured to Bank)';
+        } else if (mode.startsWith('contra') || /CD/i.test(voucherStr) || descLower.includes('बँक भरणा') || descLower.includes('cash to bank')) {
+            voucherTitleText = 'बँक व रोख अंतर्गत हस्तांतरण (Contra Transfer)';
+        } else if (/IBT/i.test(voucherStr) || descLower.includes('बँक चार्जेस')) {
+            voucherTitleText = 'बँक अंतर्गत व्यवहार (Internal Banking Transaction)';
+        }
+
+        let proofHtml = 'नोंदणीकृत खरेदीखत / मूळ व्हाऊचर / बिल प्रत';
+        if (item.docUrl) {
+            proofHtml = `<a href="${escapeHTML(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">जोडलेला दस्तऐवज पहा (Click to View Attached Proof)</a>`;
+        }
 
         const voucherHtml = `
-
         <!DOCTYPE html>
-
         <html>
-
         <head>
-
             <meta charset="UTF-8">
-
-            <title>व्हाउचर - ${escapeHTML(voucherNum)}</title>
-
+            <title>खर्चाचे व्हाउचर - ${escapeHTML(voucherNum)}</title>
             <style>
-
                 @page { size: A5 landscape; margin: 4mm; }
-
                 * { box-sizing: border-box; font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif; }
-
-                body { color: #111; margin: 0; padding: 4px; }
-
-                .voucher-box { border: 2px solid #800020; border-radius: 8px; padding: 10px 14px; position: relative; background:#fff; max-height: 130mm; overflow: hidden; }
-
-                .header { text-align: center; border-bottom: 1.5px solid #800020; padding-bottom: 4px; }
-
-                .header h1 { margin: 0; font-size: 16px; color: #800020; font-weight: 800; }
-
-                .header p { margin: 1px 0; font-size: 11px; color: #555; }
-
-                .reg-tag { display: inline-block; background: #fdf2e9; color: #a04000; padding: 1px 8px; border-radius: 10px; font-weight: bold; font-size: 9.5px; margin-top: 2px; border: 1px solid #f5cba7; }
-
-                .voucher-title { text-align: center; font-size: 13px; font-weight: bold; margin: 6px 0; text-decoration: underline; color: #800020; }
-
-                .details-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 12px; }
-
-                .details-table td { padding: 4px 4px; }
-
-                .amount-highlight { font-size: 15px; font-weight: bold; color: #800020; background: #fbf2f4; padding: 3px 10px; border-radius: 4px; border: 1px dashed #c0392b; display: inline-block; }
-
-                .words-text { font-size: 11px; font-weight: bold; color: #721c24; margin-top: 2px; }
-
-                .bottom-auth-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding: 0 5px; }
-
-                .sig-box { text-align: center; border-top: 1px dashed #333; width: 120px; font-size: 10.5px; font-weight: bold; padding-top: 2px; }
-
-                .official-stamp {
-
-                    width: 75px; height: 75px; border: 2.5px dashed #800020; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4px; color: #800020; font-size: 7.5px; font-weight: 700; transform: rotate(-6deg); opacity: 0.9;
-
+                body { color: #111; margin: 0; padding: 4px; background: #fff; }
+                .voucher-box {
+                    border: 2px solid #222;
+                    padding: 8px 12px;
+                    background: #fff;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
                 }
-
-                .official-stamp .stamp-sub { font-size: 7px; border-top: 1px solid #800020; border-bottom: 1px solid #800020; padding: 0.5px 0; margin: 1px 0; }
-
-                .official-stamp .stamp-verified { font-size: 7.5px; color: #800020; font-weight: 800; }
-
+                .voucher-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 1.5px solid #222;
+                    padding-bottom: 3px;
+                }
+                .org-name {
+                    font-size: 13.5px;
+                    font-weight: 800;
+                    color: #111;
+                }
+                .reg-no {
+                    font-size: 10.5px;
+                    font-weight: 700;
+                    color: #333;
+                }
+                .voucher-title {
+                    text-align: center;
+                    font-size: 13.5px;
+                    font-weight: 800;
+                    margin: 4px 0;
+                    text-decoration: underline;
+                    color: #111;
+                    letter-spacing: 0.5px;
+                }
+                .voucher-meta {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 11.5px;
+                    font-weight: 700;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 3px;
+                    margin-bottom: 4px;
+                }
+                .voucher-recipient {
+                    font-size: 11.5px;
+                    margin-bottom: 4px;
+                    line-height: 1.4;
+                }
+                .voucher-declaration {
+                    font-size: 11px;
+                    color: #222;
+                    margin-top: 1px;
+                }
+                .voucher-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 11px;
+                    margin-bottom: 4px;
+                }
+                .voucher-table th, .voucher-table td {
+                    border: 1px solid #333;
+                    padding: 4px 6px;
+                }
+                .voucher-table th {
+                    background: #f1f3f5;
+                    font-weight: 700;
+                }
+                .total-row {
+                    font-weight: 800;
+                    background: #fafafa;
+                }
+                .voucher-words {
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: #111;
+                    margin: 3px 0 6px 0;
+                }
+                .voucher-signatures {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    margin-top: 8px;
+                    padding: 0 10px;
+                }
+                .sig-col {
+                    text-align: center;
+                    font-size: 10.5px;
+                    font-weight: 700;
+                }
+                .sig-line {
+                    border-top: 1px dashed #333;
+                    min-width: 165px;
+                    padding-top: 3px;
+                }
+                .voucher-proof {
+                    margin-top: 5px;
+                    font-size: 9.5px;
+                    color: #444;
+                    border-top: 1px solid #ddd;
+                    padding-top: 3px;
+                }
             </style>
-
         </head>
-
         <body>
-
             <div class="voucher-box">
-
-                <div class="header">
-
-                    <h1>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-
-                    <p>श्रीराम नगर भद्रावती</p>
-
-                    <span class="reg-tag">📜 Reg. No.: F-0016068(CDP)</span>
-
+                <div>
+                    <div class="voucher-header">
+                        <span class="org-name">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था, श्रीराम नगर, भद्रावती</span>
+                        <span class="reg-no">नोंदणी क्रमांक : F-0016068 (CDP)</span>
+                    </div>
+                    <div class="voucher-title">${escapeHTML(voucherTitleText)}</div>
+                    <div class="voucher-meta">
+                        <div><strong>व्हाउचर नं. :</strong> &nbsp;${escapeHTML(voucherNum)}</div>
+                        <div><strong>दिनांक :</strong> &nbsp;${escapeHTML(dateStr)}</div>
+                    </div>
+                    <div class="voucher-recipient">
+                        <div><strong>रक्कम घेणाऱ्याचे नांव :</strong> &nbsp;<span style="font-size:12.5px; font-weight:700;">${escapeHTML(item.name || '-')}</span></div>
+                        <div class="voucher-declaration">पावती लिहून देतो की, मला आज रोजी खालील तपशिलाप्रमाणे रक्कम <strong>${payMethodText}</strong> मिळाली.</div>
+                    </div>
+                    <table class="voucher-table">
+                        <thead>
+                            <tr>
+                                <th style="width:7%; text-align:center;">अ.क्र.</th>
+                                <th style="width:73%; text-align:center;">तपशिल</th>
+                                <th style="width:13%; text-align:center;">रुपये</th>
+                                <th style="width:7%; text-align:center;">पैसे</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:center; vertical-align:top;">१</td>
+                                <td style="vertical-align:top;">
+                                    <div>${escapeHTML(item.description || '-')}</div>
+                                    ${item.accountHead ? `<div style="font-size:9.5px; color:#555; margin-top:2px;"><strong>खर्च शिर्षक:</strong> ${escapeHTML(item.accountHead)}</div>` : ''}
+                                    ${isSplitMode ? `<div style="font-size:9.5px; color:#0b5ed7; font-weight:700; margin-top:2px;">(💵 रोख: ${formatIndianNum(item.cashOut)} &nbsp;|&nbsp; 🏦 बँक: ${formatIndianNum(item.bankOut)})</div>` : ''}
+                                </td>
+                                <td style="text-align:right; font-weight:700; vertical-align:top;">${rupeesFormatted}</td>
+                                <td style="text-align:center; vertical-align:top;">${paiseFormatted}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2" style="text-align:right; padding-right:12px;">एकूण रुपये :</td>
+                                <td style="text-align:right; font-size:12px;">${rupeesFormatted}</td>
+                                <td style="text-align:center;">${paiseFormatted}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="voucher-words">
+                        (अक्षरी : &nbsp;<strong>${escapeHTML(amountWords)}</strong> मिळाले.)
+                    </div>
+                    <div class="voucher-signatures">
+                        <div class="sig-col">
+                            <div class="sig-line">
+                                ( अध्यक्ष / सचिव / कोषाध्यक्ष )<br>
+                                <span style="font-size:9.5px; font-weight:600;">स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                            </div>
+                        </div>
+                        <div class="sig-col">
+                            <div class="sig-line">
+                                ( ${escapeHTML(item.name || 'पैसे घेणारा')} )<br>
+                                <span style="font-size:9.5px; font-weight:600;">पैसे घेणाऱ्याची स्वाक्षरी</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="voucher-proof">
+                        <strong>सोबत जोडलेला पुरावा :</strong> &nbsp;${proofHtml}
+                    </div>
                 </div>
-
-                <div class="voucher-title">${escapeHTML(voucherTitleText)}</div>
-
-                <table class="details-table">
-
-                    <tr>
-
-                        <td style="width:50%;"><strong>व्हाउचर क्र.:</strong> ${escapeHTML(voucherNum)}</td>
-
-                        <td style="text-align:right;"><strong>दिनांक:</strong> ${escapeHTML(item.date)}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td colspan="2"><strong>नांव / तपशील:</strong> ${escapeHTML(item.name || '-')}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td colspan="2"><strong>लेखा शिर्षक (Head):</strong> ${escapeHTML(item.accountHead || '-')}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td colspan="2"><strong>पेमेंट मोड:</strong> ${isSplitMode ? `💵 रोख: ${formatIndianNum(item.cashOut)} + 🏦 बँक: ${formatIndianNum(item.bankOut)}` : escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td colspan="2" style="padding-top:4px;">
-
-                            <strong>रक्कम:</strong> 
-
-                            <span class="amount-highlight">${formatIndianNum(expenseAmount)}</span>
-
-                            <div class="words-text">रक्कम अक्षरी: ${escapeHTML(amountWords)}</div>
-
-                        </td>
-
-                    </tr>
-
-                </table>
-
-                <div class="bottom-auth-section">
-
-                    <div class="sig-box">
-
-                        <div style="height:15px;"></div>
-
-                        स्वाक्षरी / सही
-
-                    </div>
-
-                    <div class="official-stamp">
-
-                        <span>स्वामी गोपाल तीर्थ बहु. संस्था</span>
-
-                        <span class="stamp-sub">भद्रावती F-0016068</span>
-
-                        <span class="stamp-verified">✓ पास / अदा</span>
-
-                    </div>
-
-                    <div class="sig-box">
-
-                        <div style="height:15px;"></div>
-
-                        सचिव / अध्यक्ष
-
-                    </div>
-
-                </div>
-
             </div>
-
             <script>window.onload = function() { window.print(); };<\/script>
-
         </body>
-
         </html>`;
 
-
-
         const printWin = window.open('', '_blank');
-
         if (!printWin) {
-
             alert('कृपया ब्राउझरचे Pop-up blocker बंद करा.');
-
             return;
-
         }
-
         printWin.document.open();
-
         printWin.document.write(voucherHtml);
-
         printWin.document.close();
-
     }
 
 
