@@ -5537,6 +5537,8 @@ function populateStatementYearsDynamically(data) {
 
                         name: item.name || '-',
 
+                        accountHead: item.accountHead || '',
+
                         description: item.description || '-',
 
                         cashIn: Number(item.cashIn) || 0,
@@ -8620,6 +8622,8 @@ tr.innerHTML = `
 
                         else if (item.paymentMode.startsWith('contra')) mLabel = 'CONTRA';
 
+                        else if (item.paymentMode === 'cash_bank' || item.paymentMode === 'split') mLabel = '💵+🏦 रोख+बँक';
+
                         rowsHtml += `
 
                         <tr>
@@ -9098,7 +9102,7 @@ tr.innerHTML = `
 
                             <tr><td colspan="2"><strong>कारण / तपशील:</strong> ${escapeHTML(item.description || '-')}</td></tr>
 
-                            <tr><td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
+                            <tr><td colspan="2"><strong>पेमेंट मोड:</strong> ${(item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashOut > 0 && item.bankOut > 0)) ? `💵 रोख: ${formatIndianNum(item.cashOut)} + 🏦 बँक: ${formatIndianNum(item.bankOut)}` : escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
 
                             <tr>
 
@@ -10829,12 +10833,13 @@ tr.innerHTML = `
 
     function downloadTemplate() {
         if (currentRole !== 'admin') return;
-        const headers = ['Date', 'Voucher/Pavti No.', 'Payment Mode', 'Name', 'Account Head', 'Description', 'Credit', 'Debit', 'Drive Link'];
-        const sample1 = ['2023-07-26', 'A/VSN 01', 'Cash', 'SWAMI MADHAVANAND TIRTH', 'आजीवन सभासद फी', 'Ajivan sabhasad nondni', '1000', '0', ''];
-        const sample2 = ['2023-11-23', 'VN 01', 'Bank', 'सौ. चंद्रकला नारायण गोडे', 'स्थावर मालमत्ता / प्लॉट खरेदी', 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक', '0', '600000', ''];
-        const csv = '\uFEFF' + headers.join(',') + '\n' + sample1.join(',') + '\n' + sample2.join(',');
+        const headers = ['Date', 'Voucher/Pavti No.', 'Payment Mode', 'Name', 'Account Head', 'Description', 'Credit', 'Debit', 'Cash Amount', 'Bank Amount', 'Drive Link'];
+        const sample1 = ['2023-07-26', 'A/VSN 01', 'Cash', 'SWAMI MADHAVANAND TIRTH', 'आजीवन सभासद फी', 'Ajivan sabhasad nondni', '1000', '0', '1000', '0', ''];
+        const sample2 = ['2023-11-23', 'VN 01', 'Bank', 'सौ. चंद्रकला नारायण गोडे', 'स्थावर मालमत्ता / प्लॉट खरेदी', 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक', '0', '600000', '0', '600000', ''];
+        const sample3 = ['2023-12-01', 'PN 150', 'cash_bank', 'श्री. रमेश पाटील', 'सामान्य देणगी', 'देणगी (रोख ₹4000 + बँक ₹6000)', '10000', '0', '4000', '6000', ''];
+        const csv = '\uFEFF' + headers.join(',') + '\n' + sample1.join(',') + '\n' + sample2.join(',') + '\n' + sample3.join(',');
         downloadFile(csv, 'TwoColumn_CashBook_Template.csv', 'text/csv;charset=utf-8;');
-        showToast('📄 Template downloaded with Account Head!');
+        showToast('📄 Template downloaded with Split Cash+Bank columns!');
     }
 
 
@@ -10851,7 +10856,7 @@ tr.innerHTML = `
 
         }
 
-        let csv = '\uFEFFDate,Voucher/Pavti No.,Payment Mode,Name,Account Head,Description,Credit,Debit,Cash_Bal,Bank_Bal,Total_Bal,Drive Link\n';
+        let csv = '\uFEFFDate,Voucher/Pavti No.,Payment Mode,Name,Account Head,Description,Credit,Debit,Cash_In,Bank_In,Cash_Bal,Bank_Bal,Total_Bal,Drive Link\n';
         transactionsData.forEach(t => {
             const v = `"${(t.voucher || '').replace(/"/g, '""')}"`;
             const m = `"${(t.paymentMode || 'bank').replace(/"/g, '""')}"`;
@@ -10859,7 +10864,9 @@ tr.innerHTML = `
             const h = `"${(t.accountHead || '').replace(/"/g, '""')}"`;
             const d = `"${(t.description || '').replace(/"/g, '""')}"`;
             const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
-            csv += `${t.date},${v},${m},${n},${h},${d},${t.credit || 0},${t.debit || 0},${t.cashBal || 0},${t.bankBal || 0},${t.totalBal || 0},${l}\n`;
+            const cin = t.cashIn || 0;
+            const bin = t.bankIn || 0;
+            csv += `${t.date},${v},${m},${n},${h},${d},${t.credit || 0},${t.debit || 0},${cin},${bin},${t.cashBal || 0},${t.bankBal || 0},${t.totalBal || 0},${l}\n`;
         });
 
         downloadFile(csv, 'SwamiGopalTirth_TwoColumn_Export.csv', 'text/csv');
@@ -10907,6 +10914,8 @@ tr.innerHTML = `
             const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc') || h.toLowerCase().includes('तपशील') || h.toLowerCase().includes('कारण'));
             const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit') || h.toLowerCase().includes('जमा') || h.toLowerCase().includes('in'));
             const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit') || h.toLowerCase().includes('खर्च') || h.toLowerCase().includes('out'));
+            const cashAmtIdx = headers.findIndex(h => h.toLowerCase().includes('cash amount') || h.toLowerCase().includes('cash_in') || h.toLowerCase().includes('रोख रक्कम') || h.toLowerCase().includes('cash_amt'));
+            const bankAmtIdx = headers.findIndex(h => h.toLowerCase().includes('bank amount') || h.toLowerCase().includes('bank_in') || h.toLowerCase().includes('बँक रक्कम') || h.toLowerCase().includes('bank_amt'));
 
 
 
@@ -10953,11 +10962,35 @@ tr.innerHTML = `
 
 
                 const headVal = (typeof headIdx !== 'undefined' && headIdx !== -1 && parts[headIdx]) ? parts[headIdx].trim() : '';
+                let cashAmt = (cashAmtIdx !== -1 && parts[cashAmtIdx]) ? parseIndianNum(parts[cashAmtIdx]) : 0;
+                let bankAmt = (bankAmtIdx !== -1 && parts[bankAmtIdx]) ? parseIndianNum(parts[bankAmtIdx]) : 0;
+
+                let finalMode = mode;
+                if (!finalMode) {
+                    if (cashAmt > 0 && bankAmt > 0) finalMode = 'cash_bank';
+                    else if (description.toLowerCase().includes('cash') || description.toLowerCase().includes('रोख')) finalMode = 'cash';
+                    else finalMode = 'bank';
+                } else if (finalMode.includes('cash_bank') || finalMode.includes('split') || (finalMode.includes('cash') && finalMode.includes('bank'))) {
+                    finalMode = 'cash_bank';
+                }
+
+                if (finalMode === 'cash_bank') {
+                    if (cashAmt === 0 && bankAmt === 0) {
+                        cashAmt = credit > 0 ? credit : 0;
+                    }
+                } else if (finalMode === 'cash' && cashAmt === 0) {
+                    cashAmt = credit > 0 ? credit : debit;
+                } else if (finalMode === 'bank' && bankAmt === 0) {
+                    bankAmt = credit > 0 ? credit : debit;
+                }
+
                 toAdd.push({
                     rawDate: rawDate,
                     date: formatDateToDisplay(rawDate),
                     voucher: voucher,
-                    paymentMode: mode || (description.toLowerCase().includes('cash') ? 'cash' : 'bank'),
+                    paymentMode: finalMode,
+                    cashAmount: cashAmt,
+                    bankAmount: bankAmt,
                     docUrl: docUrl,
                     name: name,
                     accountHead: headVal || (credit > 0 ? 'सामान्य देणगी' : 'कार्यालयीन व इतर खर्च'),
@@ -11380,7 +11413,9 @@ tr.innerHTML = `
 
         const voucherNum = item.voucher || '-';
 
-        const expenseAmount = (item.cashOut > 0) ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.credit > 0 ? item.credit : item.debit));
+        const isSplitMode = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashOut > 0 && item.bankOut > 0));
+
+        const expenseAmount = (item.debit > 0) ? item.debit : ((item.cashOut || 0) + (item.bankOut || 0));
 
         const amountWords = numberToMarathiWords(expenseAmount);
 
@@ -11526,7 +11561,7 @@ tr.innerHTML = `
 
                     <tr>
 
-                        <td colspan="2"><strong>पेमेंट मोड:</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
+                        <td colspan="2"><strong>पेमेंट मोड:</strong> ${isSplitMode ? `💵 रोख: ${formatIndianNum(item.cashOut)} + 🏦 बँक: ${formatIndianNum(item.bankOut)}` : escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
 
                     </tr>
 
