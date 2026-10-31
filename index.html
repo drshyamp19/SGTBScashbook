@@ -6751,9 +6751,8 @@ function populateStatementYearsDynamically(data) {
             if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
             updates.name = 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)';
-            updates.description = 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) शासकीय मुद्रांक व नोंदणी चालान (पांडुरंग मांडवकर पावती क्र. ४६ रोख देणगीतून थेट भरणा, ठराव क्र. ०२)';
-            updates.paymentMode = 'cash';
-            item.paymentMode = 'cash';
+            updates.description = 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)';
+            updates.paymentMode = 'Cash';
         } else if (debit === 33500 && (/PRABHAKAR/i.test(n) || /KALEKAR/i.test(n))) {
             if (v !== 'VN 04') { v = 'VN 04'; updates.voucher = v; item.voucher = v; }
             if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
@@ -6787,29 +6786,39 @@ function populateStatementYearsDynamically(data) {
         } else if (credit === 1007671 || /FDM/i.test(v) || (credit >= 1000000 && /FD/i.test(n))) {
             if (v !== 'FDM 01') { v = 'FDM 01'; updates.voucher = v; item.voucher = v; }
             if (head !== 'मुदत ठेव परतावा व व्याज') { head = 'मुदत ठेव परतावा व व्याज'; updates.accountHead = head; item.accountHead = head; }
-        } else if (/CD\s*0?1/i.test(v) || /VN\s*0?1\s*-\s*CD\s*0?1/i.test(v) || (credit === 11000 && (/BARODA/i.test(n) || /A\/VSN/i.test(d)))) {
+        } else if (/CD\s*0?1\b/i.test(v) || /VN\s*0?1\s*-\s*CD\s*0?1/i.test(v) || (credit === 11000 && (/BARODA/i.test(n) || /A\/VSN/i.test(d)))) {
             if (v !== 'CD 01') { v = 'CD 01'; updates.voucher = v; item.voucher = v; }
             if (head !== 'बँक भरणा (Cash to Bank)') { head = 'बँक भरणा (Cash to Bank)'; updates.accountHead = head; item.accountHead = head; }
-        } else if (/CD\s*0?2/i.test(v) || /VN\s*0?2\s*-\s*CD\s*0?2/i.test(v) || (credit === 33500 && /BARODA/i.test(n))) {
+        } else if (/CD\s*0?2\b/i.test(v) || /VN\s*0?2\s*-\s*CD\s*0?2/i.test(v) || (credit === 33500 && /BARODA/i.test(n))) {
             if (v !== 'CD 02') { v = 'CD 02'; updates.voucher = v; item.voucher = v; }
             if (head !== 'बँक भरणा (Cash to Bank)') { head = 'बँक भरणा (Cash to Bank)'; updates.accountHead = head; item.accountHead = head; }
         } else if (/IBT/i.test(v) || /SMS/i.test(d) || /PORD/i.test(d)) {
             const ibtMatch = v.match(/IBT\s*[-]?\s*(\d+)/i);
             const ibtNum = ibtMatch ? ibtMatch[1].padStart(2, '0') : '01';
-            const cleanV = IBT ;
+            const cleanV = `IBT ${ibtNum}`;
             if (v !== cleanV) { v = cleanV; updates.voucher = v; }
             if (head !== 'बँक चार्जेस व सेवा शुल्क') { head = 'बँक चार्जेस व सेवा शुल्क'; updates.accountHead = head; }
-        } else if (credit === 91800) {
-            if (v !== 'PN 46') { v = 'PN 46'; updates.voucher = v; item.voucher = v; }
-            if (head !== 'सामान्य देणगी') { head = 'सामान्य देणगी'; updates.accountHead = head; item.accountHead = head; }
-            updates.name = 'श्री. पांडुरंग सखारामजी मांडवकर (भांडवली देणगी)';
-            updates.description = 'प्लॉट क्र. ३७ व ३८ शासकीय चलन खर्चासाठी रोख देणगी (भांडवली देणगी ठराव क्र. ०२)';
-            updates.paymentMode = 'cash';
-            item.paymentMode = 'cash';
+        } else if (credit === 91800 && (v === 'PN 220' || (/उसनवार/i.test(v) && /2026/i.test(item.date || '')) || /समर्पण/i.test(d) || /समर्पण/i.test(head))) {
+            if (v !== 'PN 220') { v = 'PN 220'; updates.voucher = v; item.voucher = v; }
+            if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; item.accountHead = head; }
+            updates.name = 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)';
+            updates.description = 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.';
+            updates.paymentMode = 'bank';
+        } else if (credit === 91800 && (/उसनवार/i.test(v) || /उसनवार/i.test(d) || /मांडवकर/i.test(n))) {
+            if (v.startsWith('PN')) {
+                if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; }
+            } else {
+                if (v !== 'उसनवार ०१') { v = 'उसनवार ०१'; updates.voucher = v; }
+                if (head !== 'विश्वस्तांकडून उसनवार उचल') { head = 'विश्वस्तांकडून उसनवार उचल'; updates.accountHead = head; }
+            }
         } else if (v.startsWith('A/VSN') || /सभासद/i.test(d)) {
             if (head !== 'आजीवन सभासद फी') { head = 'आजीवन सभासद फी'; updates.accountHead = head; }
         } else if (v.startsWith('PN') || /पावती/i.test(v)) {
-            if (head !== 'सामान्य देणगी') { head = 'सामान्य देणगी'; updates.accountHead = head; }
+            if (credit === 91800 && /मांडवकर/i.test(n)) {
+                if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; }
+            } else {
+                if (head !== 'सामान्य देणगी') { head = 'सामान्य देणगी'; updates.accountHead = head; }
+            }
         } else {
             if (!head) {
                 head = (credit > 0) ? 'सामान्य देणगी' : 'कार्यालयीन व इतर खर्च';
@@ -6861,7 +6870,6 @@ function populateStatementYearsDynamically(data) {
         if (updates.name) item.name = updates.name;
         if (updates.description) item.description = updates.description;
         if (updates.accountHead) item.accountHead = updates.accountHead;
-        if (updates.paymentMode) item.paymentMode = updates.paymentMode;
 
         return updates;
     }
