@@ -2584,6 +2584,8 @@
 
                             <option value="cash">💵 Cash (हातातील रोख)</option>
 
+                            <option value="cash_bank">💵+🏦 रोख + बँक (Cash + Bank)</option>
+
                             <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
 
                             <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
@@ -2670,9 +2672,37 @@
 
                     <div class="field">
 
-                        <label>💰 Amount (₹) <span class="required-star">*</span></label>
+                        <label>💰 Amount (एकूण रक्कम ₹) <span class="required-star">*</span></label>
 
                         <input type="number" id="newAmount" placeholder="1000" step="0.01">
+
+                    </div>
+
+                    <div class="field full-width" id="splitAmountFields" style="display:none; background:#e0f2fe; padding:10px 14px; border-radius:8px; border:1.5px dashed #0284c7; margin-bottom:8px;">
+
+                        <div style="font-weight:700; color:#0369a1; margin-bottom:6px; font-size:12.5px;">💵+🏦 रोख आणि बँक विभागणी (Split Payment Details):</div>
+
+                        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+
+                            <div style="flex:1; min-width:140px;">
+
+                                <label style="font-size:12px; font-weight:600; color:#0d2b44;">💵 रोख रक्कम (Cash Amount ₹):</label>
+
+                                <input type="number" id="newCashAmount" placeholder="उदा. 4000" step="0.01" oninput="calculateSplitTotal('new')" style="background:#fff;">
+
+                            </div>
+
+                            <div style="flex:1; min-width:140px;">
+
+                                <label style="font-size:12px; font-weight:600; color:#0d2b44;">🏦 बँक रक्कम (Bank Amount ₹):</label>
+
+                                <input type="number" id="newBankAmount" placeholder="उदा. 6000" step="0.01" oninput="calculateSplitTotal('new')" style="background:#fff;">
+
+                            </div>
+
+                        </div>
+
+                        <div style="font-size:11px; color:#555; margin-top:4px;">* रोख आणि बँक दोन्ही रकमा भरल्यानंतर एकूण रक्कम आपोआप मोजली जाईल.</div>
 
                     </div>
 
@@ -3448,6 +3478,8 @@
 
                     <option value="cash">💵 Cash (हातातील रोख)</option>
 
+                    <option value="cash_bank">💵+🏦 रोख + बँक (Cash + Bank)</option>
+
                     <option value="contra_c2b">🔄 Contra: रोख बँकेत भरली (Cash to Bank)</option>
 
                     <option value="contra_b2c">🔄 Contra: बँकेतून रोख काढली (Bank to Cash)</option>
@@ -3492,9 +3524,35 @@
 
             <div>
 
-                <label>💰 Amount (₹) <span class="required-star">*</span></label>
+                <label>💰 Amount (एकूण रक्कम ₹) <span class="required-star">*</span></label>
 
                 <input type="number" id="editAmount" placeholder="1000" step="0.01">
+
+            </div>
+
+            <div class="full-width" id="editSplitAmountFields" style="display:none; background:#e0f2fe; padding:10px 14px; border-radius:8px; border:1.5px dashed #0284c7;">
+
+                <div style="font-weight:700; color:#0369a1; margin-bottom:6px; font-size:12.5px;">💵+🏦 रोख आणि बँक विभागणी (Split Payment Details):</div>
+
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+
+                    <div style="flex:1; min-width:140px;">
+
+                        <label style="font-size:12px; font-weight:600; color:#0d2b44;">💵 रोख रक्कम (Cash Amount ₹):</label>
+
+                        <input type="number" id="editCashAmount" placeholder="उदा. 4000" step="0.01" oninput="calculateSplitTotal('edit')" style="background:#fff;">
+
+                    </div>
+
+                    <div style="flex:1; min-width:140px;">
+
+                        <label style="font-size:12px; font-weight:600; color:#0d2b44;">🏦 बँक रक्कम (Bank Amount ₹):</label>
+
+                        <input type="number" id="editBankAmount" placeholder="उदा. 6000" step="0.01" oninput="calculateSplitTotal('edit')" style="background:#fff;">
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -4692,13 +4750,13 @@ function populateStatementYearsDynamically(data) {
 
             'वीस', 'एकवीस', 'बावीस', 'तेवीस', 'चोवीस', 'पंचवीस', 'सव्वीस', 'सत्तावीस', 'अठ्ठावीस', 'एकोणतीस',
 
-            'तीस', 'एकतीस', 'बत्तीस', 'तेहेतीस', 'चौतीस', 'पस्तीस', 'छत्तीस', 'सदतीस', 'अडतीस', 'एकेचाळीस',
+            'तीस', 'एकतीस', 'बत्तीस', 'तेहेतीस', 'चौतीस', 'पस्तीस', 'छत्तीस', 'सदतीस', 'अडतीस', 'एकोणचाळीस',
 
-            'चाळीस', 'एक्केचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास',
+            'चाळीस', 'एकेचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास',
 
             'पन्नास', 'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ',
 
-            'साठ', 'एकसष्ट', 'पासष्ट', 'त्रेसष्ट', 'चौसष्ट', 'पासष्ट', 'सहासष्ट', 'सदुसष्ट', 'अडुसष्ट', 'एकोणसत्तर',
+            'साठ', 'एकसष्ट', 'बासष्ट', 'त्रेसष्ट', 'चौसष्ट', 'पासष्ट', 'सहासष्ट', 'सदुसष्ट', 'अडुसष्ट', 'एकोणसत्तर',
 
             'सत्तर', 'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौऱ्याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी',
 
@@ -5461,6 +5519,7 @@ function populateStatementYearsDynamically(data) {
                     else if (item.paymentMode === 'contra_b2c') modeLabel = 'Bank->Cash';
 
                     else if (item.paymentMode === 'contra_c2b') modeLabel = 'Cash->Bank';
+                    else if (item.paymentMode === 'cash_bank' || item.paymentMode === 'split') modeLabel = 'CASH+BANK';
 
 
 
@@ -6045,9 +6104,17 @@ function populateStatementYearsDynamically(data) {
 
 
 
+    function getTodayIsoDate() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
     function parseToIsoDate(dateStr) {
 
-        if (!dateStr) return new Date().toISOString().split('T')[0];
+        if (!dateStr) return getTodayIsoDate();
 
         dateStr = String(dateStr).trim();
 
@@ -6087,7 +6154,7 @@ function populateStatementYearsDynamically(data) {
 
         }
 
-        return new Date().toISOString().split('T')[0];
+        return getTodayIsoDate();
 
     }
 
@@ -6187,7 +6254,14 @@ function populateStatementYearsDynamically(data) {
 
     function inferPaymentMode(item) {
 
-        if (item.paymentMode) return String(item.paymentMode).toLowerCase();
+        if (item.paymentMode) {
+            const pm = String(item.paymentMode).toLowerCase();
+            if (pm === 'cash_bank' || pm === 'split') return 'cash_bank';
+            return pm;
+        }
+        if ((item.cashAmount && Number(item.cashAmount) > 0) && (item.bankAmount && Number(item.bankAmount) > 0)) {
+            return 'cash_bank';
+        }
 
         const text = `${item.description || ''} ${item.name || ''} ${item.voucher || ''}`.toLowerCase();
 
@@ -6485,6 +6559,17 @@ function populateStatementYearsDynamically(data) {
 
 
 
+    function calculateSplitTotal(prefix) {
+        const cashElem = document.getElementById(prefix + 'CashAmount');
+        const bankElem = document.getElementById(prefix + 'BankAmount');
+        const amtElem = document.getElementById(prefix + 'Amount');
+        if (!cashElem || !bankElem || !amtElem) return;
+        const cash = parseFloat(cashElem.value) || 0;
+        const bank = parseFloat(bankElem.value) || 0;
+        const tot = roundMoney(cash + bank);
+        amtElem.value = tot > 0 ? tot : '';
+    }
+
     function handlePaymentModeChange() {
 
         const mode = document.getElementById('newPaymentMode').value;
@@ -6498,6 +6583,17 @@ function populateStatementYearsDynamically(data) {
         const typeSelect = document.getElementById('newType');
 
         const vSelect = document.getElementById('voucherTypeSelect');
+        const splitBox = document.getElementById('splitAmountFields');
+        const amountInput = document.getElementById('newAmount');
+
+        if (mode === 'cash_bank') {
+            if (splitBox) splitBox.style.display = 'block';
+            if (amountInput) amountInput.readOnly = true;
+            calculateSplitTotal('new');
+        } else {
+            if (splitBox) splitBox.style.display = 'none';
+            if (amountInput) amountInput.readOnly = false;
+        }
 
 
 
@@ -6651,6 +6747,17 @@ function populateStatementYearsDynamically(data) {
         const typeSelect = document.getElementById('editType');
 
         const vSelect = document.getElementById('editVoucherTypeSelect');
+        const editSplitBox = document.getElementById('editSplitAmountFields');
+        const editAmountInput = document.getElementById('editAmount');
+
+        if (mode === 'cash_bank') {
+            if (editSplitBox) editSplitBox.style.display = 'block';
+            if (editAmountInput) editAmountInput.readOnly = true;
+            calculateSplitTotal('edit');
+        } else {
+            if (editSplitBox) editSplitBox.style.display = 'none';
+            if (editAmountInput) editAmountInput.readOnly = false;
+        }
 
 
 
@@ -6747,7 +6854,7 @@ function populateStatementYearsDynamically(data) {
             updates.description = 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)';
             updates.paymentMode = 'bank';
             item._needsVN02Creation = true;
-        } else if (debit === 91800) {
+        } else if (debit === 91800 && (v === 'VN 03' || /राजेश/i.test(n) || /मत्ते/i.test(n) || /MH011275327202324E/i.test(d))) {
             if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
             if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
             updates.name = 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)';
@@ -6971,6 +7078,26 @@ function populateStatementYearsDynamically(data) {
                 bankIn = cr;
 
                 bankOut = dr;
+
+            } else if (mode === 'cash_bank' || mode === 'split') {
+
+                const cAmt = roundMoney(Number(item.cashAmount) || 0);
+
+                const bAmt = roundMoney(Number(item.bankAmount) || 0);
+
+                if (cr > 0) {
+
+                    cashIn = (cAmt + bAmt > 0) ? cAmt : cr;
+
+                    bankIn = (cAmt + bAmt > 0) ? bAmt : 0;
+
+                } else if (dr > 0) {
+
+                    cashOut = (cAmt + bAmt > 0) ? cAmt : 0;
+
+                    bankOut = (cAmt + bAmt > 0) ? bAmt : dr;
+
+                }
 
             } else if (mode === 'contra_c2b' || mode === 'contra') {
 
@@ -8819,7 +8946,9 @@ tr.innerHTML = `
 
             const isContra = (item.paymentMode || '').startsWith('contra');
 
-            const receiptAmount = (item.cashIn > 0) ? item.cashIn : (item.bankIn > 0 ? item.bankIn : (item.cashOut > 0 ? item.cashOut : (item.bankOut > 0 ? item.bankOut : (item.credit > 0 ? item.credit : item.debit))));
+            const isSplitMode = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashIn > 0 && item.bankIn > 0));
+
+            const receiptAmount = isCredit ? ((item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0))) : ((item.debit > 0) ? item.debit : ((item.cashOut || 0) + (item.bankOut || 0)));
 
             const amountWords = numberToMarathiWords(receiptAmount);
 
@@ -8869,7 +8998,7 @@ tr.innerHTML = `
 
                             <tr><td colspan="2"><strong>तपशील/कारण:</strong> ${escapeHTML(item.description || 'देणगी')}</td></tr>
 
-                            <tr><td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
+                            <tr><td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${isSplitMode ? `💵 रोख: ${formatIndianNum(item.cashIn)} + 🏦 बँक: ${formatIndianNum(item.bankIn)}` : escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td></tr>
 
                             <tr>
 
@@ -9103,6 +9232,10 @@ tr.innerHTML = `
 
                 modeHtml = '<span class="mode-badge mode-cash">💵 Cash</span>';
 
+            } else if (item.paymentMode === 'cash_bank' || item.paymentMode === 'split') {
+
+                modeHtml = '<span class="mode-badge" style="background:#0284c7; color:#fff;" title="रोख + बँक">💵+🏦 रोख+बँक</span>';
+
             } else if (item.paymentMode === 'contra_b2fd') {
 
                 modeHtml = '<span class="mode-badge mode-contra">🏦 Bank→FD</span>';
@@ -9286,6 +9419,7 @@ tr.innerHTML = `
             else if (item.paymentMode === 'contra_b2c') modeLabel = 'Bank→Cash';
 
             else if (item.paymentMode === 'contra_c2b') modeLabel = 'Cash→Bank';
+            else if (item.paymentMode === 'cash_bank' || item.paymentMode === 'split') modeLabel = 'CASH+BANK';
 
 
 
@@ -9600,6 +9734,7 @@ tr.innerHTML = `
             else if (item.paymentMode === 'contra_b2c') modeLabel = 'Bank->Cash';
 
             else if (item.paymentMode === 'contra_c2b') modeLabel = 'Cash->Bank';
+                    else if (item.paymentMode === 'cash_bank' || item.paymentMode === 'split') modeLabel = 'CASH+BANK';
 
 
 
@@ -10199,7 +10334,22 @@ tr.innerHTML = `
         try {
 
             const accountHeadVal = document.getElementById('newAccountHead') ? document.getElementById('newAccountHead').value : '';
-            const editAccountHeadVal = document.getElementById('editAccountHead') ? document.getElementById('editAccountHead').value : '';
+            let cashAmt = 0, bankAmt = 0;
+            if (modeVal === 'cash_bank') {
+                cashAmt = parseFloat(document.getElementById('newCashAmount').value) || 0;
+                bankAmt = parseFloat(document.getElementById('newBankAmount').value) || 0;
+                if (cashAmt <= 0 && bankAmt <= 0) {
+                    alert('कृपया रोख किंवा बँक यापैकी किमान एका रकान्यात योग्य रक्कम टाका.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '➕ Add Transaction';
+                    return;
+                }
+            } else if (modeVal === 'cash') {
+                cashAmt = amount;
+            } else if (modeVal === 'bank') {
+                bankAmt = amount;
+            }
+
             const payload = {
 
                 rawDate: rawDate,
@@ -10208,11 +10358,13 @@ tr.innerHTML = `
 
                 voucher: voucher,
 
-                accountHead: editAccountHeadVal,
-
                 accountHead: accountHeadVal,
 
                 paymentMode: modeVal,
+
+                cashAmount: cashAmt,
+
+                bankAmount: bankAmt,
 
                 docUrl: docUrl,
 
@@ -10251,6 +10403,10 @@ tr.innerHTML = `
             document.getElementById('newDesc').value = '';
 
             document.getElementById('newAmount').value = '';
+            document.getElementById('newAmount').readOnly = false;
+            if (document.getElementById('newCashAmount')) document.getElementById('newCashAmount').value = '';
+            if (document.getElementById('newBankAmount')) document.getElementById('newBankAmount').value = '';
+            if (document.getElementById('splitAmountFields')) document.getElementById('splitAmountFields').style.display = 'none';
 
             document.getElementById('btnUploadDrive').style.display = 'none';
 
@@ -10313,11 +10469,27 @@ tr.innerHTML = `
         document.getElementById('editVoucherTypeSelect').value = detectedType;
         document.getElementById('editVoucher').value = item.voucher || '';
 
-        document.getElementById('editPaymentMode').value = item.paymentMode || 'bank';
+        const editPm = item.paymentMode || 'bank';
+        document.getElementById('editPaymentMode').value = editPm;
         document.getElementById('editType').value = (item.credit > 0) ? 'credit' : 'debit';
 
         const amt = item.credit > 0 ? item.credit : item.debit;
         document.getElementById('editAmount').value = amt || 0;
+
+        const editSplitBox = document.getElementById('editSplitAmountFields');
+        const editAmtInput = document.getElementById('editAmount');
+        if (editPm === 'cash_bank' || editPm === 'split' || (item.cashAmount > 0 && item.bankAmount > 0)) {
+            document.getElementById('editPaymentMode').value = 'cash_bank';
+            if (editSplitBox) editSplitBox.style.display = 'block';
+            if (editAmtInput) editAmtInput.readOnly = true;
+            document.getElementById('editCashAmount').value = item.cashAmount || (item.cashIn > 0 ? item.cashIn : item.cashOut) || '';
+            document.getElementById('editBankAmount').value = item.bankAmount || (item.bankIn > 0 ? item.bankIn : item.bankOut) || '';
+        } else {
+            if (editSplitBox) editSplitBox.style.display = 'none';
+            if (editAmtInput) editAmtInput.readOnly = false;
+            document.getElementById('editCashAmount').value = '';
+            document.getElementById('editBankAmount').value = '';
+        }
         const editHeadSelect = document.getElementById('editAccountHead');
         const editFlowType = (item.credit > 0) ? 'credit' : 'debit';
 
@@ -10374,6 +10546,11 @@ tr.innerHTML = `
         document.getElementById('editModalOverlay').style.display = 'none';
 
         document.getElementById('editEntryId').value = '';
+        const editSplitBox = document.getElementById('editSplitAmountFields');
+        if (editSplitBox) editSplitBox.style.display = 'none';
+        if (document.getElementById('editCashAmount')) document.getElementById('editCashAmount').value = '';
+        if (document.getElementById('editBankAmount')) document.getElementById('editBankAmount').value = '';
+        if (document.getElementById('editAmount')) document.getElementById('editAmount').readOnly = false;
 
         pendingEditFiles = [];
 
@@ -10505,6 +10682,23 @@ tr.innerHTML = `
 
         try {
 
+            const editHeadVal = document.getElementById('editAccountHead') ? document.getElementById('editAccountHead').value : '';
+            let editCashAmt = 0, editBankAmt = 0;
+            if (modeVal === 'cash_bank') {
+                editCashAmt = parseFloat(document.getElementById('editCashAmount').value) || 0;
+                editBankAmt = parseFloat(document.getElementById('editBankAmount').value) || 0;
+                if (editCashAmt <= 0 && editBankAmt <= 0) {
+                    alert('कृपया रोख किंवा बँक यापैकी किमान एका रकान्यात योग्य रक्कम टाका.');
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = '💾 बदल सेव्ह करा';
+                    return;
+                }
+            } else if (modeVal === 'cash') {
+                editCashAmt = amount;
+            } else if (modeVal === 'bank') {
+                editBankAmt = amount;
+            }
+
             const payload = {
 
                 rawDate: rawDate,
@@ -10513,7 +10707,13 @@ tr.innerHTML = `
 
                 voucher: voucher,
 
+                accountHead: editHeadVal,
+
                 paymentMode: modeVal,
+
+                cashAmount: editCashAmt,
+
+                bankAmount: editBankAmt,
 
                 docUrl: docUrl,
 
@@ -10952,7 +11152,9 @@ tr.innerHTML = `
 
         const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
 
-        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
+        const isSplitMode = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashIn > 0 && item.bankIn > 0));
+
+        const receiptAmount = (item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0));
 
         const amountWords = numberToMarathiWords(receiptAmount);
 
@@ -11082,7 +11284,7 @@ tr.innerHTML = `
 
                     <tr>
 
-                        <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
+                        <td colspan="2"><strong>पेमेंट प्रकार (Mode):</strong> ${isSplitMode ? `💵 रोख: ${formatIndianNum(item.cashIn)} + 🏦 बँक: ${formatIndianNum(item.bankIn)}` : escapeHTML((item.paymentMode || 'Bank').toUpperCase())}</td>
 
                     </tr>
 
@@ -11420,7 +11622,9 @@ tr.innerHTML = `
 
         const cleanReceiptNum = getCleanReceiptNumber(item.voucher);
 
-        const receiptAmount = (item.cashIn > 0) ? item.cashIn : item.bankIn;
+        const isSplitMode = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashIn > 0 && item.bankIn > 0));
+
+        const receiptAmount = (item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0));
 
         const amountWords = numberToMarathiWords(receiptAmount);
 
@@ -11428,7 +11632,7 @@ tr.innerHTML = `
 
         const descText = item.description ? `📝 *तपशील:* ${item.description}\n` : '';
 
-        const modeText = `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
+        const modeText = isSplitMode ? `💳 *पेमेंट प्रकार:* रोख: ${formatIndianNum(item.cashIn)} + बँक: ${formatIndianNum(item.bankIn)}\n` : `💳 *पेमेंट प्रकार:* ${(item.paymentMode || 'Bank').toUpperCase()}\n`;
 
 
 
