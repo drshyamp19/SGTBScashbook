@@ -7009,6 +7009,7 @@ function populateStatementYearsDynamically(data) {
 
         data.sort((a, b) => {
 
+            // 1. प्राथमिक क्रम: तारीख (Date Ascending)
             const dateA = a.rawDate || parseToIsoDate(a.date);
 
             const dateB = b.rawDate || parseToIsoDate(b.date);
@@ -7017,6 +7018,40 @@ function populateStatementYearsDynamically(data) {
 
 
 
+            // 2. द्वितीय क्रम: एकाच तारखेसाठी लेखा प्रवाह प्राधान्यक्रम (Accounting Flow Tier)
+            // Tier 1: सर्व जमा / पावत्या (Receipts / Jama: PN, A/VSN, FDM, Credit > 0, Bank to Cash)
+            // Tier 2: सर्व खर्च देयके (Expenses / Kharch: VN, IBT, Debit > 0)
+            // Tier 3: रोख रक्कम बँकेत भरणा (Contra: CD, Cash to Bank) - हा दिवसभराची रोख जमा झाल्यावरच शेवटी यावा
+            const getFlowTier = (item) => {
+                const mode = (item.paymentMode || '').toLowerCase();
+                const v = (item.voucher || '').toUpperCase();
+                const desc = (item.description || '').toLowerCase();
+                if (mode === 'contra_c2b' || mode === 'contra' || v.startsWith('CD') || desc.includes('बँक भरणा') || desc.includes('cash to bank') || desc.includes('cash deposited')) {
+                    return 3;
+                }
+                if (mode === 'contra_b2c') {
+                    return 1;
+                }
+                if (Number(item.debit) > 0 || (Number(item.cashOut) > 0 || Number(item.bankOut) > 0) || v.startsWith('VN') || v.startsWith('IBT')) {
+                    return 2;
+                }
+                return 1; // Receipts / Jama default
+            };
+
+            const tierA = getFlowTier(a);
+            const tierB = getFlowTier(b);
+            if (tierA !== tierB) return tierA - tierB;
+
+
+
+            // 3. तृतीय क्रम: युझरने नोंद केल्याची अचूक वेळ (Creation Timestamp)
+            const cA = Number(a.createdAt) || 0;
+            const cB = Number(b.createdAt) || 0;
+            if (cA && cB && cA !== cB) return cA - cB;
+
+
+
+            // 4. चतुर्थ क्रम: व्हाउचर नंबर नैसर्गिक क्रम (उदा. PN 185 नंतर PN 186)
             const vA = (a.voucher || '').trim();
 
             const vB = (b.voucher || '').trim();
@@ -10360,6 +10395,8 @@ tr.innerHTML = `
 
                 date: formattedDate,
 
+                createdAt: Date.now(),
+
                 voucher: voucher,
 
                 accountHead: accountHeadVal,
@@ -10987,6 +11024,7 @@ tr.innerHTML = `
                 toAdd.push({
                     rawDate: rawDate,
                     date: formatDateToDisplay(rawDate),
+                    createdAt: (Date.now() + i),
                     voucher: voucher,
                     paymentMode: finalMode,
                     cashAmount: cashAmt,
