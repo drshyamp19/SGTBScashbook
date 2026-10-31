@@ -3230,35 +3230,7 @@
 
         <div id="tabPanelMgmt" class="tab-panel-section admin-item-block">
 
-        <!-- CA AUDIT SYNC & AUTO CORRECTION ACTION -->
-        <div class="card" style="border-left: 4px solid #0d6efd; background: #f0f6ff; margin-bottom: 20px;">
-            <div class="flex-between">
-                <div>
-                    <h2 style="color: #0d6efd; margin-bottom: 4px;">🎯 CA ऑडिटनुसार व्हाउचर्स व नोंदी थेट दुरुस्त करा (Audit Auto Sync)</h2>
-                    <div style="font-size: 13px; color: #475569;">
-                        • प्लॉट खरेदी व्हाउचर्स विभाजन (VN 01: ₹६,००,००० व VN 02: ₹७,००,०००)<br>
-                        • चालान नोंद (VN 03: ₹९१,८००) व विश्वस्त समर्पण देणगी (PN 220: ₹९१,८००)<br>
-                        • Contra बँक भरणा (CD 01: ₹११,०००), मुदत ठेव परत (FDM 01: ₹१०,०७,६७१) व VN 11 (₹८७,५००) दुरुस्ती
-                    </div>
-                </div>
-                <div>
-                    <button class="btn btn-primary btn-sm" onclick="syncAllAuditFixesToCloud()">🔄 सर्व व्हाउचर्स दुरुस्त करा</button>
-                </div>
-            </div>
-        </div>
 
-        <!-- 29 OCT 2026 TRUSTEE RESOLUTION ACTION -->
-        <div class="card" style="border-left: 4px solid #198754; background: #f8fff9; margin-bottom: 20px;">
-            <div class="flex-between">
-                <div>
-                    <h2 style="color: #198754; margin-bottom: 4px;">📜 विश्वस्त उसनवार समर्पण (२९ ऑक्टो २०२६ ठराव)</h2>
-                    <div style="font-size: 13px; color: #555;">श्री. पांडुरंग सखारामजी मांडवकर यांची ₹९१,८०० उसनवार रक्कम कायम देणगी खाती समर्पित करणे (पावती क्र. PN 220)</div>
-                </div>
-                <div>
-                    <button class="btn btn-success btn-sm" onclick="recordPandurangMandavkarDonation()">✍️ समर्पण पावती (PN 220) नोंदवा</button>
-                </div>
-            </div>
-        </div>
 
 
             <div class="card">
@@ -7468,79 +7440,7 @@ function populateStatementYearsDynamically(data) {
                     list.push(rec);
                 });
 
-                // Auto-create VN 02 if missing
-                const hasVN02 = list.some(t => t.voucher === 'VN 02' || (Number(t.debit) === 700000 && /CHANDRAKALA/i.test(t.name || '')));
-                if (!hasVN02) {
-                    const vn2Payload = {
-                        voucher: 'VN 02',
-                        debit: 700000,
-                        credit: 0,
-                        name: 'सौ. चंद्रकला नारायण गोडे',
-                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
-                        description: 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)',
-                        paymentMode: 'bank',
-                        date: '23-Nov-2023',
-                        rawDate: '2023-11-23',
-                        fy: '2023-24'
-                    };
-                    list.push({ id: 'LOCAL_VN_02', ...vn2Payload });
-                    if (currentRole === 'admin' && !window._isAddingVN02 && db) {
-                        window._isAddingVN02 = true;
-                        db.collection('transactions').add(vn2Payload).then(() => {
-                            window._isAddingVN02 = false;
-                        }).catch(() => { window._isAddingVN02 = false; });
-                    }
-                }
-
-                // Auto-create PN 220 if missing
-                const hasPN220 = list.some(t => t.voucher === 'PN 220' || (Number(t.credit) === 91800 && (t.date || '').includes('2026')));
-                if (!hasPN220) {
-                    const pn220Payload = {
-                        voucher: 'PN 220',
-                        credit: 91800,
-                        debit: 0,
-                        name: 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)',
-                        accountHead: 'उसनवार समर्पण देणगी',
-                        description: 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.',
-                        paymentMode: 'bank',
-                        date: '29-Oct-2026',
-                        rawDate: '2026-10-29',
-                        fy: '2026-27'
-                    };
-                    list.push({ id: 'LOCAL_PN_220', ...pn220Payload });
-                    if (currentRole === 'admin' && !window._isAddingPN220 && db) {
-                        window._isAddingPN220 = true;
-                        db.collection('transactions').add(pn220Payload).then(() => {
-                            window._isAddingPN220 = false;
-                        }).catch(() => { window._isAddingPN220 = false; });
-                    }
-                }
-
-                // Auto-create VN 03 if missing
-                const hasVN03 = list.some(t => t.voucher === 'VN 03' || Number(t.debit) === 91800);
-                if (!hasVN03) {
-                    const vn3Payload = {
-                        voucher: 'VN 03',
-                        debit: 91800,
-                        credit: 0,
-                        name: 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)',
-                        accountHead: 'स्थावर मालमत्ता / प्लॉट खरेदी',
-                        description: 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)',
-                        paymentMode: 'Cash',
-                        date: '22-Nov-2023',
-                        rawDate: '2023-11-22',
-                        fy: '2023-24'
-                    };
-                    list.push({ id: 'LOCAL_VN_03', ...vn3Payload });
-                    if (currentRole === 'admin' && !window._isAddingVN03 && db) {
-                        window._isAddingVN03 = true;
-                        db.collection('transactions').add(vn3Payload).then(() => {
-                            window._isAddingVN03 = false;
-                        }).catch(() => { window._isAddingVN03 = false; });
-                    }
-                }
-
-                if (pendingCloudFixes.length > 0 && currentRole === 'admin' && !isAutoCleanupRunning) {
+                if (pendingCloudFixes.length > 0 && currentRole === 'admin' && !isAutoCleanupRunning && list.length > 0) {
                     isAutoCleanupRunning = true;
                     const batch = db.batch();
                     pendingCloudFixes.forEach(fix => {
@@ -10728,19 +10628,13 @@ tr.innerHTML = `
 
 
     function downloadTemplate() {
-
         if (currentRole !== 'admin') return;
-
-        const headers = ['Date', 'Voucher/Pavti No.', 'Payment Mode', 'Drive Link', 'Name', 'Description', 'Credit', 'Debit'];
-
-        const sample = ['2026-04-01', 'PN 01', 'bank', 'https://...', 'रमेश पाटील', 'देणगी', '5000', '0'];
-
-        const csv = headers.join(',') + '\n' + sample.join(',');
-
-        downloadFile(csv, 'TwoColumn_CashBook_Template.csv', 'text/csv');
-
-        showToast('📄 Template downloaded!');
-
+        const headers = ['Date', 'Voucher/Pavti No.', 'Payment Mode', 'Name', 'Account Head', 'Description', 'Credit', 'Debit', 'Drive Link'];
+        const sample1 = ['2023-07-26', 'A/VSN 01', 'Cash', 'SWAMI MADHAVANAND TIRTH', 'आजीवन सभासद फी', 'Ajivan sabhasad nondni', '1000', '0', ''];
+        const sample2 = ['2023-11-23', 'VN 01', 'Bank', 'सौ. चंद्रकला नारायण गोडे', 'स्थावर मालमत्ता / प्लॉट खरेदी', 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक', '0', '600000', ''];
+        const csv = '\uFEFF' + headers.join(',') + '\n' + sample1.join(',') + '\n' + sample2.join(',');
+        downloadFile(csv, 'TwoColumn_CashBook_Template.csv', 'text/csv;charset=utf-8;');
+        showToast('📄 Template downloaded with Account Head!');
     }
 
 
@@ -10757,22 +10651,15 @@ tr.innerHTML = `
 
         }
 
-        let csv = 'Date,Voucher/Pavti No.,Payment Mode,Drive Link,Name,Description,Credit,Debit,Cash_Bal,Bank_Bal,Total_Bal\n';
-
+        let csv = '\uFEFFDate,Voucher/Pavti No.,Payment Mode,Name,Account Head,Description,Credit,Debit,Cash_Bal,Bank_Bal,Total_Bal,Drive Link\n';
         transactionsData.forEach(t => {
-
             const v = `"${(t.voucher || '').replace(/"/g, '""')}"`;
-
             const m = `"${(t.paymentMode || 'bank').replace(/"/g, '""')}"`;
-
-            const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
-
             const n = `"${(t.name || '').replace(/"/g, '""')}"`;
-
+            const h = `"${(t.accountHead || '').replace(/"/g, '""')}"`;
             const d = `"${(t.description || '').replace(/"/g, '""')}"`;
-
-            csv += `${t.date},${v},${m},${l},${n},${d},${t.credit || 0},${t.debit || 0},${t.cashBal},${t.bankBal},${t.totalBal}\n`;
-
+            const l = `"${(t.docUrl || '').replace(/"/g, '""')}"`;
+            csv += `${t.date},${v},${m},${n},${h},${d},${t.credit || 0},${t.debit || 0},${t.cashBal || 0},${t.bankBal || 0},${t.totalBal || 0},${l}\n`;
         });
 
         downloadFile(csv, 'SwamiGopalTirth_TwoColumn_Export.csv', 'text/csv');
@@ -10811,21 +10698,15 @@ tr.innerHTML = `
 
             const headers = parseCSVLine(lines[0]);
 
-            const dateIdx = headers.findIndex(h => h.toLowerCase().includes('date'));
-
-            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('pavti') || h.toLowerCase().includes('bill'));
-
-            const modeIdx = headers.findIndex(h => h.toLowerCase().includes('mode'));
-
+            const dateIdx = headers.findIndex(h => h.toLowerCase().includes('date') || h.toLowerCase().includes('दिनांक'));
+            const voucherIdx = headers.findIndex(h => h.toLowerCase().includes('voucher') || h.toLowerCase().includes('pavti') || h.toLowerCase().includes('bill') || h.toLowerCase().includes('व्हाउचर') || h.toLowerCase().includes('पावती'));
+            const modeIdx = headers.findIndex(h => h.toLowerCase().includes('mode') || h.toLowerCase().includes('मोड'));
             const docUrlIdx = headers.findIndex(h => h.toLowerCase().includes('link') || h.toLowerCase().includes('drive') || h.toLowerCase().includes('url'));
-
-            const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
-
-            const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc'));
-
-            const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit'));
-
-            const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit'));
+            const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name') || h.toLowerCase().includes('नाव'));
+            const headIdx = headers.findIndex(h => h.toLowerCase().includes('head') || h.toLowerCase().includes('शीर्षक') || h.toLowerCase().includes('शिर्षक'));
+            const descIdx = headers.findIndex(h => h.toLowerCase().includes('description') || h.toLowerCase().includes('desc') || h.toLowerCase().includes('तपशील') || h.toLowerCase().includes('कारण'));
+            const creditIdx = headers.findIndex(h => h.toLowerCase().includes('credit') || h.toLowerCase().includes('जमा') || h.toLowerCase().includes('in'));
+            const debitIdx = headers.findIndex(h => h.toLowerCase().includes('debit') || h.toLowerCase().includes('खर्च') || h.toLowerCase().includes('out'));
 
 
 
@@ -10871,26 +10752,18 @@ tr.innerHTML = `
 
 
 
+                const headVal = (typeof headIdx !== 'undefined' && headIdx !== -1 && parts[headIdx]) ? parts[headIdx].trim() : '';
                 toAdd.push({
-
                     rawDate: rawDate,
-
                     date: formatDateToDisplay(rawDate),
-
                     voucher: voucher,
-
                     paymentMode: mode || (description.toLowerCase().includes('cash') ? 'cash' : 'bank'),
-
                     docUrl: docUrl,
-
                     name: name,
-
+                    accountHead: headVal || (credit > 0 ? 'सामान्य देणगी' : 'कार्यालयीन व इतर खर्च'),
                     description: description,
-
                     credit: credit,
-
                     debit: debit
-
                 });
 
             }
