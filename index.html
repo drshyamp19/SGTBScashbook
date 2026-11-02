@@ -3703,10 +3703,17 @@
     function generateReceiptQRCodeSVG(text) {
         try {
             if (typeof qrcode !== 'function') return '';
+            if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs["UTF-8"]) {
+                qrcode.stringToBytes = qrcode.stringToBytesFuncs["UTF-8"];
+            }
             const qr = qrcode(0, 'M');
             qr.addData(text);
             qr.make();
-            return qr.createSvgTag(2.2, 1);
+            let svg = qr.createSvgTag({ scalable: true, margin: 2, cellSize: 2 });
+            if (svg) {
+                svg = svg.replace('<svg ', '<svg style="width:100%; height:100%; display:block;" ');
+            }
+            return svg;
         } catch(e) {
             console.warn('QR code gen error:', e);
             return '';
@@ -6604,6 +6611,7 @@ function populateStatementYearsDynamically(data) {
     function normalizeTransactionRecord(item) {
         if (!item) return {};
         const updates = {};
+        if (item.userEdited) return updates;
 
         let v = (item.voucher || '').trim();
         let n = (item.name || '').trim();
@@ -6614,17 +6622,17 @@ function populateStatementYearsDynamically(data) {
 
         // 1. CA AUDIT MASTER 11 VOUCHERS & FINANCIAL STATEMENTS NORMALIZATION
         if (debit === 600000 && /CHANDRAKALA/i.test(n)) {
-            if (v !== 'VN 01') { v = 'VN 01'; updates.voucher = v; item.voucher = v; }
-            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
-            updates.name = 'सौ. चंद्रकला नारायण गोडे';
-            updates.description = 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)';
-            updates.paymentMode = 'bank';
+            if (!v) { v = 'VN 01'; updates.voucher = v; item.voucher = v; }
+            if (!head) { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+            if (!n) { updates.name = 'सौ. चंद्रकला नारायण गोडे'; }
+            if (!d) { updates.description = 'मौजा घुटकळा प्लॉट नं. ३७ खरेदी देयक (धनादेश क्र. 000002)'; }
+            if (!item.paymentMode) { updates.paymentMode = 'bank'; }
         } else if (debit === 700000 && /CHANDRAKALA/i.test(n)) {
-            if (v !== 'VN 02') { v = 'VN 02'; updates.voucher = v; item.voucher = v; }
-            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
-            updates.name = 'सौ. चंद्रकला नारायण गोडे';
-            updates.description = 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)';
-            updates.paymentMode = 'bank';
+            if (!v) { v = 'VN 02'; updates.voucher = v; item.voucher = v; }
+            if (!head) { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+            if (!n) { updates.name = 'सौ. चंद्रकला नारायण गोडे'; }
+            if (!d) { updates.description = 'मौजा घुटकळा प्लॉट नं. ३८ खरेदी देयक (धनादेश क्र. 000003)'; }
+            if (!item.paymentMode) { updates.paymentMode = 'bank'; }
         } else if ((debit === 1300000 || debit === 1300000.0) || (debit >= 1200000 && (/CHANDRAKALA/i.test(n) || /PLOT/i.test(d)))) {
             // Split 13L combined record into VN 01 (600,000) and trigger VN 02 (700,000)
             if (v !== 'VN 01') { v = 'VN 01'; updates.voucher = v; item.voucher = v; }
@@ -6635,11 +6643,11 @@ function populateStatementYearsDynamically(data) {
             updates.paymentMode = 'bank';
             item._needsVN02Creation = true;
         } else if (debit === 91800 && (v === 'VN 03' || /राजेश/i.test(n) || /मत्ते/i.test(n) || /MH011275327202324E/i.test(d))) {
-            if (v !== 'VN 03') { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
-            if (head !== 'स्थावर मालमत्ता / प्लॉट खरेदी') { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
-            updates.name = 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)';
-            updates.description = 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)';
-            updates.paymentMode = 'Cash';
+            if (!v) { v = 'VN 03'; updates.voucher = v; item.voucher = v; }
+            if (!head) { head = 'स्थावर मालमत्ता / प्लॉट खरेदी'; updates.accountHead = head; item.accountHead = head; }
+            if (!n) { updates.name = 'श्री. राजेश नामदेवराव मत्ते (अर्जनवीस / दस्तलेखक)'; }
+            if (!d) { updates.description = 'प्लॉट ३७ (GRN MH011275327202324E - ₹४२,४००) व प्लॉट ३८ (GRN MH011276183202324E - ₹४९,४००) चे शासकीय चालान भरले. अदा करणारे: श्री. पांडुरंग मांडवकर (उसनवार)'; }
+            if (!item.paymentMode) { updates.paymentMode = 'Cash'; }
         } else if (debit === 33500 && (/PRABHAKAR/i.test(n) || /KALEKAR/i.test(n))) {
             if (v !== 'VN 04') { v = 'VN 04'; updates.voucher = v; item.voucher = v; }
             if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; item.accountHead = head; }
@@ -6662,11 +6670,11 @@ function populateStatementYearsDynamically(data) {
             if (v !== 'VN 10') { v = 'VN 10'; updates.voucher = v; item.voucher = v; }
             if (head !== 'शेड, बांधकाम व विकास कार्य') { head = 'शेड, बांधकाम व विकास कार्य'; updates.accountHead = head; }
         } else if (debit === 87500 && (/PANDURANG/i.test(n) || /MANDAVKAR/i.test(n) || /MANDAOKAR/i.test(n))) {
-            if (v !== 'VN 11') { v = 'VN 11'; updates.voucher = v; item.voucher = v; }
-            if (head !== 'खर्च परतफेड (विश्वस्त)') { head = 'खर्च परतफेड (विश्वस्त)'; updates.accountHead = head; item.accountHead = head; }
-            updates.name = 'श्री. पांडुरंग सखाराम मांडवकर (विश्वस्त)';
-            updates.paymentMode = 'bank';
-            updates.description = '1) मारोती वेल्डिंग & फॅब्रिकेशन (लोखंडी काम) ₹२७,२०० + 2) के. अँड के. अर्थ मूव्हर्स (मुरूम/जेसीबी) ₹६०,३०० - एकूण ₹८७,५०० (धनादेश क्र. 000013)';
+            if (!v) { v = 'VN 11'; updates.voucher = v; item.voucher = v; }
+            if (!head) { head = 'खर्च परतफेड (विश्वस्त)'; updates.accountHead = head; item.accountHead = head; }
+            if (!n) { updates.name = 'श्री. पांडुरंग सखाराम मांडवकर (विश्वस्त)'; }
+            if (!item.paymentMode) { updates.paymentMode = 'bank'; }
+            if (!d) { updates.description = '1) मारोती वेल्डिंग & फॅब्रिकेशन (लोखंडी काम) ₹२७,२०० + 2) के. अँड के. अर्थ मूव्हर्स (मुरूम/जेसीबी) ₹६०,३०० - एकूण ₹८७,५०० (धनादेश क्र. 000013)'; }
         } else if (debit === 1000000 && (/FDR/i.test(d) || /FD/i.test(v) || /FD/i.test(d))) {
             if (v !== 'FD 01') { v = 'FD 01'; updates.voucher = v; item.voucher = v; }
             if (head !== 'बँक मुदत ठेव (FD)') { head = 'बँक मुदत ठेव (FD)'; updates.accountHead = head; item.accountHead = head; }
@@ -6686,11 +6694,11 @@ function populateStatementYearsDynamically(data) {
             if (v !== cleanV) { v = cleanV; updates.voucher = v; }
             if (head !== 'बँक चार्जेस व सेवा शुल्क') { head = 'बँक चार्जेस व सेवा शुल्क'; updates.accountHead = head; }
         } else if (credit === 91800 && (v === 'PN 220' || (/उसनवार/i.test(v) && /2026/i.test(item.date || '')) || /समर्पण/i.test(d) || /समर्पण/i.test(head))) {
-            if (v !== 'PN 220') { v = 'PN 220'; updates.voucher = v; item.voucher = v; }
-            if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; item.accountHead = head; }
-            updates.name = 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)';
-            updates.description = 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.';
-            updates.paymentMode = 'bank';
+            if (!v) { v = 'PN 220'; updates.voucher = v; item.voucher = v; }
+            if (!head) { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; item.accountHead = head; }
+            if (!n) { updates.name = 'श्री. पांडुरंग सखारामजी मांडवकर (विश्वस्त)'; }
+            if (!d) { updates.description = 'मौजा घुटकळा प्लॉट ३७ व ३८ शासकीय चलन उसनवार रक्कम सभा ठराव दि. २९/१०/२०२६ अन्वये देणगी खाती समर्पित केली.'; }
+            if (!item.paymentMode) { updates.paymentMode = 'bank'; }
         } else if (credit === 91800 && (/उसनवार/i.test(v) || /उसनवार/i.test(d) || /मांडवकर/i.test(n))) {
             if (v.startsWith('PN')) {
                 if (head !== 'उसनवार समर्पण देणगी') { head = 'उसनवार समर्पण देणगी'; updates.accountHead = head; }
@@ -8747,7 +8755,7 @@ tr.innerHTML = `
 
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding:6px 12px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; position:relative; z-index:1;">
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <div style="width:58px; height:58px; background:#fff; padding:2px; border:1px solid #94a3b8; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+                                <div style="width:62px; height:62px; min-width:62px; background:#fff; padding:3px; border:1px solid #94a3b8; border-radius:4px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                                     ${qrSvg}
                                 </div>
                                 <div>
@@ -10477,18 +10485,17 @@ tr.innerHTML = `
 
                 debit: (typeVal === 'debit') ? amount : 0,
 
-                fy: getFinancialYear(rawDate)
-
+                fy: getFinancialYear(rawDate),
+                userEdited: true
             };
 
-
-
             if (db) {
-
                 await db.collection('transactions').doc(id).update(payload);
-
+                const localItem = (transactionsData || []).find(t => t.id === id);
+                if (localItem) {
+                    Object.assign(localItem, payload);
+                }
                 showToast('✅ नोंद यशस्वीरीत्या अपडेट केली!');
-
                 closeEditModal();
 
                 if (typeof syncAllToGoogleSheet === 'function') { syncAllToGoogleSheet(true); }
@@ -11028,7 +11035,7 @@ tr.innerHTML = `
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding:6px 12px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; position:relative; z-index:1;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:58px; height:58px; background:#fff; padding:2px; border:1px solid #94a3b8; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+                        <div style="width:62px; height:62px; min-width:62px; background:#fff; padding:3px; border:1px solid #94a3b8; border-radius:4px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                             ${qrSvg}
                         </div>
                         <div>
