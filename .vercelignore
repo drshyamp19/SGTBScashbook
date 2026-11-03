@@ -1,0 +1,15 @@
+# Vercel Deployment Ignore
+# Prevent sensitive data, backups, and audits from being publicly accessible
+
+backups/
+*.csv
+*.xlsx
+*.xls
+*.docx
+*.pdf
+*_backup*
+*.bak
+*.tmp
+*.log
+.git/
+.gitignore

@@ -2093,41 +2093,23 @@
     <!-- TOP HEADER: TITLE, REGISTRATION BADGE & LOGIN BUTTON (NO LOGO, 100% VISIBLE BANNER) -->
 
     <header class="front-header-bar">
-
         <div class="front-top-center">
-
             <h1 class="front-sanstha-title">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h1>
-
             <p class="front-sanstha-sub">श्रीराम नगर भद्रावती</p>
-
             <div class="front-reg-wrapper">
-
-                <span class="front-reg-badge">📜 नोंदणी क्र.: F-0016068(CDP)</span>
-
+                <span class="front-reg-badge">Registration No.: F-0016068(CDP) | Two-Column Daily Cash Book</span>
             </div>
-
             <div class="front-btn-wrapper">
-
-                <button class="portal-enter-btn" onclick="openLoginModal()" title="संस्थेच्या कॅश बुक प्रणालीमध्ये प्रवेश करा">
-
+                <button class="portal-enter-btn" onclick="openLoginModal()" title="Sign In to Cash Book Portal">
                     <span class="btn-icon">🔐</span>
-
-                    <span class="btn-text">संस्थेत प्रवेश (Login)</span>
-
+                    <span class="btn-text">Sign In (Login)</span>
                 </button>
-
-                <a href="SGTB_Cashbook.apk" download="SGTB_Cashbook.apk" class="portal-install-btn" id="apkDownloadBtn" title="मोबाईलसाठी अधिकृत Android App डाऊनलोड करा (APK)" style="text-decoration:none;">
-
+                <a href="SGTB_Cashbook.apk" download="SGTB_Cashbook.apk" class="portal-install-btn" id="apkDownloadBtn" title="Download Official Android App (APK)" style="text-decoration:none;">
                     <span class="btn-icon">📥</span>
-
-                    <span class="btn-text">ॲप डाऊनलोड (Android App)</span>
-
+                    <span class="btn-text">Download Android App</span>
                 </a>
-
             </div>
-
         </div>
-
     </header>
 
 
@@ -2137,48 +2119,49 @@
     <div id="loginModalOverlay" class="login-modal-overlay" onclick="handleLoginModalBackdrop(event)">
 
         <div class="login-modal-box">
-
-            <button class="modal-close-icon-btn" onclick="closeLoginModal()" title="पॉपअप बंद करा">✖</button>
-
-            
+            <button class="modal-close-icon-btn" onclick="closeLoginModal()" title="Close Popup">✖</button>
 
             <div class="modal-header-mini">
-
-                <img src="logo.jpg" class="modal-mini-logo" alt="Logo" onerror="this.src='https://placehold.co/60x60/ffc107/0d2b44?text=LOGO'">
-
+                <img src="logo.jpg" class="modal-mini-logo" alt="Logo" onerror="this.onerror=null; this.src='icon-192.png';">
                 <div>
-
                     <h3 style="margin:0; font-size:15px; color:#0d2b44; font-weight:800;">स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h3>
-
-                    <p style="margin:2px 0 0 0; font-size:11.5px; color:#555;">श्रीराम नगर भद्रावती | कॅश बुक लॉगिन</p>
-
+                    <p style="margin:2px 0 0 0; font-size:11.5px; color:#555;">श्रीराम नगर भद्रावती | Cash Book Portal Login</p>
                 </div>
-
             </div>
 
+            <!-- Role Guidance Badge -->
+            <div class="login-role-guide" style="margin-top:12px; background:#f0f7ff; border:1px solid #c7ddf5; border-radius:6px; padding:6px 10px; font-size:11.5px; color:#0d2b44; display:flex; justify-content:space-between; align-items:center;">
+                <span>🛡️ <strong>Admin:</strong> Use Email</span>
+                <span>👥 <strong>Trustee:</strong> Use Username</span>
+            </div>
 
+            <!-- Inline Error Alert Box -->
+            <div id="loginInlineAlert" style="display:none; margin-top:10px; padding:8px 12px; background:#fef2f2; border:1px solid #f87171; border-radius:6px; color:#991b1b; font-size:12px; font-weight:600;"></div>
 
-            <div class="login-form-box" style="margin-top:12px;">
-                <label style="font-weight:700; color:#0d2b44; font-size:12.5px;">👤 युझर आयडी किंवा ईमेल (User ID / Email):</label>
-                <input type="text" id="unifiedLoginIdentifierInput" placeholder="उदा. admin@gmail.com किंवा viewer1" onkeydown="if(event.key==='Enter') document.getElementById('unifiedLoginPasswordInput').focus()" autocomplete="username" style="width:100%; padding:9px 12px; border:1.5px solid #bdd5ea; border-radius:6px; font-size:13px; margin:4px 0 10px 0;">
+            <div class="login-form-box" style="margin-top:10px;">
+                <label style="font-weight:700; color:#0d2b44; font-size:12.5px;">👤 User ID or Email:</label>
+                <!-- EMPTY PLACEHOLDER AS REQUESTED -->
+                <input type="text" id="unifiedLoginIdentifierInput" placeholder="" onkeydown="if(event.key==='Enter') document.getElementById('unifiedLoginPasswordInput').focus()" autocomplete="username" style="width:100%; padding:9px 12px; border:1.5px solid #bdd5ea; border-radius:6px; font-size:13px; margin:4px 0 10px 0;">
 
-                <label style="font-weight:700; color:#0d2b44; font-size:12.5px;">🔑 पासवर्ड (Password):</label>
+                <label style="font-weight:700; color:#0d2b44; font-size:12.5px;">🔑 Password:</label>
                 <div class="password-field-wrapper" style="position:relative; margin-top:4px;">
-                    <input type="password" id="unifiedLoginPasswordInput" placeholder="Password टाका" onkeydown="if(event.key==='Enter') handleUnifiedLogin()" autocomplete="current-password" style="width:100%; padding:9px 12px; padding-right:40px; border:1.5px solid #bdd5ea; border-radius:6px; font-size:13px;">
-                    <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('unifiedLoginPasswordInput', this)" title="पासवर्ड पहा/लपवा">
+                    <!-- EMPTY PLACEHOLDER AS REQUESTED -->
+                    <input type="password" id="unifiedLoginPasswordInput" placeholder="" onkeydown="if(event.key==='Enter') handleUnifiedLogin()" autocomplete="current-password" style="width:100%; padding:9px 12px; padding-right:40px; border:1.5px solid #bdd5ea; border-radius:6px; font-size:13px;">
+                    <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('unifiedLoginPasswordInput', this)" title="Show/Hide Password">
                         <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     </button>
                 </div>
 
                 <label class="remember-me-row" style="display:flex; align-items:center; gap:8px; font-size:12px; margin:10px 0; color:#555; cursor:pointer;">
-                    <input type="checkbox" id="rememberUnifiedLoginCheckbox" style="cursor:pointer;"> युझर आयडी लक्षात ठेवा (Remember ID)
+                    <input type="checkbox" id="rememberUnifiedLoginCheckbox" style="cursor:pointer;"> Remember User ID
                 </label>
 
-                <button class="login-submit-btn admin-btn" id="unifiedLoginSubmitBtn" onclick="handleUnifiedLogin()" style="width:100%; padding:10px; background:#0d2b44; color:#fff; font-weight:700; font-size:13.5px; border:none; border-radius:6px; cursor:pointer; margin-top:4px;">🔐 प्रणालीत प्रवेश करा (Login)</button>
+                <button class="login-submit-btn admin-btn" id="unifiedLoginSubmitBtn" onclick="handleUnifiedLogin()" style="width:100%; padding:10px; background:#0d2b44; color:#fff; font-weight:700; font-size:13.5px; border:none; border-radius:6px; cursor:pointer; margin-top:4px;">Sign In to Portal 🔐</button>
                 <div style="text-align:center; margin-top:10px;">
-                    <span class="forgot-pass-link" onclick="openForgotModal()" style="font-size:11.5px; color:#0b5ed7; text-decoration:underline; cursor:pointer;">❓ पासवर्ड विसरलात? (Forgot Password)</span>
+                    <span class="forgot-pass-link" onclick="openForgotModal()" style="font-size:11.5px; color:#0b5ed7; text-decoration:underline; cursor:pointer;">Forgot Password?</span>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 
@@ -2281,180 +2264,96 @@
         <!-- Header -->
 
         <div class="org-header">
-
             <div class="header-left-brand">
-
-                <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.src='https://placehold.co/65x65/ffc107/0d2b44?text=LOGO'">
-
+                <img src="logo.jpg" class="header-logo-img" alt="Sanstha Logo" onerror="this.onerror=null; this.src='icon-192.png';">
                 <div class="header-titles">
-
                     <h2>स्वामी गोपाल तीर्थ बहुउद्देशीय संस्था</h2>
-
-                    <p>श्रीराम नगर भद्रावती | Two-Column Cash Book</p>
-
-                    <span class="reg">📜 Registration No.: F-0016068(CDP)</span>
-
+                    <p>श्रीराम नगर भद्रावती | Two-Column Daily Cash Book</p>
+                    <span class="reg">Registration No.: F-0016068(CDP)</span>
                 </div>
-
             </div>
-
-            
 
             <div class="header-right-actions">
-
                 <span id="dbStatusBadge" class="db-status">🟢 Cloud Live (Synced)</span>
-
                 <span id="userRoleBadge" class="user-role-badge admin">Admin Panel</span>
-
-                <button class="header-btn logout-btn-header" onclick="performLogout()">🚪 Logout</button>
-
+                <button class="header-btn logout-btn-header" onclick="performLogout()">🚪 Sign Out</button>
             </div>
-
         </div>
-
-
 
         <!-- Security Notice -->
 
         <div id="backupReminderBar" class="backup-reminder-bar admin-item-block">
-
-            <span>💾 <strong>Security Notice:</strong> Please download JSON backup to keep a backup of new entries safe.</span>
-
+            <span>💾 <strong>Security Notice:</strong> Please download JSON backup to keep your latest entries safe offline.</span>
             <div>
-
                 <button class="btn btn-warning btn-sm" onclick="backupData(); dismissBackupReminder();" style="margin:0 4px;">💾 Backup Now</button>
-
-                <button class="btn btn-secondary btn-sm" onclick="dismissBackupReminder();" style="margin:0;">✖ After</button>
-
+                <button class="btn btn-secondary btn-sm" onclick="dismissBackupReminder();" style="margin:0;">✖ Later</button>
             </div>
-
         </div>
-
-
 
         <!-- TWO-COLUMN SUMMARY TOP CARD -->
 
         <div class="card-summary-top">
-
             <div class="flex-between" style="margin-bottom:12px;">
-
-                <h2>📊 Two-Column Summary <span style="font-size:12px; color:#64748b; font-weight:normal;">(Cash and Bank Balance Sheet)</span></h2>
-
+                <h2>📊 Two-Column Summary <span style="font-size:12px; color:#64748b; font-weight:normal;">(Cash & Bank Balance Sheet)</span></h2>
             </div>
-
             <div class="stats-grid">
-
-                <div class="stat-box credit-box" onclick="switchToRecordsWithFilter('credit')" title="फक्त जमा नोंदी पहा">
-
-                    <div class="label">📈 Total Credit</div>
-
+                <div class="stat-box credit-box" onclick="switchToRecordsWithFilter('credit')" title="View Credit / Receipts Only">
+                    <div class="label">📈 Total Credit (Receipts)</div>
                     <div class="value" id="statTotalCredit" style="color:#198754;">₹ 0.00</div>
-
                     <div style="font-size:11px; color:#666; margin-top:2px;">Cash In + Bank In ↗</div>
-
                 </div>
 
-
-
-                <div class="stat-box debit-box" onclick="switchToRecordsWithFilter('debit')" title="फक्त खर्च नोंदी पहा">
-
-                    <div class="label">📉 Total Debit (Total Expenses)</div>
-
+                <div class="stat-box debit-box" onclick="switchToRecordsWithFilter('debit')" title="View Debit / Expenses Only">
+                    <div class="label">📉 Total Debit (Expenses)</div>
                     <div class="value" id="statTotalDebit" style="color:#dc3545;">₹ 0.00</div>
-
                     <div style="font-size:11px; color:#666; margin-top:2px;">Cash Out + Bank Out ↗</div>
-
                 </div>
 
-
-
-                <div class="stat-box cash-box" onclick="switchToRecordsWithMode('cash')" title="फक्त रोख व्यवहार पहा">
-
+                <div class="stat-box cash-box" onclick="switchToRecordsWithMode('cash')" title="View Cash Transactions Only">
                     <div class="label">💵 Cash in Hand</div>
-
                     <div class="value" id="statCashBal">₹ 0.00</div>
-
                     <div style="font-size:10.5px; color:#888; margin-top:2px;">In: <span id="statCashIn">₹ 0</span> | Out: <span id="statCashOut">₹ 0</span></div>
-
                 </div>
 
-
-
-                <div class="stat-box bank-box" onclick="switchToRecordsWithMode('bank')" title="फक्त बँक व्यवहार पहा">
-
+                <div class="stat-box bank-box" onclick="switchToRecordsWithMode('bank')" title="View Bank Transactions Only">
                     <div class="label">🏦 Bank Balance</div>
-
                     <div class="value" id="statBankBal">₹ 0.00</div>
-
                     <div style="font-size:10.5px; color:#888; margin-top:2px;">In: <span id="statBankIn">₹ 0</span> | Out: <span id="statBankOut">₹ 0</span></div>
-
                 </div>
 
-
-
-                <div class="stat-box total-box" onclick="resetAllFilters()" title="संस्थेचा चालू एकूण निधी">
-
-                    <div class="label">💰 Total Balance</div>
-
+                <div class="stat-box total-box" onclick="resetAllFilters()" title="Total Organization Net Balance">
+                    <div class="label">💰 Total Fund Balance</div>
                     <div class="value" id="statTotalBal">₹ 0.00</div>
-
                     <div style="font-size:11px; color:#28a745; font-weight:600; margin-top:2px;">Cash + Bank Fund</div>
-
                 </div>
 
-
-
-                <div class="stat-box" onclick="switchAppTab('tabPanelRecords')" title="सर्व नोंदी पहा">
-
+                <div class="stat-box" onclick="switchAppTab('tabPanelRecords')" title="View All Transactions">
                     <div class="label">🧾 Total Transactions</div>
-
                     <div class="value" id="totalEntries">0</div>
-
-                    <div style="font-size:11px; color:#888; margin-top:2px;">View entries ↗</div>
-
+                    <div style="font-size:11px; color:#888; margin-top:2px;">View all entries ↗</div>
                 </div>
-
             </div>
-
         </div>
-
-
 
         <!-- 4 TABS NAVIGATION -->
 
         <div class="app-nav-tabs">
-
             <button class="nav-tab-item admin-item active" id="tabNavAdd" onclick="switchAppTab('tabPanelAdd')">
-
-                <span>➕</span> + Tab 1: Add Entry
-
+                <span>➕</span> + Add Transaction
             </button>
-
             <button class="nav-tab-item" id="tabNavRecords" onclick="switchAppTab('tabPanelRecords')">
-
-                <span>📋</span> Tab 2: All Records
-
+                <span>📋</span> All Records
             </button>
-
             <button class="nav-tab-item" id="tabNavLedger" onclick="switchAppTab('tabPanelLedger')">
-
-                <span>📒</span> Tab 3: Cash Book (Ledger)
-
+                <span>📒</span> Cash Book (Ledger)
             </button>
-
             <button class="nav-tab-item admin-item" id="tabNavMgmt" onclick="switchAppTab('tabPanelMgmt')">
-
-                <span>⚙️</span> Tab 4: Management
-
+                <span>⚙️</span> Admin Management
             </button>
-
         </div>
 
-
-
+        <!-- Toast Notification -->
         <div id="toast" class="toast">✅ Success!</div>
-
-
 
         <!-- TAB 1: ADD ENTRY -->
 
@@ -2476,7 +2375,7 @@
 
                     <div class="field">
 
-                        <label>🔢 Voucher / Pavti No. <span class="required-star">*</span></label>
+                        <label>🔢 Voucher / Receipt No. <span class="required-star">*</span></label>
 
                         <div class="voucher-input-group">
 
@@ -2564,7 +2463,7 @@
 
                     <div class="field">
 
-                        <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
+                        <label>🧑‍💼 Donor / Payee Name (नाव) <span class="required-star">*</span></label>
 
                         <input type="text" id="newName" list="donorNamesList" placeholder="E.g. Saurabh Yamawar" style="min-width:180px;" autocomplete="off">
 
@@ -2604,7 +2503,7 @@
 
                     <div class="field">
 
-                        <label>💰 Amount (एकूण रक्कम ₹) <span class="required-star">*</span></label>
+                        <label>💰 Amount (₹) <span class="required-star">*</span></label>
 
                         <input type="number" id="newAmount" placeholder="1000" step="0.01">
 
@@ -2639,7 +2538,7 @@
                     </div>
 
                                         <div class="field" id="accountHeadField">
-                        <label>🏷️ Account Head (लेखा शिर्षक) <span class="required-star">*</span></label>
+                        <label>🏷️ Account Head <span class="required-star">*</span></label>
                         <select id="newAccountHead">
                             <!-- populated dynamically -->
                         </select>
@@ -2681,7 +2580,7 @@
 
                 <div class="flex-between">
 
-                    <h2>📋 All Transactions (सर्व व्यवहार नोंदवही)</h2>
+                    <h2>📋 All Transactions (Cash Book Ledger)</h2>
 
                     <div class="search-controls">
 
@@ -2691,9 +2590,9 @@
 
                                 <option value="all">All Types</option>
 
-                                <option value="credit">📈 Only Credit (जमा)</option>
+                                <option value="credit">📈 Credit / Receipts (जमा)</option>
 
-                                <option value="debit">📉 Only Debit (खर्च)</option>
+                                <option value="debit">📉 Debit / Expenses (खर्च)</option>
 
                             </select>
 
@@ -2876,7 +2775,7 @@
 
                 <div>
 
-                    <h2 style="margin-bottom:4px;">👁️ Month-wise Screen Ledger Viewer</h2>
+                    <h2 style="margin-bottom:4px;">👁️ Month-wise Continuous Ledger Viewer</h2>
 
                     <p style="font-size:12px; color:#666;">विशिष्ट महिना स्क्रीनवर पाहण्यासाठी किंवा संपूर्ण अहवाल डाऊनलोड करण्यासाठी खालील टूलबार वापरा.</p>
 
@@ -2892,11 +2791,11 @@
 
                         <div style="display:inline-flex; align-items:center; gap:6px;">
 
-                            <label for="screenYearSelect" style="font-size:12px; font-weight:700; color:#0d2b44; white-space:nowrap;">📅 वर्ष (Year):</label>
+                            <label for="screenYearSelect" style="font-size:12px; font-weight:700; color:#0d2b44; white-space:nowrap;">📅 Year:</label>
 
                             <select id="screenYearSelect" onchange="onScreenYearChange()" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:700; font-size:12px; background:#fff; color:#0d2b44; min-width:130px; cursor:pointer;">
 
-                                <option value="all">सर्व वर्षे (All Years)</option>
+                                <option value="all">All Years</option>
 
                                 <option value="2026-27" selected>FY 2026-27</option>
 
@@ -2914,7 +2813,7 @@
 
                         <div style="display:inline-flex; align-items:center; gap:6px;">
 
-                            <label for="screenMonthSelect" style="font-size:12px; font-weight:700; color:#0d2b44; white-space:nowrap;">🗓️ महिना (Month):</label>
+                            <label for="screenMonthSelect" style="font-size:12px; font-weight:700; color:#0d2b44; white-space:nowrap;">🗓️ Month:</label>
 
                             <select id="screenMonthSelect" style="padding:6px 10px; border-radius:6px; border:1.5px solid #2a7de1; font-weight:600; font-size:12px; background:#fff; color:#0d2b44; min-width:170px; cursor:pointer;">
 
@@ -2968,10 +2867,10 @@
 
                         <div style="flex: 1; min-width: 180px;">
 
-                            <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 वर्ष (Year):</label>
+                            <label style="font-size: 11px; font-weight: 700; color: #444; display: block; margin-bottom: 3px;">📅 Year:</label>
 
                             <select id="statementYearSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
-                                <option value="all" selected>सर्व वर्षे (All Years)</option>
+                                <option value="all" selected>All Years</option>
                                 <option value="2026">2026</option>
                                 <option value="2025">2025</option>
                                 <option value="2024">2024</option>
@@ -2988,7 +2887,7 @@
 
                             <select id="statementMonthSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
 
-                                <option value="all">सर्व महिने (All Months)</option>
+                                <option value="all">All Months</option>
 
                                 <option value="January">January</option>
 
@@ -3114,11 +3013,11 @@
 
                                     <th rowspan="2" style="width:30px;">#</th>
 
-                                    <th rowspan="2" style="width:75px;">दिनांक</th>
+                                    <th rowspan="2" style="width:75px;">Date</th>
 
                                     <th rowspan="2" style="width:85px;">व्हाउचर क्र.</th>
 
-                                    <th rowspan="2" style="width:65px;">मोड</th>
+                                    <th rowspan="2" style="width:65px;">Mode</th>
 
                                     <th rowspan="2">नाव / तपशील</th>
 
@@ -3227,6 +3126,7 @@
 
                         <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
 
+                        <button class="btn btn-primary btn-sm" onclick="syncAllAuditFixesToCloud()" style="background:#0284c7; color:#fff; font-weight:700; border:none; margin:0 4px; padding:6px 12px; border-radius:6px; cursor:pointer;" title="Sync CA Audited Vouchers (VN 01, VN 02, VN 03, CD 01, FDM 01, PN 220) directly to Cloud Database">⚡ Sync CA Audited Vouchers to Cloud</button>
                         <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All Data</button>
 
                     </div>
@@ -3263,13 +3163,13 @@
 
             <div class="card">
 
-                <h2>👥 Viewer Management <span class="badge" style="background:#e2e8f0; color:#475569; font-size:11px; padding:2px 8px; border-radius:12px;">Admin</span></h2>
+                <h2>👥 Trustee / Viewer Management <span class="badge" style="background:#e2e8f0; color:#475569; font-size:11px; padding:2px 8px; border-radius:12px;">Admin</span></h2>
 
                 <div class="add-entry-form" style="margin-bottom:15px;">
 
                     <div class="field">
 
-                        <label>👤 Viewer Name:</label>
+                        <label>👤 Trustee Name:</label>
 
                         <input type="text" id="newViewerName" placeholder="Eg. Mr. Sharma (Trustee)">
 
@@ -3293,7 +3193,7 @@
 
                     <div class="field field-actions">
 
-                        <button class="btn btn-success" onclick="addNewViewer()">➕ Add Viewer</button>
+                        <button class="btn btn-success" onclick="addNewViewer()">➕ Add Trustee / Viewer</button>
 
                     </div>
 
@@ -3351,7 +3251,7 @@
 
         <div class="flex-between" style="border-bottom: 2px solid #eef4fb; padding-bottom: 8px; margin-bottom: 14px;">
 
-            <h3 style="color:#0d2b44; font-size: 1.15rem;">✏️ Edit Transaction (नोंदीत बदल करा)</h3>
+            <h3 style="color:#0d2b44; font-size: 1.15rem;">✏️ Edit Transaction</h3>
 
             <button onclick="closeEditModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">✖</button>
 
@@ -3367,7 +3267,7 @@
 
             <div>
 
-                <label>📅 Date (दिनांक) <span class="required-star">*</span></label>
+                <label>📅 Date <span class="required-star">*</span></label>
 
                 <input type="date" id="editDate">
 
@@ -3377,7 +3277,7 @@
 
             <div>
 
-                <label>🔢 Voucher / Pavti No. <span class="required-star">*</span></label>
+                <label>🔢 Voucher / Receipt No. <span class="required-star">*</span></label>
 
                 <div class="voucher-input-group">
 
@@ -3428,7 +3328,7 @@
 
             <div>
 
-                <label>📌 Flow Type (प्रकार) <span class="required-star">*</span></label>
+                <label>📌 Flow Type <span class="required-star">*</span></label>
 
                 <select id="editType" onchange="handleEditTypeChange()">
 
@@ -3442,7 +3342,7 @@
 
             <div>
 
-                <label>🏷️ Account Head (लेखा शिर्षक) <span class="required-star">*</span></label>
+                <label>🏷️ Account Head <span class="required-star">*</span></label>
 
                 <select id="editAccountHead">
 
@@ -3456,7 +3356,7 @@
 
             <div>
 
-                <label>💰 Amount (एकूण रक्कम ₹) <span class="required-star">*</span></label>
+                <label>💰 Amount (₹) <span class="required-star">*</span></label>
 
                 <input type="number" id="editAmount" placeholder="1000" step="0.01">
 
@@ -3492,7 +3392,7 @@
 
             <div>
 
-                <label>🧑‍💼 Donor/Payer Name <span class="required-star">*</span></label>
+                <label>🧑‍💼 Donor / Payee Name (नाव) <span class="required-star">*</span></label>
 
                 <input type="text" id="editName" list="donorNamesList" placeholder="नांव टाका" autocomplete="off">
 
@@ -3817,7 +3717,7 @@ function populateStatementYearsDynamically(data) {
 
         const sortedYears = Array.from(yearsSet).sort((a,b) => b.localeCompare(a));
 
-        let html = '<option value="all">सर्व वर्षे (All Years)</option>';
+        let html = '<option value="all">All Years</option>';
         sortedYears.forEach(y => {
             html += `<option value="${y}">${y}</option>`;
         });
@@ -5100,16 +5000,26 @@ function populateStatementYearsDynamically(data) {
 
 
 
+    function showLoginAlert(msg) {
+        const box = document.getElementById('loginInlineAlert');
+        if (box) {
+            box.textContent = msg;
+            box.style.display = 'block';
+        } else {
+            alert(msg);
+        }
+    }
+
+    function clearLoginAlert() {
+        const box = document.getElementById('loginInlineAlert');
+        if (box) {
+            box.textContent = '';
+            box.style.display = 'none';
+        }
+    }
+
     function switchLoginTab(tab) {
-
-        document.getElementById('tabAdminBtn').classList.toggle('active', tab === 'admin');
-
-        document.getElementById('tabViewerBtn').classList.toggle('active', tab === 'viewer');
-
-        document.getElementById('adminLoginForm').style.display = (tab === 'admin') ? 'block' : 'none';
-
-        document.getElementById('viewerLoginForm').style.display = (tab === 'viewer') ? 'block' : 'none';
-
+        /* Unified Smart Login routes dynamically */
     }
 
 
@@ -5125,13 +5035,13 @@ function populateStatementYearsDynamically(data) {
         const rememberMe = document.getElementById('rememberUnifiedLoginCheckbox') ? document.getElementById('rememberUnifiedLoginCheckbox').checked : false;
 
         if (!identifier || !pwd) {
-            alert('कृपया युझर आयडी / ईमेल आणि पासवर्ड दोन्ही टाका.');
+            showLoginAlert('Please enter both User ID / Email and Password.');
             return;
         }
 
         if (btn) {
             btn.disabled = true;
-            btn.textContent = '⏳ पडताळणी सुरू आहे... (Verifying...)';
+            btn.textContent = '⏳ Verifying credentials...';
         }
 
         try {
@@ -5231,7 +5141,7 @@ function populateStatementYearsDynamically(data) {
 
             // 4. If neither Admin nor Viewer matched
             if (!isAdminLogin) {
-                alert('❌ लॉगिन अयशस्वी: युझर आयडी/ईमेल किंवा पासवर्ड चुकीचा आहे!');
+                showLoginAlert('❌ Sign In Failed: Invalid User ID/Email or Password.');
                 return;
             }
 
@@ -5248,7 +5158,7 @@ function populateStatementYearsDynamically(data) {
         } finally {
             if (btn) {
                 btn.disabled = false;
-                btn.textContent = '🔐 प्रणालीत प्रवेश करा (Login)';
+                btn.textContent = 'Sign In to Portal 🔐';
             }
         }
     }
@@ -5402,10 +5312,6 @@ function populateStatementYearsDynamically(data) {
 
         const uPwd = document.getElementById('unifiedLoginPasswordInput');
         if (uPwd) uPwd.value = '';
-        const aPwd = document.getElementById('adminPasswordInput');
-        if (aPwd) aPwd.value = '';
-        const vPwd = document.getElementById('viewerPasswordInput');
-        if (vPwd) vPwd.value = '';
 
         showToast('👋 Logged out successfully & Google Sheet synced.');
 
@@ -5414,7 +5320,7 @@ function populateStatementYearsDynamically(data) {
 
 
     function openForgotModal() {
-        const idInput = document.getElementById('unifiedLoginIdentifierInput') || document.getElementById('adminEmailInput');
+        const idInput = document.getElementById('unifiedLoginIdentifierInput');
         const val = idInput ? idInput.value : '';
         const resetInput = document.getElementById('modalResetEmailInput');
         if (resetInput) resetInput.value = val.includes('@') ? val : '';
@@ -7180,7 +7086,7 @@ function populateStatementYearsDynamically(data) {
 
         allYearsOpt.value = 'all';
 
-        allYearsOpt.textContent = 'सर्व वर्षे (All Years)';
+        allYearsOpt.textContent = 'All Years';
 
         yearSelect.appendChild(allYearsOpt);
 
@@ -8323,9 +8229,9 @@ tr.innerHTML = `
                         <thead>
                             <tr>
                                 <th rowspan="2">#</th>
-                                <th rowspan="2">दिनांक</th>
+                                <th rowspan="2">Date</th>
                                 <th rowspan="2">व्हाउचर क्र.</th>
-                                <th rowspan="2">मोड</th>
+                                <th rowspan="2">Mode</th>
                                 <th rowspan="2">नाव / तपशील</th>
                                 <th rowspan="2">खर्च / देणगी कारण</th>
                                 <th colspan="2" class="cash-sub">रोख रकाना (Cash ₹)</th>
@@ -9313,11 +9219,11 @@ tr.innerHTML = `
 
                         <th rowspan="2" style="width:25px;">#</th>
 
-                        <th rowspan="2" style="width:65px;">दिनांक</th>
+                        <th rowspan="2" style="width:65px;">Date</th>
 
                         <th rowspan="2" style="width:80px;">व्हाउचर क्र.</th>
 
-                        <th rowspan="2" style="width:55px;">मोड</th>
+                        <th rowspan="2" style="width:55px;">Mode</th>
 
                         <th rowspan="2">नाव / देणगीदार</th>
 
@@ -9654,11 +9560,11 @@ tr.innerHTML = `
 
                         <th rowspan="2">#</th>
 
-                        <th rowspan="2">दिनांक</th>
+                        <th rowspan="2">Date</th>
 
                         <th rowspan="2">व्हाउचर क्र.</th>
 
-                        <th rowspan="2">मोड</th>
+                        <th rowspan="2">Mode</th>
 
                         <th rowspan="2">नाव / देणगीदार</th>
 
@@ -11534,16 +11440,18 @@ ${modeText}${descText}💰 *रक्कम:* ${formatIndianNum(receiptAmount)}
 
         const today = new Date().toISOString().split('T')[0];
 
-        document.getElementById('newDate').value = today;
+        const dateEl = document.getElementById('newDate');
+        if (dateEl) dateEl.value = today;
 
+        const idInput = document.getElementById('unifiedLoginIdentifierInput');
+        const chkBox = document.getElementById('rememberUnifiedLoginCheckbox');
+        const savedId = localStorage.getItem('sgtb_saved_login_id');
 
-
-        const savedId = localStorage.getItem('sgtb_saved_login_id') || localStorage.getItem('sgtb_admin_saved_email') || localStorage.getItem('sgtb_viewer_saved_username');
-        if (savedId) {
-            const idInput = document.getElementById('unifiedLoginIdentifierInput');
-            const chkBox = document.getElementById('rememberUnifiedLoginCheckbox');
-            if (idInput) idInput.value = savedId;
-            if (chkBox) chkBox.checked = true;
+        if (savedId && idInput && chkBox) {
+            idInput.value = savedId;
+            chkBox.checked = true;
+        } else if (idInput) {
+            idInput.value = '';
         }
 
     };

@@ -1,10 +1,12 @@
-# Local temporary backups
-index_backup_*.html
-*.tmp
-backups/*Pre_AuditFix*
-
-# Temporary logs & excel exports & pdfs
-*.log
+# Git Ignore for SGTB Cashbook
+backups/
+*.csv
+*.xlsx
 *.xls
+*.docx
 *.pdf
+*_backup*
+*.bak
+*.tmp
+*.log
 banner SAMAPL.png
