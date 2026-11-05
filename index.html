@@ -2459,6 +2459,14 @@
 
                     </div>
 
+                    <div class="field">
+
+                        <label>📑 सोबत जोडलेला पुरावा <span style="font-weight:400; color:#888;">(Proof Option)</span></label>
+
+                        <input type="text" id="newProofText" list="proofSuggestionsList" placeholder="उदा. बँक भरणा पावती / बँक स्टेटमेंट" style="min-width:180px;">
+
+                    </div>
+
 
 
                     <div class="field">
@@ -3860,7 +3868,7 @@
 
     function buildReceiptVerificationUrl(item) {
         try {
-            const isVoucher = (Number(item.debit) > 0) || (Number(item.cashOut) > 0) || (Number(item.bankOut) > 0) || (item.type === 'debit') || (item.voucher && /^(VN|PV|EXP|IBT|CD)/i.test(String(item.voucher).trim()));
+            const isVoucher = (Number(item.debit) > 0) || (Number(item.cashOut) > 0) || (Number(item.bankOut) > 0) || (item.type === 'debit') || (item.voucher && /^(VN|PV|EXP|IBT|CD|FD)/i.test(String(item.voucher).trim()));
             const voucherOrReceiptNum = isVoucher
                 ? (item.voucher || '-')
                 : ((typeof getCleanReceiptNumber === 'function') ? getCleanReceiptNumber(item.voucher) : (item.voucher || '-'));
@@ -3920,7 +3928,7 @@
                     const jsonStr = decodeURIComponent(escape(atob(b64)));
                     const p = JSON.parse(jsonStr);
                     const vNum = p.r || p.c || p.rn || p.voucher || p.receipt || '-';
-                    const vType = p.t || (urlParams.get('t') === 'v' || /^(VN|PV|EXP|IBT|CD)/i.test(String(vNum).trim()) ? 'v' : 'r');
+                    const vType = p.t || (urlParams.get('t') === 'v' || /^(VN|PV|EXP|IBT|CD|FD)/i.test(String(vNum).trim()) ? 'v' : 'r');
                     receiptData = {
                         type: vType,
                         voucher: vNum,
@@ -3941,7 +3949,7 @@
             // Try reading standard query parameters
             if (!receiptData) {
                 const rn = urlParams.get('rn') || urlParams.get('r') || urlParams.get('receipt') || urlParams.get('voucher') || '-';
-                const isV = urlParams.get('t') === 'v' || urlParams.has('voucher') || /^(VN|PV|EXP|IBT|CD)/i.test(String(rn).trim());
+                const isV = urlParams.get('t') === 'v' || urlParams.has('voucher') || /^(VN|PV|EXP|IBT|CD|FD)/i.test(String(rn).trim());
                 const dt = urlParams.get('dt') || urlParams.get('d') || urlParams.get('date') || '';
                 const amt = Number(urlParams.get('amt') || urlParams.get('a') || urlParams.get('amount') || 0);
                 const dn = urlParams.get('dn') || urlParams.get('n') || urlParams.get('name') || '-';
@@ -3976,7 +3984,7 @@
 
     function showPublicReceiptVerificationModal(data) {
         currentPublicReceiptData = data;
-        const isVoucher = (data.type === 'v') || (data.voucher && /^(VN|PV|EXP|IBT|CD)/i.test(String(data.voucher).trim()));
+        const isVoucher = (data.type === 'v') || (data.voucher && /^(VN|PV|EXP|IBT|CD|FD)/i.test(String(data.voucher).trim()));
         const cleanNum = isVoucher
             ? (data.voucher || '-')
             : ((typeof getCleanReceiptNumber === 'function') ? getCleanReceiptNumber(data.voucher || '-') : (data.voucher || '-'));
@@ -3992,10 +4000,12 @@
                 titleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured)';
             }
         } else {
-            if (/VN\s*-\s*FD/i.test(vStr)) {
-                titleText = 'मुदत ठेव व्हाउचर (Fixed Deposit / FD)';
+            if (/^(FD|VN\s*-\s*FD)/i.test(vStr)) {
+                titleText = 'मुदत ठेव व्हाउचर (Bank to Fixed Deposit / FD)';
             } else if (/IBT/i.test(vStr)) {
-                titleText = 'बँक अंतर्गत व्यवहार (Internal Bank Transfer)';
+                titleText = 'बँक अंतर्गत व्यवहार (Internal Banking Transaction)';
+            } else if (/^(CD|VN\s*-\s*CD)/i.test(vStr)) {
+                titleText = 'बँक व रोख अंतर्गत हस्तांतरण (Contra Transfer)';
             }
         }
 
@@ -4079,7 +4089,7 @@
     function printPublicVerifiedItemFromModal() {
         if (!currentPublicReceiptData) return;
         const isVoucher = (currentPublicReceiptData.type === 'v') || 
-                          (currentPublicReceiptData.voucher && /^(VN|PV|EXP|IBT|CD)/i.test(String(currentPublicReceiptData.voucher).trim()));
+                          (currentPublicReceiptData.voucher && /^(VN|PV|EXP|IBT|CD|FD)/i.test(String(currentPublicReceiptData.voucher).trim()));
         if (isVoucher) {
             const voucherItem = {
                 voucher: currentPublicReceiptData.voucher,
@@ -5214,91 +5224,65 @@ function populateStatementYearsDynamically(data) {
     // ============================================================
 
     function numberToMarathiWords(amount) {
+        const total = Number(amount) || 0;
+        if (total <= 0) return 'शून्य रुपये फक्त';
 
-        let num = Math.round(Number(amount) || 0);
-
-        if (num === 0) return 'शून्य रुपये फक्त';
-
-
+        let rupees = Math.floor(total);
+        let paise = Math.round((total - rupees) * 100);
+        if (paise === 100) {
+            rupees += 1;
+            paise = 0;
+        }
 
         const units = ['', 'एक', 'दोन', 'तीन', 'चार', 'पाच', 'सहा', 'सात', 'आठ', 'नऊ',
-
             'दहा', 'अकरा', 'बारा', 'तेरा', 'चौदा', 'पंधरा', 'सोळा', 'सतरा', 'अठरा', 'एकोणीस',
-
             'वीस', 'एकवीस', 'बावीस', 'तेवीस', 'चोवीस', 'पंचवीस', 'सव्वीस', 'सत्तावीस', 'अठ्ठावीस', 'एकोणतीस',
-
             'तीस', 'एकतीस', 'बत्तीस', 'तेहेतीस', 'चौतीस', 'पस्तीस', 'छत्तीस', 'सदतीस', 'अडतीस', 'एकोणचाळीस',
-
             'चाळीस', 'एकेचाळीस', 'बेचाळीस', 'त्रेचाळीस', 'चव्वेचाळीस', 'पंचेचाळीस', 'शेहेचाळीस', 'सत्तेचाळीस', 'अठ्ठेचाळीस', 'एकोणपन्नास',
-
             'पन्नास', 'एक्कावन्न', 'बावन्न', 'त्रेपन्न', 'चौपन्न', 'पंचावन्न', 'छप्पन्न', 'सत्तावन्न', 'अठ्ठावन्न', 'एकोणसाठ',
-
             'साठ', 'एकसष्ट', 'बासष्ट', 'त्रेसष्ट', 'चौसष्ट', 'पासष्ट', 'सहासष्ट', 'सदुसष्ट', 'अडुसष्ट', 'एकोणसत्तर',
-
             'सत्तर', 'एकाहत्तर', 'बाहत्तर', 'त्र्याहत्तर', 'चौऱ्याहत्तर', 'पंच्याहत्तर', 'शहात्तर', 'सत्त्याहत्तर', 'अठ्ठ्याहत्तर', 'एकोणऐंशी',
-
             'ऐंशी', 'एक्क्याऐंशी', 'ब्याऐंशी', 'त्र्याऐंशी', 'चौऱ्याऐंशी', 'पंच्याऐंशी', 'शहाऐंशी', 'सत्त्याऐंशी', 'अठ्ठ्याऐंशी', 'एकोणनव्वद',
-
             'नव्वद', 'एक्याण्णव', 'ब्याण्णव', 'त्र्याण्णव', 'चौऱ्याण्णव', 'पंच्याण्णव', 'शहाण्णव', 'सत्त्याण्णव', 'अठ्ठ्याण्णव', 'नव्व्याण्णव'
-
         ];
 
-
-
         function convertTwoDigits(n) {
-
             return units[n] || '';
-
         }
-
-
 
         let words = '';
-
-
+        let num = rupees;
 
         if (Math.floor(num / 10000000) > 0) {
-
             words += convertTwoDigits(Math.floor(num / 10000000)) + ' कोटी ';
-
             num %= 10000000;
-
         }
-
         if (Math.floor(num / 100000) > 0) {
-
             words += convertTwoDigits(Math.floor(num / 100000)) + ' लाख ';
-
             num %= 100000;
-
         }
-
         if (Math.floor(num / 1000) > 0) {
-
             words += convertTwoDigits(Math.floor(num / 1000)) + ' हजार ';
-
             num %= 1000;
-
         }
-
         if (Math.floor(num / 100) > 0) {
-
             words += convertTwoDigits(Math.floor(num / 100)) + ' शे ';
-
             num %= 100;
-
         }
-
         if (num > 0) {
-
             words += convertTwoDigits(num) + ' ';
-
         }
 
+        let result = '';
+        if (rupees > 0) {
+            result += words.trim() + ' रुपये';
+        }
+        if (paise > 0) {
+            const paiseWord = convertTwoDigits(paise) + ' पैसे';
+            result = result ? (result + ' ' + paiseWord) : paiseWord;
+        }
 
-
-        return words.trim() + ' रुपये फक्त';
-
+        return (result.trim() || 'शून्य रुपये') + ' फक्त';
     }
 
 
@@ -10552,6 +10536,7 @@ tr.innerHTML = `
         const fileInput = document.getElementById('newDocFile');
 
         let docUrl = document.getElementById('newDocUrlInput').value.trim();
+        const proofTextVal = document.getElementById('newProofText') ? document.getElementById('newProofText').value.trim() : '';
 
         const name = document.getElementById('newName').value.trim();
 
@@ -10716,6 +10701,7 @@ tr.innerHTML = `
             if (fileInput) fileInput.value = '';
 
             document.getElementById('newDocUrlInput').value = '';
+            if (document.getElementById('newProofText')) document.getElementById('newProofText').value = '';
 
             document.getElementById('newName').value = '';
 
@@ -11038,6 +11024,7 @@ tr.innerHTML = `
                 bankAmount: editBankAmt,
 
                 docUrl: docUrl,
+                proofText: proofTextVal,
 
                 name: name,
 
