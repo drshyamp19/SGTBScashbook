@@ -3438,6 +3438,27 @@
 
             </div>
 
+            <div>
+
+                <label>📑 सोबत जोडलेला पुरावा <span style="font-weight:400; color:#888;">(Attached Proof Option)</span></label>
+
+                <input type="text" id="editProofText" list="proofSuggestionsList" placeholder="उदा. बँक भरणा पावती / बँक स्टेटमेंट" style="margin-bottom:2px;">
+
+                <datalist id="proofSuggestionsList">
+                    <option value="अधिकृत बँक भरणा पावती (पे-इन स्लिप) / बँक स्टेटमेंट प्रत (Bank Deposit Slip / Bank Statement)">
+                    <option value="अधिकृत बँक स्टेटमेंट प्रत (Bank Statement Copy)">
+                    <option value="अधिकृत बँक पासबुक / बँक स्टेटमेंट नोंद प्रत (Bank Passbook / Statement Entry)">
+                    <option value="नोंदणीकृत खरेदीखत / दुय्यम निबंधक कार्यालय दस्तऐवज प्रत (Registered Sale Deed)">
+                    <option value="कंत्राटदार / मजूर हजेरी पत्रक व मजुरी देयक पावती (Labor Muster / Wage Slip)">
+                    <option value="साहित्य खरेदीचे अधिकृत कर बीजक / जीएसटी बिल प्रत (Material Tax Invoice / Bill)">
+                    <option value="बँक मुदत ठेव (FD) पावती / मुदत ठेव प्रमाणपत्र प्रत (Bank Fixed Deposit Certificate)">
+                    <option value="महावितरण अधिकृत वीज बिल व भरणा पावती (Electricity Bill & Payment Receipt)">
+                    <option value="दुकानदाराचे मूळ खरेदी बिल / अधिकृत कॅश मेमो प्रत (Vendor Cash Memo / Tax Invoice)">
+                    <option value="सनदी लेखापाल (CA) अधिकृत फी देयक व पावती (CA Audit Fee Bill & Receipt)">
+                </datalist>
+
+            </div>
+
         </div>
 
 
@@ -3772,7 +3793,12 @@
 
         // 5. Contra Bank Deposit (CD - Cash to Bank / बँक भरणा)
         if (voucher.includes('CD') || mode.startsWith('contra_c2b') || head.includes('बँक भरणा') || desc.includes('बँक भरणा') || desc.includes('cash to bank')) {
-            return 'अधिकृत बँक भरणा पावती / पे-इन स्लिप प्रत (Bank Deposit Pay-in Slip)';
+            return 'अधिकृत बँक भरणा पावती (पे-इन स्लिप) / बँक स्टेटमेंट प्रत (Bank Deposit Slip / Bank Statement)';
+        }
+
+        // 5b. Contra Bank Withdrawal (Bank to Cash / बँक रोख काढली)
+        if (mode.startsWith('contra_b2c') || desc.includes('रोख काढली') || desc.includes('bank to cash')) {
+            return 'अधिकृत बँक धनादेश (Cheque) प्रत / बँक स्टेटमेंट नोंद (Bank Cheque / Statement Entry)';
         }
 
         // 6. Banking transactions, SMS charges, Service charges, Cheque return (उदा. IBT 01, IBT 02)
@@ -10659,6 +10685,7 @@ tr.innerHTML = `
                 bankAmount: bankAmt,
 
                 docUrl: docUrl,
+                proofText: (document.getElementById('editProofText') ? document.getElementById('editProofText').value.trim() : '') || (item ? (item.proofText || '') : ''),
 
                 name: name,
 
@@ -10802,6 +10829,9 @@ tr.innerHTML = `
         document.getElementById('editDesc').value = item.description || '';
 
         document.getElementById('editDocUrl').value = item.docUrl || '';
+        if (document.getElementById('editProofText')) {
+            document.getElementById('editProofText').value = item.proofText || '';
+        }
 
 
 
