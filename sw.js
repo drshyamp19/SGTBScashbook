@@ -1,5 +1,5 @@
 // SGTB Cashbook - Service Worker for PWA Installation
-const CACHE_NAME = 'sgtb-cashbook-v11';
+const CACHE_NAME = 'sgtb-cashbook-v12';
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();

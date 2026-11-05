@@ -2634,6 +2634,10 @@
 
                                 <option value="2028-29">FY 2028-29</option>
 
+                                <option value="2029-30">FY 2029-30</option>
+
+                                <option value="2030-31">FY 2030-31</option>
+
                             </select>
 
                         </label>
@@ -2873,6 +2877,8 @@
 
                             <select id="statementYearSelect" class="form-control" onchange="filterStatementsByDropdown()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff;">
                                 <option value="all" selected>All Years</option>
+                                <option value="2028">2028</option>
+                                <option value="2027">2027</option>
                                 <option value="2026">2026</option>
                                 <option value="2025">2025</option>
                                 <option value="2024">2024</option>
@@ -4330,11 +4336,22 @@ function populateStatementYearsDynamically(data) {
         if (!yearSelect || !data) return;
 
         const currentVal = yearSelect.value;
-        const yearsSet = new Set(["2023", "2024", "2025", "2026"]);
-        
+        const currentCalYear = new Date().getFullYear();
+        const yearsSet = new Set();
+
+        // Auto-Pilot: Guarantee all years from trust inception (2023) up to current calendar year (and at least 2027)
+        const maxBaseYear = Math.max(2027, currentCalYear);
+        for (let y = 2023; y <= maxBaseYear; y++) {
+            yearsSet.add(String(y));
+        }
+
+        // Dynamically include any statement years uploaded to Google Drive (no limitation!)
         data.forEach(item => {
-            if (item.year && item.year !== 'Other' && !isNaN(item.year) && Number(item.year) <= 2026) {
-                yearsSet.add(String(item.year));
+            if (item.year && item.year !== 'Other' && !isNaN(item.year)) {
+                const yNum = Number(item.year);
+                if (yNum >= 2020 && yNum <= 2099) {
+                    yearsSet.add(String(yNum));
+                }
             }
         });
 
@@ -7491,6 +7508,23 @@ function populateStatementYearsDynamically(data) {
 
         buildContinuousMonthlyMap(data);
 
+        // Auto-Pilot: Ensure filterFYSelect dynamically has any newly recorded FY
+        try {
+            const fySelect = document.getElementById('filterFYSelect');
+            if (fySelect) {
+                const existingValues = new Set(Array.from(fySelect.options).map(o => o.value));
+                data.forEach(t => {
+                    if (t.fy && !existingValues.has(t.fy)) {
+                        const opt = document.createElement('option');
+                        opt.value = t.fy;
+                        opt.textContent = `FY ${t.fy}`;
+                        fySelect.appendChild(opt);
+                        existingValues.add(t.fy);
+                    }
+                });
+            }
+        } catch(e) { console.warn('syncFYFilterOptions error:', e); }
+
         return data;
 
     }
@@ -7515,7 +7549,17 @@ function populateStatementYearsDynamically(data) {
 
         const [endYear, endMonth] = lastDateStr.split('-').map(Number);
 
+        // Auto-Pilot: Extend timeline up to current calendar date so new/future months are always live
+        const todayDate = new Date();
+        const todayYear = todayDate.getFullYear();
+        const todayMonth = todayDate.getMonth() + 1;
 
+        let limitYear = endYear;
+        let limitMonth = endMonth;
+        if (todayYear > limitYear || (todayYear === limitYear && todayMonth > limitMonth)) {
+            limitYear = todayYear;
+            limitMonth = todayMonth;
+        }
 
         const rawGroups = {};
 
@@ -7541,7 +7585,7 @@ function populateStatementYearsDynamically(data) {
 
 
 
-        while (curY < endYear || (curY === endYear && curM <= endMonth)) {
+        while (curY < limitYear || (curY === limitYear && curM <= limitMonth)) {
 
             const mKey = `${curY}-${String(curM).padStart(2, '0')}`;
 
@@ -7585,7 +7629,9 @@ function populateStatementYearsDynamically(data) {
 
             const closeBank = roundMoney(openBank + mBankIn - mBankOut);
 
+            carryCash = closeCash;
 
+            carryBank = closeBank;
 
             monthlyContinuousMap[mKey] = {
 
@@ -7669,11 +7715,24 @@ function populateStatementYearsDynamically(data) {
 
         });
 
+        // Auto-Pilot: Dynamically calculate current active financial year from system clock
+        const todayClock = new Date();
+        const tClockYear = todayClock.getFullYear();
+        const tClockMonth = todayClock.getMonth() + 1;
+        const currentActiveFY = (tClockMonth >= 4) 
+            ? `${tClockYear}-${String(tClockYear + 1).slice(-2)}` 
+            : `${tClockYear - 1}-${String(tClockYear).slice(-2)}`;
 
+        // Guarantee all financial years from 2023-24 up to currentActiveFY are always included
+        const startFyBaseYear = 2023;
+        const targetFyEndYear = (tClockMonth >= 4) ? tClockYear : (tClockYear - 1);
+        for (let y = startFyBaseYear; y <= targetFyEndYear; y++) {
+            fySet.add(`${y}-${String(y + 1).slice(-2)}`);
+        }
 
         const sortedFYs = Array.from(fySet).sort().reverse();
 
-        const prevYearVal = yearSelect.value || '2026-27';
+        const prevYearVal = yearSelect.value;
 
 
 
@@ -7703,13 +7762,17 @@ function populateStatementYearsDynamically(data) {
 
 
 
-        if (Array.from(yearSelect.options).some(o => o.value === prevYearVal)) {
+        // Auto-Pilot Selection:
+        // 1. If user previously picked a valid option, keep it.
+        // 2. Otherwise default to currentActiveFY (e.g. FY 2026-27 now, FY 2027-28 from April 2027 onwards automatically).
+        // 3. Fallback to latest available FY in data, then 'all'.
+        if (prevYearVal && Array.from(yearSelect.options).some(o => o.value === prevYearVal)) {
 
             yearSelect.value = prevYearVal;
 
-        } else if (sortedFYs.includes('2026-27')) {
+        } else if (sortedFYs.includes(currentActiveFY)) {
 
-            yearSelect.value = '2026-27';
+            yearSelect.value = currentActiveFY;
 
         } else if (sortedFYs.length > 0) {
 
