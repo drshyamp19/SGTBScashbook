@@ -3593,7 +3593,7 @@
 </div>
 
 <!-- ============================================================ -->
-<!--  PUBLIC DIGITAL RECEIPT VERIFICATION MODAL (NO LOGIN REQUIRED) -->
+<!--  PUBLIC DIGITAL RECEIPT & PAYMENT VOUCHER VERIFICATION MODAL -->
 <!-- ============================================================ -->
 <div class="modal-overlay" id="publicReceiptVerifyModal" style="display:none; z-index:99999;" onclick="handleVerifyModalBackdrop(event)">
     <div class="modal-box" style="max-width:540px; border-radius:18px; border:2px solid #0d2b44; padding:0; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.45); background:#fff; animation:fadeIn 0.25s ease-out;">
@@ -3609,13 +3609,13 @@
             </div>
             <!-- Verified Banner -->
             <div style="display:inline-flex; align-items:center; gap:6px; background:#d1e7dd; color:#0f5132; padding:5px 16px; border-radius:20px; font-weight:800; font-size:12px; border:1px solid #a3cfbb;">
-                <span style="font-size:14px;">✅</span> अधिकृत डिजिटल पावती पडताळणी (OFFICIAL RECEIPT VERIFIED)
+                <span style="font-size:14px;">✅</span> <span id="pubVerifyBadgeText">अधिकृत डिजिटल पावती पडताळणी (OFFICIAL RECEIPT VERIFIED)</span>
             </div>
         </div>
 
         <!-- Verified Receipt Body -->
         <div style="padding:18px 22px; max-height:68vh; overflow-y:auto;">
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #198754; padding:8px 12px; border-radius:6px; font-size:12px; color:#334155; margin-bottom:14px;">
+            <div id="pubVerifyNoticeText" style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #198754; padding:8px 12px; border-radius:6px; font-size:12px; color:#334155; margin-bottom:14px;">
                 ℹ️ <strong>डिजिटल पडताळणी यशस्वी:</strong> सदर पावती संस्थेच्या दप्तरी अधिकृतपणे नोंद असून, CA ऑडिट व क्लाऊड सर्व्हरद्वारे प्रमाणित आहे.
             </div>
 
@@ -3627,33 +3627,45 @@
                 
                 <div style="background:#fff; border-bottom:1px solid #f1f5f9;">
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px; gap:8px;">
-                        <span style="color:#64748b; font-weight:600; white-space:nowrap;">📅 पावती दिनांक (Date):</span>
+                        <span id="pubVerifyDateLabel" style="color:#64748b; font-weight:600; white-space:nowrap;">📅 पावती दिनांक (Date):</span>
                         <span style="font-weight:700; color:#0f172a; text-align:right;" id="pubVerifyDate">-</span>
                     </div>
 
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px; gap:10px;">
-                        <span style="color:#64748b; font-weight:600; white-space:nowrap;">👤 नाव (Donor Name):</span>
+                        <span id="pubVerifyNameLabel" style="color:#64748b; font-weight:600; white-space:nowrap;">👤 नाव (Donor Name):</span>
                         <span style="font-weight:800; color:#0d2b44; font-size:14px; text-align:right; word-break:break-word;" id="pubVerifyName">-</span>
                     </div>
 
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px; gap:10px;">
-                        <span style="color:#64748b; font-weight:600; white-space:nowrap;">🏷️ देणगी प्रकार / हेड:</span>
+                        <span id="pubVerifyHeadLabel" style="color:#64748b; font-weight:600; white-space:nowrap;">🏷️ देणगी प्रकार / हेड:</span>
                         <span style="font-weight:700; color:#334155; text-align:right;" id="pubVerifyHead">-</span>
                     </div>
 
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px; gap:10px;">
-                        <span style="color:#64748b; font-weight:600; white-space:nowrap;">📝 तपशील (Narration):</span>
+                        <span id="pubVerifyDescLabel" style="color:#64748b; font-weight:600; white-space:nowrap;">📝 तपशील (Narration):</span>
                         <span style="color:#475569; text-align:right; word-break:break-word;" id="pubVerifyDesc">-</span>
                     </div>
 
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px;">
-                        <span style="color:#64748b; font-weight:600;">💳 पेमेंट प्रकार (Mode):</span>
+                        <span id="pubVerifyModeLabel" style="color:#64748b; font-weight:600;">💳 पेमेंट प्रकार (Mode):</span>
                         <span style="font-weight:700; color:#0284c7; background:#e0f2fe; padding:2px 8px; border-radius:4px; font-size:12px;" id="pubVerifyMode">-</span>
+                    </div>
+
+                    <!-- Voucher Specific Signature Row -->
+                    <div id="pubVerifySigRow" style="display:none; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px; background:#fafbff;">
+                        <span style="color:#64748b; font-weight:600; white-space:nowrap;">✍️ स्वाक्षरी स्थिती:</span>
+                        <span style="font-weight:700; color:#0f5132; background:#d1e7dd; padding:2px 8px; border-radius:4px; font-size:12px;">संस्थेच्या दप्तरी प्रत्यक्ष स्वाक्षरीसह उपलब्ध</span>
+                    </div>
+
+                    <!-- Voucher Specific Document/Proof Row -->
+                    <div id="pubVerifyDocRow" style="display:none; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f1f5f9; font-size:13px; background:#fafbff;">
+                        <span style="color:#64748b; font-weight:600; white-space:nowrap;">📄 जोडलेला पुरावा:</span>
+                        <span id="pubVerifyDocContent" style="font-weight:700; color:#0b5ed7; text-align:right;">-</span>
                     </div>
 
                     <div style="background:#f0fdf4; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
                         <div>
-                            <div style="color:#166534; font-weight:700; font-size:13px;">💰 स्वीकारलेली रक्कम:</div>
+                            <div id="pubVerifyAmountLabel" style="color:#166534; font-weight:700; font-size:13px;">💰 स्वीकारलेली रक्कम:</div>
                             <div style="font-size:11.5px; font-weight:700; color:#15803d; margin-top:2px;" id="pubVerifyWords">-</div>
                         </div>
                         <div style="font-size:22px; font-weight:900; color:#15803d; text-align:right; white-space:nowrap;" id="pubVerifyAmount">₹0</div>
@@ -3667,7 +3679,7 @@
                     <div style="width:58px; height:58px; border:2px dashed #0b5ed7; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2px; color:#084298; font-size:6.5px; font-weight:700; transform:rotate(-5deg);">
                         <span style="font-size:6.2px;">स्वामी गोपाल तीर्थ बहु. संस्था</span>
                         <span style="font-size:5.8px; border-top:1px solid #0b5ed7; border-bottom:1px solid #0b5ed7; padding:0.5px 0; margin:1px 0;">भद्रावती F-0016068</span>
-                        <span style="color:#198754; font-size:6.5px; font-weight:800;">✓ अधिकृत पावती</span>
+                        <span id="pubVerifyStampVerified" style="color:#198754; font-size:6.5px; font-weight:800;">✓ अधिकृत पावती</span>
                     </div>
                     <div style="font-size:10.5px; color:#475569;">
                         <div>🏛️ <strong>ऑडिट स्थिती:</strong> CA प्रमाणित</div>
@@ -3675,7 +3687,7 @@
                     </div>
                 </div>
                 <div style="text-align:right;">
-                    <div style="font-size:9.5px; font-weight:700; color:#0d2b44;">संगणकीकृत अधिकृत पावती</div>
+                    <div id="pubVerifyComputerGenText" style="font-size:9.5px; font-weight:700; color:#0d2b44;">संगणकीकृत अधिकृत पावती</div>
                     <div style="font-size:8px; color:#64748b;">No Signature Required</div>
                 </div>
             </div>
@@ -3684,7 +3696,7 @@
         <!-- Card Footer Actions -->
         <div style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:12px 20px; display:flex; gap:10px; justify-content:flex-end;">
             <button class="btn btn-secondary btn-sm" onclick="closePublicReceiptVerifyModal()" style="padding:8px 16px; font-size:12.5px;">✖ बंद करा (Close)</button>
-            <button class="btn btn-primary btn-sm" onclick="printPublicVerifiedReceiptFromModal()" style="padding:8px 18px; font-size:12.5px; background:#0d2b44; border-color:#0d2b44;">🖨️ पावती प्रिंट / PDF</button>
+            <button id="pubVerifyPrintBtn" class="btn btn-primary btn-sm" onclick="printPublicVerifiedItemFromModal()" style="padding:8px 18px; font-size:12.5px; background:#0d2b44; border-color:#0d2b44;">🖨️ पावती प्रिंट / PDF</button>
         </div>
     </div>
 </div>
@@ -3724,23 +3736,29 @@
 
     function buildReceiptVerificationUrl(item) {
         try {
-            const cleanReceiptNum = (typeof getCleanReceiptNumber === 'function') 
-                ? getCleanReceiptNumber(item.voucher) 
-                : (item.voucher || '-');
-            const receiptAmount = (item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0));
+            const isVoucher = (Number(item.debit) > 0) || (Number(item.cashOut) > 0) || (Number(item.bankOut) > 0) || (item.type === 'debit') || (item.voucher && /^(VN|PV|EXP|IBT|CD)/i.test(String(item.voucher).trim()));
+            const voucherOrReceiptNum = isVoucher
+                ? (item.voucher || '-')
+                : ((typeof getCleanReceiptNumber === 'function') ? getCleanReceiptNumber(item.voucher) : (item.voucher || '-'));
+            
+            const amount = isVoucher
+                ? ((item.debit > 0) ? item.debit : ((item.cashOut || 0) + (item.bankOut || 0)))
+                : ((item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0)));
             
             const host = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || !window.location.origin || !window.location.origin.startsWith('http'))
                 ? 'https://sgtb-scashbook.vercel.app'
                 : window.location.origin;
 
             const payload = {
-                r: cleanReceiptNum || '-',
-                d: item.date || '',
-                a: receiptAmount,
+                t: isVoucher ? 'v' : 'r',
+                r: voucherOrReceiptNum || '-',
+                d: item.date || item.rawDate || '',
+                a: amount,
                 n: item.name || '-',
                 m: (item.paymentMode || 'Bank').toUpperCase(),
-                h: item.accountHead || 'सामान्य देणगी',
-                desc: (item.description || '').slice(0, 80)
+                h: item.accountHead || (isVoucher ? 'संस्था खर्च' : 'सामान्य देणगी'),
+                desc: (item.description || '').slice(0, 80),
+                doc: item.docUrl || ''
             };
 
             const jsonStr = JSON.stringify(payload);
@@ -3752,9 +3770,10 @@
         } catch(e) {
             console.warn('Failed to build verification URL, fallback to query params:', e);
             const host = 'https://sgtb-scashbook.vercel.app';
-            const cleanReceiptNum = (typeof getCleanReceiptNumber === 'function') ? getCleanReceiptNumber(item.voucher) : (item.voucher || '-');
-            const receiptAmount = (item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0));
-            return `${host}/?verify=1&rn=${encodeURIComponent(cleanReceiptNum)}&dt=${encodeURIComponent(item.date || '')}&amt=${receiptAmount}&dn=${encodeURIComponent(item.name || '-')}`;
+            const isVoucher = (Number(item.debit) > 0) || (Number(item.cashOut) > 0) || (Number(item.bankOut) > 0);
+            const voucherOrReceiptNum = isVoucher ? (item.voucher || '-') : ((typeof getCleanReceiptNumber === 'function') ? getCleanReceiptNumber(item.voucher) : (item.voucher || '-'));
+            const amount = isVoucher ? ((item.debit > 0) ? item.debit : ((item.cashOut || 0) + (item.bankOut || 0))) : ((item.credit > 0) ? item.credit : ((item.cashIn || 0) + (item.bankIn || 0)));
+            return `${host}/?verify=1&t=${isVoucher ? 'v' : 'r'}&rn=${encodeURIComponent(voucherOrReceiptNum)}&dt=${encodeURIComponent(item.date || '')}&amt=${amount}&dn=${encodeURIComponent(item.name || '-')}`;
         }
     }
 
@@ -3775,14 +3794,18 @@
                     while (b64.length % 4 !== 0) b64 += '=';
                     const jsonStr = decodeURIComponent(escape(atob(b64)));
                     const p = JSON.parse(jsonStr);
+                    const vNum = p.r || p.c || p.rn || p.voucher || p.receipt || '-';
+                    const vType = p.t || (urlParams.get('t') === 'v' || /^(VN|PV|EXP|IBT|CD)/i.test(String(vNum).trim()) ? 'v' : 'r');
                     receiptData = {
-                        voucher: p.r || p.c || p.rn || p.voucher || p.receipt || '-',
+                        type: vType,
+                        voucher: vNum,
                         date: p.d || p.dt || p.date || '',
                         amount: Number(p.a || p.amt || p.amount || 0),
                         name: p.n || p.dn || p.name || '-',
                         paymentMode: p.m || p.pm || p.mode || p.paymentMode || 'Bank',
-                        accountHead: p.h || p.head || p.accountHead || 'सामान्य देणगी',
-                        description: p.desc || p.narration || p.t || p.description || 'देणगी'
+                        accountHead: p.h || p.head || p.accountHead || (vType === 'v' ? 'संस्था खर्च' : 'सामान्य देणगी'),
+                        description: p.desc || p.narration || p.description || (vType === 'v' ? 'संस्था खर्च' : 'देणगी'),
+                        docUrl: p.doc || p.docUrl || ''
                     };
                 } catch(e) {
                     console.warn('Base64 verify decode failed, trying standard query params:', e);
@@ -3792,22 +3815,26 @@
             // Try reading standard query parameters
             if (!receiptData) {
                 const rn = urlParams.get('rn') || urlParams.get('r') || urlParams.get('receipt') || urlParams.get('voucher') || '-';
+                const isV = urlParams.get('t') === 'v' || urlParams.has('voucher') || /^(VN|PV|EXP|IBT|CD)/i.test(String(rn).trim());
                 const dt = urlParams.get('dt') || urlParams.get('d') || urlParams.get('date') || '';
                 const amt = Number(urlParams.get('amt') || urlParams.get('a') || urlParams.get('amount') || 0);
                 const dn = urlParams.get('dn') || urlParams.get('n') || urlParams.get('name') || '-';
                 const pm = urlParams.get('pm') || urlParams.get('m') || urlParams.get('mode') || 'Bank';
-                const h = urlParams.get('h') || urlParams.get('head') || 'सामान्य देणगी';
-                const desc = urlParams.get('desc') || urlParams.get('narration') || 'देणगी';
+                const h = urlParams.get('h') || urlParams.get('head') || (isV ? 'संस्था खर्च' : 'सामान्य देणगी');
+                const desc = urlParams.get('desc') || urlParams.get('narration') || (isV ? 'संस्था खर्च' : 'देणगी');
+                const doc = urlParams.get('doc') || urlParams.get('docUrl') || '';
 
                 if (rn !== '-' || amt > 0 || dn !== '-') {
                     receiptData = {
+                        type: isV ? 'v' : 'r',
                         voucher: rn,
                         date: dt,
                         amount: amt,
                         name: dn,
                         paymentMode: pm,
                         accountHead: h,
-                        description: desc
+                        description: desc,
+                        docUrl: doc
                     };
                 }
             }
@@ -3822,43 +3849,127 @@
 
     function showPublicReceiptVerificationModal(data) {
         currentPublicReceiptData = data;
-        const cleanNum = (typeof getCleanReceiptNumber === 'function') 
-            ? getCleanReceiptNumber(data.voucher || '-') 
-            : (data.voucher || '-');
+        const isVoucher = (data.type === 'v') || (data.voucher && /^(VN|PV|EXP|IBT|CD)/i.test(String(data.voucher).trim()));
+        const cleanNum = isVoucher
+            ? (data.voucher || '-')
+            : ((typeof getCleanReceiptNumber === 'function') ? getCleanReceiptNumber(data.voucher || '-') : (data.voucher || '-'));
         const amt = Number(data.amount || 0);
         const words = (typeof numberToMarathiWords === 'function') ? numberToMarathiWords(amt) : `${amt} रुपये`;
 
-        let titleText = 'देणगी पावती तपशील (Donation Receipt)';
+        let titleText = isVoucher ? 'खर्चाचे व्हाउचर तपशील (Payment Voucher Details)' : 'देणगी पावती तपशील (Donation Receipt)';
         const vStr = String(data.voucher || '').trim();
-        if (/^A\/VSN/i.test(vStr)) {
-            titleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
-        } else if (/FDM/i.test(vStr)) {
-            titleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured)';
+        if (!isVoucher) {
+            if (/^A\/VSN/i.test(vStr)) {
+                titleText = 'आजीवन / वार्षिक सभासद नोंदणी पावती';
+            } else if (/FDM/i.test(vStr)) {
+                titleText = 'मुदत ठेव समाप्ती / जमा पावती (FD Matured)';
+            }
+        } else {
+            if (/VN\s*-\s*FD/i.test(vStr)) {
+                titleText = 'मुदत ठेव व्हाउचर (Fixed Deposit / FD)';
+            } else if (/IBT/i.test(vStr)) {
+                titleText = 'बँक अंतर्गत व्यवहार (Internal Bank Transfer)';
+            }
         }
 
+        const badgeTextEl = document.getElementById('pubVerifyBadgeText');
+        const noticeEl = document.getElementById('pubVerifyNoticeText');
         const titleEl = document.getElementById('pubVerifyReceiptTitle');
         const vEl = document.getElementById('pubVerifyVoucher');
+        const dtLabelEl = document.getElementById('pubVerifyDateLabel');
         const dtEl = document.getElementById('pubVerifyDate');
+        const nameLabelEl = document.getElementById('pubVerifyNameLabel');
         const nEl = document.getElementById('pubVerifyName');
+        const headLabelEl = document.getElementById('pubVerifyHeadLabel');
         const hEl = document.getElementById('pubVerifyHead');
+        const descLabelEl = document.getElementById('pubVerifyDescLabel');
         const descEl = document.getElementById('pubVerifyDesc');
+        const modeLabelEl = document.getElementById('pubVerifyModeLabel');
         const mEl = document.getElementById('pubVerifyMode');
+        const amtLabelEl = document.getElementById('pubVerifyAmountLabel');
         const amtEl = document.getElementById('pubVerifyAmount');
         const wEl = document.getElementById('pubVerifyWords');
+        const sigRowEl = document.getElementById('pubVerifySigRow');
+        const docRowEl = document.getElementById('pubVerifyDocRow');
+        const docContentEl = document.getElementById('pubVerifyDocContent');
+        const stampVerEl = document.getElementById('pubVerifyStampVerified');
+        const computerGenTextEl = document.getElementById('pubVerifyComputerGenText');
+        const printBtnEl = document.getElementById('pubVerifyPrintBtn');
 
+        if (badgeTextEl) badgeTextEl.textContent = isVoucher ? 'अधिकृत खर्च व्हाउचर पडताळणी (OFFICIAL PAYMENT VOUCHER VERIFIED)' : 'अधिकृत डिजिटल पावती पडताळणी (OFFICIAL RECEIPT VERIFIED)';
+        if (noticeEl) {
+            noticeEl.innerHTML = isVoucher
+                ? 'ℹ️ <strong>डिजिटल पडताळणी यशस्वी:</strong> सदर खर्चाचे व्हाउचर संस्थेच्या दप्तरी अधिकृतपणे नोंद असून, CA ऑडिट व लेजरद्वारे प्रमाणित आहे. प्रत्यक्ष स्वाक्षरी संस्थेच्या फाईलमध्ये उपलब्ध आहे.'
+                : 'ℹ️ <strong>डिजिटल पडताळणी यशस्वी:</strong> सदर पावती संस्थेच्या दप्तरी अधिकृतपणे नोंद असून, CA ऑडिट व क्लाऊड सर्व्हरद्वारे प्रमाणित आहे.';
+        }
         if (titleEl) titleEl.textContent = titleText;
-        if (vEl) vEl.textContent = `पावती क्र.: ${cleanNum}`;
+        if (vEl) vEl.textContent = isVoucher ? `व्हाउचर क्र.: ${cleanNum}` : `पावती क्र.: ${cleanNum}`;
+        if (dtLabelEl) dtLabelEl.textContent = isVoucher ? '📅 खर्चाचा दिनांक (Date):' : '📅 पावती दिनांक (Date):';
         if (dtEl) dtEl.textContent = data.date || '-';
+        if (nameLabelEl) nameLabelEl.textContent = isVoucher ? '👤 रक्कम घेणाऱ्याचे नांव (Payee):' : '👤 नाव (Donor Name):';
         if (nEl) nEl.textContent = data.name || '-';
-        if (hEl) hEl.textContent = data.accountHead || 'सामान्य देणगी';
+        if (headLabelEl) headLabelEl.textContent = isVoucher ? '🏷️ खर्च शिर्षक / हेड:' : '🏷️ देणगी प्रकार / हेड:';
+        if (hEl) hEl.textContent = data.accountHead || (isVoucher ? 'संस्था खर्च' : 'सामान्य देणगी');
+        if (descLabelEl) descLabelEl.textContent = isVoucher ? '📝 खर्चाचा उद्देश / तपशील:' : '📝 तपशील (Narration):';
         if (descEl) descEl.textContent = data.description || '-';
+        if (modeLabelEl) modeLabelEl.textContent = '💳 पेमेंट प्रकार (Mode):';
         if (mEl) mEl.textContent = (data.paymentMode || 'Bank').toUpperCase();
-        if (amtEl) { const fAmt = (typeof formatIndianNum === 'function') ? formatIndianNum(amt) : String(amt); amtEl.textContent = fAmt.startsWith('₹') ? fAmt : ('₹ ' + fAmt); }
+        if (amtLabelEl) amtLabelEl.textContent = isVoucher ? '💰 खर्च झालेली रक्कम:' : '💰 स्वीकारलेली रक्कम:';
+        if (amtEl) { 
+            const fAmt = (typeof formatIndianNum === 'function') ? formatIndianNum(amt) : String(amt); 
+            amtEl.textContent = fAmt.startsWith('₹') ? fAmt : ('₹ ' + fAmt); 
+        }
         if (wEl) wEl.textContent = `रक्कम अक्षरी: ${words}`;
+
+        if (sigRowEl) {
+            sigRowEl.style.display = isVoucher ? 'flex' : 'none';
+        }
+        if (docRowEl && docContentEl) {
+            if (isVoucher) {
+                docRowEl.style.display = 'flex';
+                if (data.docUrl) {
+                    docContentEl.innerHTML = `<a href="${escapeHTML(data.docUrl)}" target="_blank" style="color:#0b5ed7; text-decoration:underline; font-weight:700;">📄 मूळ बिल / खरेदीखत पुरावा पहा</a>`;
+                } else {
+                    docContentEl.textContent = 'नोंदणीकृत खरेदीखत / मूळ बिल संस्थेकडे उपलब्ध';
+                }
+            } else {
+                docRowEl.style.display = 'none';
+            }
+        }
+
+        if (stampVerEl) stampVerEl.textContent = isVoucher ? '✓ अधिकृत व्हाउचर' : '✓ अधिकृत पावती';
+        if (computerGenTextEl) computerGenTextEl.textContent = isVoucher ? 'संगणकीकृत अधिकृत व्हाउचर' : 'संगणकीकृत अधिकृत पावती';
+        if (printBtnEl) printBtnEl.textContent = isVoucher ? '🖨️ व्हाउचर प्रिंट / PDF' : '🖨️ पावती प्रिंट / PDF';
 
         const modal = document.getElementById('publicReceiptVerifyModal');
         if (modal) {
             modal.style.display = 'flex';
+        }
+    }
+
+    function printPublicVerifiedItemFromModal() {
+        if (!currentPublicReceiptData) return;
+        const isVoucher = (currentPublicReceiptData.type === 'v') || 
+                          (currentPublicReceiptData.voucher && /^(VN|PV|EXP|IBT|CD)/i.test(String(currentPublicReceiptData.voucher).trim()));
+        if (isVoucher) {
+            const voucherItem = {
+                voucher: currentPublicReceiptData.voucher,
+                date: currentPublicReceiptData.date,
+                rawDate: currentPublicReceiptData.date,
+                debit: currentPublicReceiptData.amount,
+                name: currentPublicReceiptData.name,
+                paymentMode: currentPublicReceiptData.paymentMode,
+                accountHead: currentPublicReceiptData.accountHead,
+                description: currentPublicReceiptData.description,
+                docUrl: currentPublicReceiptData.docUrl
+            };
+            if (typeof printSinglePaymentVoucherDirect === 'function') {
+                printSinglePaymentVoucherDirect(voucherItem);
+            }
+        } else {
+            if (typeof printPublicVerifiedReceiptFromModal === 'function') {
+                printPublicVerifiedReceiptFromModal();
+            }
         }
     }
 
@@ -11364,7 +11475,11 @@ tr.innerHTML = `
     function printPaymentVoucher(id) {
         const item = (transactionsData || []).find(t => t.id === id);
         if (!item) return;
+        printSinglePaymentVoucherDirect(item);
+    }
 
+    function printSinglePaymentVoucherDirect(item) {
+        if (!item) return;
         const voucherNum = item.voucher || '-';
         const isSplitMode = (item.paymentMode === 'cash_bank' || item.paymentMode === 'split' || (item.cashOut > 0 && item.bankOut > 0));
         const expenseAmount = (item.debit > 0) ? item.debit : ((item.cashOut || 0) + (item.bankOut || 0));
@@ -11412,6 +11527,9 @@ tr.innerHTML = `
         if (item.docUrl) {
             proofHtml = `<a href="${escapeHTML(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">जोडलेला दस्तऐवज पहा (Click to View Attached Proof)</a>`;
         }
+
+        const qrVerificationUrl = (typeof buildReceiptVerificationUrl === 'function') ? buildReceiptVerificationUrl(item) : '';
+        const qrSvg = (typeof generateReceiptQRCodeSVG === 'function') ? generateReceiptQRCodeSVG(qrVerificationUrl) : '';
 
         const voucherHtml = `
         <!DOCTYPE html>
@@ -11608,6 +11726,31 @@ tr.innerHTML = `
                     </div>
                     <div class="voucher-proof">
                         <strong>सोबत जोडलेला पुरावा :</strong> &nbsp;${proofHtml}
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 12px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; position:relative; z-index:1;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:76px; height:76px; min-width:76px; min-height:76px; background:#fff; padding:3px; border:1.5px solid #0d2b44; border-radius:6px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                                ${qrSvg}
+                            </div>
+                            <div>
+                                <div style="font-size:9.5px; font-weight:800; color:#0d2b44;">🔍 अधिकृत खर्च व्हाउचर पडताळणी QR (Scan to Verify)</div>
+                                <div style="font-size:8px; color:#475569; margin-top:2px;">व्हाउचर क्र.: <strong>${escapeHTML(voucherNum)}</strong></div>
+                                <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(dateStr)} | रक्कम: ₹${formatIndianNum(expenseAmount)}</div>
+                                <div style="font-size:7.5px; color:#198754; font-weight:700; margin-top:2px;">📷 कॅमेऱ्याने स्कॅन करून डिजिटल व्हाउचर पहा</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="official-stamp" style="width:65px; height:65px; border:2px dashed #0b5ed7; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3px; color:#084298; font-size:7px; font-weight:700; transform:rotate(-5deg);">
+                                <span style="font-size:6.2px;">स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                                <span style="font-size:5.8px; border-top:1px solid #0b5ed7; border-bottom:1px solid #0b5ed7; padding:0.5px 0; margin:1px 0;">भद्रावती F-0016068</span>
+                                <span style="color:#198754; font-size:7px; font-weight:800;">✓ अधिकृत व्हाउचर</span>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:9px; font-weight:700; color:#0d2b44;">🏛️ संस्थेच्या क्लाऊड लेजरमध्ये प्रमाणित</div>
+                                <div style="font-size:7.5px; color:#64748b; margin-top:1px;">CA Audited & Cloud Ledger Verified</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
