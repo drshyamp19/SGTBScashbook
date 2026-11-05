@@ -3451,7 +3451,7 @@
                     <option value="नोंदणीकृत खरेदीखत / दुय्यम निबंधक कार्यालय दस्तऐवज प्रत (Registered Sale Deed)">
                     <option value="कंत्राटदार / मजूर हजेरी पत्रक व मजुरी देयक पावती (Labor Muster / Wage Slip)">
                     <option value="साहित्य खरेदीचे अधिकृत कर बीजक / जीएसटी बिल प्रत (Material Tax Invoice / Bill)">
-                    <option value="बँक मुदत ठेव (FD) पावती / मुदत ठेव प्रमाणपत्र प्रत (Bank Fixed Deposit Certificate)">
+                    <option value="बँक मुदत ठेव (FD) पावती / मुदत ठेव प्रमाणपत्र / बँक स्टेटमेंट प्रत (Bank Fixed Deposit Certificate / Bank Statement)">
                     <option value="महावितरण अधिकृत वीज बिल व भरणा पावती (Electricity Bill & Payment Receipt)">
                     <option value="दुकानदाराचे मूळ खरेदी बिल / अधिकृत कॅश मेमो प्रत (Vendor Cash Memo / Tax Invoice)">
                     <option value="सनदी लेखापाल (CA) अधिकृत फी देयक व पावती (CA Audit Fee Bill & Receipt)">
@@ -3788,7 +3788,7 @@
         // 4. Fixed Deposit (बँक मुदत ठेव - FD)
         if (voucher.includes('FD') || mode === 'contra_b2fd' || head.includes('मुदत ठेव') || head.includes('fd') || 
             desc.includes('fixed deposit') || desc.includes('मुदत ठेव')) {
-            return 'बँक मुदत ठेव (FD) पावती / मुदत ठेव प्रमाणपत्र प्रत (Bank Fixed Deposit Certificate)';
+            return 'बँक मुदत ठेव (FD) पावती / मुदत ठेव प्रमाणपत्र / बँक स्टेटमेंट प्रत (Bank Fixed Deposit Certificate / Bank Statement)';
         }
 
         // 5. Contra Bank Deposit (CD - Cash to Bank / बँक भरणा)
