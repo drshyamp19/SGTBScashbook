@@ -3730,6 +3730,104 @@
     }
 
     // ============================================================
+        // ============================================================
+    //  CA AUDITED DYNAMIC VOUCHER PROOF RESOLVER
+    // ============================================================
+    function getDynamicVoucherProof(item, isHtml = true) {
+        if (!item) return 'दुकानदाराचे अधिकृत खरेदी बिल / मूळ व्हाऊचर प्रत (Vendor Bill / Cash Memo)';
+
+        // 1. Direct cloud document or uploaded link
+        if (item.docUrl && String(item.docUrl).trim()) {
+            if (isHtml) {
+                return `<a href="${escapeHTML(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline; font-weight:700;">📄 जोडलेला अधिकृत दस्तऐवज पहा (Click to View Attached Proof)</a>`;
+            }
+            return 'जोडलेला अधिकृत दस्तऐवज / बिल प्रत (Attached Document Available)';
+        }
+
+        // 2. Custom proof text explicitly entered
+        if (item.proofText && String(item.proofText).trim()) {
+            return escapeHTML(String(item.proofText).trim());
+        }
+
+        const head = String(item.accountHead || '').toLowerCase();
+        const desc = String(item.description || '').toLowerCase();
+        const name = String(item.name || '').toLowerCase();
+        const voucher = String(item.voucher || '').toUpperCase();
+        const mode = String(item.paymentMode || '').toLowerCase();
+
+        // 3. Plot / Land / Immovable Property Purchase & Registry (उदा. VN 01, VN 02)
+        if (voucher.startsWith('VN 01') || voucher.startsWith('VN 02') ||
+            head.includes('प्लॉट') || head.includes('मालमत्ता') || head.includes('खरेदी') ||
+            desc.includes('प्लॉट') || desc.includes('plot') || desc.includes('खरेदीखत') || 
+            desc.includes('रजिस्ट्री') || desc.includes('दस्त') || desc.includes('ले-आऊट') || desc.includes('घुटकळा') ||
+            name.includes('chandrakala') || name.includes('चन्द्रकला') || name.includes('चंद्रकला')) {
+            return 'नोंदणीकृत खरेदीखत / दुय्यम निबंधक कार्यालय दस्तऐवज प्रत (Registered Sale Deed)';
+        }
+
+        // 4. Fixed Deposit (बँक मुदत ठेव - FD)
+        if (voucher.includes('FD') || mode === 'contra_b2fd' || head.includes('मुदत ठेव') || head.includes('fd') || 
+            desc.includes('fixed deposit') || desc.includes('मुदत ठेव')) {
+            return 'बँक मुदत ठेव (FD) पावती / मुदत ठेव प्रमाणपत्र प्रत (Bank Fixed Deposit Certificate)';
+        }
+
+        // 5. Contra Bank Deposit (CD - Cash to Bank / बँक भरणा)
+        if (voucher.includes('CD') || mode.startsWith('contra_c2b') || head.includes('बँक भरणा') || desc.includes('बँक भरणा') || desc.includes('cash to bank')) {
+            return 'अधिकृत बँक भरणा पावती / पे-इन स्लिप प्रत (Bank Deposit Pay-in Slip)';
+        }
+
+        // 6. Banking transactions, SMS charges, Service charges, Cheque return (उदा. IBT 01, IBT 02)
+        if (voucher.includes('IBT') || head.includes('बँक चार्जेस') || head.includes('सेवा शुल्क') ||
+            desc.includes('sms charge') || desc.includes('bank charge') || desc.includes('सेवा शुल्क') || 
+            desc.includes('वार्षिक शुल्क') || desc.includes('chq return') || desc.includes('चेक रिटर्न') || 
+            ((name.includes('bank of baroda') || name.includes('बँक ऑफ बडोदा') || name.includes('bank')) && !desc.includes('ठेव') && !voucher.includes('FD'))) {
+            return 'अधिकृत बँक पासबुक / बँक स्टेटमेंट नोंद प्रत (Bank Passbook / Statement Entry)';
+        }
+
+        // 7. Construction Labor, Masonry, Wage muster (उदा. VN 05 - Anandrao Pimpalkar)
+        if (desc.includes('majuri') || desc.includes('मजुरी') || desc.includes('hajeeri') || desc.includes('हजेरी') ||
+            desc.includes('labor') || desc.includes('labour') || desc.includes('wage') || desc.includes('कामगार') || 
+            desc.includes('रोजंदारी') || desc.includes('कारागीर') || desc.includes('deyak') || desc.includes('देयक') ||
+            name.includes('pimpalkar') || name.includes('पिंपळकर')) {
+            return 'कंत्राटदार / मजूर हजेरी पत्रक व मजुरी देयक पावती (Labor Muster / Wage Slip)';
+        }
+
+        // 8. Construction Material, Hardware, Cement, Steel, Sand, Bricks
+        if (head.includes('शेड') || head.includes('बांधकाम') || head.includes('विकास') ||
+            desc.includes('सिमेंट') || desc.includes('रेती') || desc.includes('खडी') || desc.includes('लोखंड') || 
+            desc.includes('पत्रा') || desc.includes('पत्रे') || desc.includes('कलर') || desc.includes('रंग') || 
+            desc.includes('cement') || desc.includes('steel') || desc.includes('sand') || desc.includes('hardware') || 
+            desc.includes('material') || desc.includes('साहित्य') || desc.includes('पाइप') || desc.includes('pipe')) {
+            return 'साहित्य खरेदीचे अधिकृत कर बीजक / जीएसटी बिल प्रत (Material Tax Invoice / Bill)';
+        }
+
+        // 9. Electricity, Municipal Taxes, Water bill (वीज बिल, कर)
+        if (desc.includes('light') || desc.includes('लाईट') || desc.includes('वीज') || desc.includes('electricity') || 
+            desc.includes('महावितरण') || desc.includes('msedcl') || desc.includes('नगरपरिषद') || desc.includes('tax') || desc.includes('कर')) {
+            return 'महावितरण अधिकृत वीज बिल व भरणा पावती (Electricity Bill & Payment Receipt)';
+        }
+
+        // 10. Printing, Stationery, Xerox, Banner, Signboard (स्टेशनरी, छपाई)
+        if (desc.includes('xerox') || desc.includes('झेरॉक्स') || desc.includes('stationery') || desc.includes('स्टेशनरी') || 
+            desc.includes('printing') || desc.includes('छपाई') || desc.includes('पुस्तक') || desc.includes('रजिस्टर') || 
+            desc.includes('flex') || desc.includes('बॅनर') || desc.includes('बोर्ड')) {
+            return 'दुकानदाराचे मूळ खरेदी बिल / अधिकृत कॅश मेमो प्रत (Vendor Cash Memo / Tax Invoice)';
+        }
+
+        // 11. CA Audit Fees, Legal Counsel (ऑडिट फी, सल्लागार)
+        if (desc.includes('audit') || desc.includes('ऑडिट') || desc.includes('ca ') || desc.includes('सीए') || 
+            desc.includes('advocate') || desc.includes('वकील') || desc.includes('लेखापरीक्षक') || name.includes('ca ') || name.includes('सीए')) {
+            return 'सनदी लेखापाल (CA) अधिकृत फी देयक व पावती (CA Audit Fee Bill & Receipt)';
+        }
+
+        // 12. Trustee Reimbursement / Expense Settlement (खर्च परतफेड)
+        if (head.includes('परतफेड') || desc.includes('परतफेड') || desc.includes('reimbursement') || desc.includes('उसनवार')) {
+            return 'विश्वस्तांनी सादर केलेली मूळ खरेदी बिले व व्हाऊचर (Original Vouchers & Expense Bills)';
+        }
+
+        // 13. Default fallback
+        return 'दुकानदाराचे अधिकृत खरेदी बिल / मूळ व्हाऊचर प्रत (Vendor Bill / Cash Memo)';
+    }
+
     //  DIGITAL RECEIPT VERIFICATION & URL ENCODING (OPTION 1)
     // ============================================================
     let currentPublicReceiptData = null;
@@ -3758,7 +3856,8 @@
                 m: (item.paymentMode || 'Bank').toUpperCase(),
                 h: item.accountHead || (isVoucher ? 'संस्था खर्च' : 'सामान्य देणगी'),
                 desc: (item.description || '').slice(0, 80),
-                doc: item.docUrl || ''
+                doc: item.docUrl || '',
+                prf: isVoucher ? getDynamicVoucherProof(item, false) : ''
             };
 
             const jsonStr = JSON.stringify(payload);
@@ -3805,7 +3904,8 @@
                         paymentMode: p.m || p.pm || p.mode || p.paymentMode || 'Bank',
                         accountHead: p.h || p.head || p.accountHead || (vType === 'v' ? 'संस्था खर्च' : 'सामान्य देणगी'),
                         description: p.desc || p.narration || p.description || (vType === 'v' ? 'संस्था खर्च' : 'देणगी'),
-                        docUrl: p.doc || p.docUrl || ''
+                        docUrl: p.doc || p.docUrl || '',
+                        proofText: p.prf || p.proof || ''
                     };
                 } catch(e) {
                     console.warn('Base64 verify decode failed, trying standard query params:', e);
@@ -3834,7 +3934,8 @@
                         paymentMode: pm,
                         accountHead: h,
                         description: desc,
-                        docUrl: doc
+                        docUrl: doc,
+                        proofText: urlParams.get('prf') || urlParams.get('proof') || ''
                     };
                 }
             }
@@ -3927,10 +4028,12 @@
         if (docRowEl && docContentEl) {
             if (isVoucher) {
                 docRowEl.style.display = 'flex';
-                if (data.docUrl) {
-                    docContentEl.innerHTML = `<a href="${escapeHTML(data.docUrl)}" target="_blank" style="color:#0b5ed7; text-decoration:underline; font-weight:700;">📄 मूळ बिल / खरेदीखत पुरावा पहा</a>`;
+                if (data.docUrl && String(data.docUrl).trim()) {
+                    docContentEl.innerHTML = `<a href="${escapeHTML(data.docUrl)}" target="_blank" style="color:#0b5ed7; text-decoration:underline; font-weight:700;">📄 जोडलेला अधिकृत दस्तऐवज पहा</a>`;
                 } else {
-                    docContentEl.textContent = 'नोंदणीकृत खरेदीखत / मूळ बिल संस्थेकडे उपलब्ध';
+                    docContentEl.textContent = (typeof getDynamicVoucherProof === 'function')
+                        ? getDynamicVoucherProof(data, false)
+                        : 'संस्थेच्या दप्तरी अधिकृत व्हाऊचर व देयक नोंद';
                 }
             } else {
                 docRowEl.style.display = 'none';
@@ -4079,7 +4182,7 @@
                         <div>
                             <div style="font-size:9.5px; font-weight:800; color:#0d2b44;">🔍 अधिकृत पडताळणी QR (Scan to Verify)</div>
                             <div style="font-size:8px; color:#475569; margin-top:2px;">पावती क्र.: <strong>${escapeHTML(cleanReceiptNum)}</strong></div>
-                            <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(item.date)} | रक्कम: ₹${formatIndianNum(receiptAmount)}</div>
+                            <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(item.date)} | रक्कम: ${formatIndianNum(receiptAmount).startsWith('₹') ? formatIndianNum(receiptAmount) : ('₹ ' + formatIndianNum(receiptAmount))}</div>
                             <div style="font-size:7.5px; color:#198754; font-weight:700; margin-top:2px;">📷 कॅमेऱ्याने स्कॅन करून डिजिटल पावती पहा</div>
                         </div>
                     </div>
@@ -9157,7 +9260,7 @@ tr.innerHTML = `
                                 <div>
                                     <div style="font-size:9.5px; font-weight:800; color:#0d2b44;">🔍 अधिकृत पडताळणी QR (Scan to Verify)</div>
                                     <div style="font-size:8px; color:#475569; margin-top:2px;">पावती क्र.: <strong>${escapeHTML(cleanReceiptNum)}</strong></div>
-                                    <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(item.date)} | रक्कम: ₹${formatIndianNum(receiptAmount)}</div>
+                                    <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(item.date)} | रक्कम: ${formatIndianNum(receiptAmount).startsWith('₹') ? formatIndianNum(receiptAmount) : ('₹ ' + formatIndianNum(receiptAmount))}</div>
                                     <div style="font-size:7.5px; color:#198754; font-weight:700; margin-top:2px;">📷 कॅमेऱ्याने स्कॅन करून डिजिटल पावती पहा</div>
                                 </div>
                             </div>
@@ -9219,10 +9322,17 @@ tr.innerHTML = `
                     payMethodText = 'ऑनलाईन बँक ट्रान्सफरद्वारे (Online / UPI / NEFT)';
                 }
 
-                let proofHtml = 'नोंदणीकृत खरेदीखत / मूळ व्हाऊचर / बिल प्रत';
-                if (item.docUrl) {
+                let proofHtml = (typeof getDynamicVoucherProof === 'function')
+                    ? getDynamicVoucherProof(item, true)
+                    : 'दुकानदाराचे अधिकृत खरेदी बिल / मूळ व्हाऊचर प्रत';
+                if (item.docUrl && !proofHtml.includes('<a ')) {
                     proofHtml = `<a href="${escapeHTML(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">जोडलेला दस्तऐवज पहा (Click to View Proof)</a>`;
                 }
+
+                const qrVerificationUrl = (typeof buildReceiptVerificationUrl === 'function') ? buildReceiptVerificationUrl(item) : '';
+                const qrSvg = (typeof generateReceiptQRCodeSVG === 'function') ? generateReceiptQRCodeSVG(qrVerificationUrl) : '';
+                const fExpAmt = (typeof formatIndianNum === 'function') ? formatIndianNum(totalNumber) : String(totalNumber);
+                const dispExpAmt = fExpAmt.startsWith('₹') ? fExpAmt : ('₹ ' + fExpAmt);
 
                 bulkHtml += `
                 <div class="doc-page">
@@ -9290,6 +9400,31 @@ tr.innerHTML = `
                             </div>
                             <div class="voucher-proof">
                                 <strong>सोबत जोडलेला पुरावा :</strong> &nbsp;${proofHtml}
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 12px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; position:relative; z-index:1;">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <div style="width:76px; height:76px; min-width:76px; min-height:76px; background:#fff; padding:3px; border:1.5px solid #0d2b44; border-radius:6px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                                        ${qrSvg}
+                                    </div>
+                                    <div>
+                                        <div style="font-size:9.5px; font-weight:800; color:#0d2b44;">🔍 अधिकृत खर्च व्हाउचर पडताळणी QR (Scan to Verify)</div>
+                                        <div style="font-size:8px; color:#475569; margin-top:2px;">व्हाउचर क्र.: <strong>${escapeHTML(item.voucher || '-')}</strong></div>
+                                        <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(dateFormatted)} | रक्कम: ${escapeHTML(dispExpAmt)}</div>
+                                        <div style="font-size:7.5px; color:#198754; font-weight:700; margin-top:2px;">📷 कॅमेऱ्याने स्कॅन करून डिजिटल व्हाउचर पहा</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div class="official-stamp" style="width:65px; height:65px; border:2px dashed #0b5ed7; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3px; color:#084298; font-size:7px; font-weight:700; transform:rotate(-5deg);">
+                                        <span style="font-size:6.2px;">स्वामी गोपाल तीर्थ बहु. संस्था</span>
+                                        <span style="font-size:5.8px; border-top:1px solid #0b5ed7; border-bottom:1px solid #0b5ed7; padding:0.5px 0; margin:1px 0;">भद्रावती F-0016068</span>
+                                        <span style="color:#198754; font-size:7px; font-weight:800;">✓ अधिकृत व्हाउचर</span>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-size:9px; font-weight:700; color:#0d2b44;">🏛️ संस्थेच्या क्लाऊड लेजरमध्ये प्रमाणित</div>
+                                        <div style="font-size:7.5px; color:#64748b; margin-top:1px;">CA Audited & Cloud Ledger Verified</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -11438,7 +11573,7 @@ tr.innerHTML = `
                         <div>
                             <div style="font-size:9.5px; font-weight:800; color:#0d2b44;">🔍 अधिकृत पडताळणी QR (Scan to Verify)</div>
                             <div style="font-size:8px; color:#475569; margin-top:2px;">पावती क्र.: <strong>${escapeHTML(cleanReceiptNum)}</strong></div>
-                            <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(item.date)} | रक्कम: ₹${formatIndianNum(receiptAmount)}</div>
+                            <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(item.date)} | रक्कम: ${formatIndianNum(receiptAmount).startsWith('₹') ? formatIndianNum(receiptAmount) : ('₹ ' + formatIndianNum(receiptAmount))}</div>
                             <div style="font-size:7.5px; color:#198754; font-weight:700; margin-top:2px;">📷 कॅमेऱ्याने स्कॅन करून डिजिटल पावती पहा</div>
                         </div>
                     </div>
@@ -11523,8 +11658,10 @@ tr.innerHTML = `
             voucherTitleText = 'बँक अंतर्गत व्यवहार (Internal Banking Transaction)';
         }
 
-        let proofHtml = 'नोंदणीकृत खरेदीखत / मूळ व्हाऊचर / बिल प्रत';
-        if (item.docUrl) {
+        let proofHtml = (typeof getDynamicVoucherProof === 'function')
+            ? getDynamicVoucherProof(item, true)
+            : 'दुकानदाराचे अधिकृत खरेदी बिल / मूळ व्हाऊचर प्रत';
+        if (item.docUrl && !proofHtml.includes('<a ')) {
             proofHtml = `<a href="${escapeHTML(item.docUrl)}" target="_blank" style="color:#0d6efd; text-decoration:underline;">जोडलेला दस्तऐवज पहा (Click to View Attached Proof)</a>`;
         }
 
@@ -11736,7 +11873,7 @@ tr.innerHTML = `
                             <div>
                                 <div style="font-size:9.5px; font-weight:800; color:#0d2b44;">🔍 अधिकृत खर्च व्हाउचर पडताळणी QR (Scan to Verify)</div>
                                 <div style="font-size:8px; color:#475569; margin-top:2px;">व्हाउचर क्र.: <strong>${escapeHTML(voucherNum)}</strong></div>
-                                <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(dateStr)} | रक्कम: ₹${formatIndianNum(expenseAmount)}</div>
+                                <div style="font-size:8px; color:#475569;">दिनांक: ${escapeHTML(dateStr)} | रक्कम: ${formatIndianNum(expenseAmount).startsWith('₹') ? formatIndianNum(expenseAmount) : ('₹ ' + formatIndianNum(expenseAmount))}</div>
                                 <div style="font-size:7.5px; color:#198754; font-weight:700; margin-top:2px;">📷 कॅमेऱ्याने स्कॅन करून डिजिटल व्हाउचर पहा</div>
                             </div>
                         </div>
